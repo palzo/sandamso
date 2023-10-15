@@ -64,5 +64,9 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "올바른 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
+        // 회원가입 취소 버튼 클릭 시 로그인 페이지로 돌아가기
+        binding.btnSignupcancel.setOnClickListener {
+            finish()
+        }
     }
 }

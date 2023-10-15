@@ -4,6 +4,6 @@ package com.example.sansaninfo.Data
 data class UserData(
     val name : String,
     val email : String,
-    val gender : String,
+    //val gender : String,
     val nickname : String
 )

@@ -18,19 +18,11 @@ class SignUpActivity : AppCompatActivity() {
 
         // Firebase Authentication과 연결
         auth = FirebaseAuth.getInstance()
-        val email = binding.editSignupemail.text.toString()
-        val nick = binding.editSignupnick.text.toString()
-        val name = binding.editSignupname.text.toString()
-        val pw = binding.editSignuppw.text.toString()
-        val checkpw = binding.editSignupemail.text.toString()
 
         /*수정 필요 부분
         =======================================
         회원가입 정보 입력칸의 형식 조건 추가 필요
         =======================================*/
-
-        val emailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
         // 이메일 형식대로 입력하고 회원가입 정보를 제대로 입력한 경우
         binding.btnSignupaccept.setOnClickListener {
             val email = binding.editSignupemail.text.toString()

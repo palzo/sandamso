@@ -7,7 +7,7 @@
     tools:context=".Activity.SignUpActivity">
 
     <TextView
-        android:id="@+id/tv_signupid"
+        android:id="@+id/tv_signupemail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="아이디"
@@ -15,13 +15,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edit_signupid"
+        android:id="@+id/edit_signupemail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signupid" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_signupemail" />
 
     <TextView
         android:id="@+id/tv_signupnick"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:text="닉네임"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signupid" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_signupemail" />
 
     <EditText
         android:id="@+id/edit_signupnick"
@@ -106,15 +106,6 @@
         android:text="취소"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_signupaccept" />
-
-    <Button
-        android:id="@+id/btn_checkid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="중복확인"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_signupid"
-        app:layout_constraintStart_toEndOf="@+id/edit_signupid"
-        app:layout_constraintTop_toTopOf="@+id/edit_signupid" />
 
     <Button
         android:id="@+id/btn_checknick"

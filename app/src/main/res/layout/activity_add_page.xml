@@ -6,4 +6,184 @@
     android:layout_height="match_parent"
     tools:context=".AddPage.AddPage">
 
+    <ImageView
+        android:id="@+id/add_page_iv_backbotton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/add_page_tv_titlename"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/add_page_tv_titlename"
+        app:srcCompat="@drawable/ic_back_arrow" />
+
+    <TextView
+        android:id="@+id/add_page_tv_titlename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:text="메아리 모임 게시물 올리기"
+        android:textSize="26sp"
+        app:layout_constraintStart_toEndOf="@+id/add_page_iv_backbotton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/add_page_stroke_round_rec"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_page_tv_titlename" />
+
+    <TextView
+        android:id="@+id/add_page_tv_title"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:text="제목을 입력해주세요. (필수)"
+        app:layout_constraintBottom_toBottomOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="@+id/view2"
+        app:layout_constraintStart_toStartOf="@+id/view2"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/add_page_tv_title_limit_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="/ 30"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/view2"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/add_page_tv_title_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 "
+        android:textColor="@color/mint"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/add_page_tv_title_limit_max"
+        app:layout_constraintEnd_toStartOf="@+id/add_page_tv_title_limit_max"
+        app:layout_constraintTop_toTopOf="@+id/add_page_tv_title_limit_max" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/add_page_filled_round_rec"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_page_tv_title_limit_max" />
+
+    <ImageView
+        android:id="@+id/add_page_iv_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="@+id/view3"
+        app:layout_constraintTop_toTopOf="@+id/view3"
+        app:srcCompat="@drawable/ic_add_photo" />
+
+    <TextView
+        android:id="@+id/add_page_tv_image_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 "
+        android:textColor="@color/mint"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/add_page_tv_image_limit_max"
+        app:layout_constraintEnd_toStartOf="@+id/add_page_tv_image_limit_max"
+        app:layout_constraintTop_toTopOf="@+id/add_page_tv_image_limit_max" />
+
+    <TextView
+        android:id="@+id/add_page_tv_image_limit_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="/ 5"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/add_page_iv_add"
+        app:layout_constraintTop_toBottomOf="@+id/add_page_iv_add" />
+
+    <Spinner
+        android:id="@+id/add_page_spn_spinner"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@+id/view3"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="350dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/add_page_stroke_round_rec"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_page_spn_spinner" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="본문 내용 작성 (필수) - 최소 2자 ~ 5000자 이내를 작성할 수 있어요. - 다른 회원들을 위한 이쁜 언어로 작성해주는 센스 ~  - 우리 모두 깨끗한 등산 일지 작성해봐요 !"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+        app:layout_constraintTop_toTopOf="@+id/view4" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 "
+        android:textColor="@color/mint"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintEnd_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="/ 5000"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
+        app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="카카오톡 오픈채팅 만들러가기"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView10"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toTopOf="@+id/textView10"
+        app:srcCompat="@drawable/ic_question" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/add_page_mint_button"
+        android:text="올리기"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 </androidx.constraintlayout.widget.ConstraintLayout>

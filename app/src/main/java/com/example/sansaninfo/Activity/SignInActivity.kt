@@ -20,8 +20,8 @@ class SignInActivity : AppCompatActivity() {
 
         // 로그인 버튼을 누를 경우
         binding.btnSignin.setOnClickListener {
-            val email = binding.editSigninemail.text.toString()
-            val pw = binding.editSigninpw.text.toString()
+            val email = binding.signinEtEmail.text.toString()
+            val pw = binding.signinEtPw.text.toString()
 
             // 이메일 및 패스워드가 비어있지 않을 경우
             if (email.isNotEmpty() && pw.isNotEmpty()) {

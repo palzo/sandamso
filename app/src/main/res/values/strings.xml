@@ -2,4 +2,15 @@
     <string name="app_name">SanSanInfo</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="info_page_tv_detail_view">상세 보기</string>
+    <string name="info_page_tv_location_view">위치 보기</string>
+    <string name="info_page_tv_intro_view">산 소개</string>
+    <string name="my_page_tv_info_edit_view">개인 정보 수정</string>
+    <string name="my_page_tv_nickname_view">닉네임</string>
+    <string name="my_page_tv_name_view">이 름</string>
+    <string name="my_page_tv_social_view">인증된 소셜 계정</string>
+    <string name="my_page_tv_theme_view">테마 변경</string>
+    <string name="my_page_tv_mode_view">라이트모드 / 다크모드</string>
+    <string name="my_page_tv_btn_logout">로그 아웃</string>
+    <string name="my_page_tv_btn_secession">회원 탈퇴</string>
 </resources>

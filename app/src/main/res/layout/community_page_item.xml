@@ -72,6 +72,7 @@
         android:layout_height="wrap_content"
         android:text="D - 2"
         android:textColor="@color/white"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/community_item_iv_image"
         app:layout_constraintEnd_toEndOf="@+id/community_item_iv_image"

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/community_item_iv_image"
+        android:layout_width="120dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_gallery2" />
+
+    <TextView
+        android:id="@+id/community_item_tv_title"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="북한산 등반 할 파티원 구합니다~~~"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/community_item_iv_image"
+        app:layout_constraintTop_toTopOf="@+id/community_item_iv_image" />
+
+    <TextView
+        android:id="@+id/community_item_tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="북한산날다람쥐"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/community_item_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/community_item_tv_title" />
+
+    <TextView
+        android:id="@+id/community_item_tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2023.10.10"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="@+id/community_item_iv_image"
+        app:layout_constraintStart_toStartOf="@+id/community_item_tv_nickname" />
+
+    <ImageView
+        android:id="@+id/community_item_iv_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/community_item_tv_date"
+        app:layout_constraintEnd_toStartOf="@+id/community_item_tv_like_amount"
+        app:srcCompat="@drawable/ic_handshake" />
+
+    <TextView
+        android:id="@+id/community_item_tv_like_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="10"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/community_item_iv_like"
+        app:layout_constraintEnd_toEndOf="@+id/community_item_tv_title"
+        app:layout_constraintTop_toTopOf="@+id/community_item_iv_like" />
+
+    <TextView
+        android:id="@+id/community_item_tv_dday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="D - 2"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/community_item_iv_image"
+        app:layout_constraintEnd_toEndOf="@+id/community_item_iv_image"
+        app:layout_constraintStart_toStartOf="@+id/community_item_iv_image"
+        app:layout_constraintTop_toTopOf="@+id/community_item_iv_image" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="400dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/dark_grey"
+        app:layout_constraintEnd_toEndOf="@+id/community_item_tv_title"
+        app:layout_constraintStart_toStartOf="@+id/community_item_iv_image"
+        app:layout_constraintTop_toBottomOf="@+id/community_item_tv_date" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mint">#4BDDCE</color>
+    <color name="light_mint">#A5EEE7</color>
+    <color name="dark_grey">#808080</color>
+    <color name="red_pink">#F29494</color>
+    <color name="light_grey">#d2d2d2</color>
 
     <!-- Grey -->
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchPage.SearchPageRegionFragment">
+
+    <TextView
+        android:id="@+id/region_search_page_bt_mountain"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/search_page_button_background"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:text="산 이름으로 검색"
+        app:layout_constraintEnd_toStartOf="@id/region_search_page_bt_region"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/region_search_page_bt_region"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/search_page_click_button_background"
+        android:gravity="center"
+        android:paddingVertical="8dp"
+        android:text="지역명으로 검색"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/region_search_page_bt_mountain"
+        app:layout_constraintTop_toTopOf="@id/region_search_page_bt_mountain" />
+
+    <LinearLayout
+        android:id="@+id/region_search_page_linear_layout"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/search_page_background"
+        android:gravity="center"
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintEnd_toStartOf="@id/region_search_page_linear_layout2"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/region_search_page_bt_region">
+
+        <TextView
+            android:id="@+id/region_search_page_tv_search_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="서울특별시"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/region_search_page_iv_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ic_down_direction" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/region_search_page_linear_layout2"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_page_background"
+        android:gravity="center"
+        android:paddingHorizontal="25dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/region_search_page_linear_layout"
+        app:layout_constraintTop_toTopOf="@id/region_search_page_linear_layout">
+
+        <TextView
+            android:id="@+id/region_search_page_tv_search_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="종로구"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/region_search_page_iv_direction2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ic_down_direction" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/region_search_page_linear_layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "797720929790",
+    "project_id": "sansaninfo-7819a",
+    "storage_bucket": "sansaninfo-7819a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797720929790:android:497fcb7f923b36e083ccaf",
+        "android_client_info": {
+          "package_name": "com.example.sansaninfo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkdl8k67ezBCt8ybTWknnwG27G4BrWoFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

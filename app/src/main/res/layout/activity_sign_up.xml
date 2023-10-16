@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.SignUpActivity">
+
+    <TextView
+        android:id="@+id/tv_signupemail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이디"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_signupemail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signupemail" />
+
+    <TextView
+        android:id="@+id/tv_signupnick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="닉네임"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_signupemail" />
+
+    <EditText
+        android:id="@+id/edit_signupnick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signupnick" />
+
+    <TextView
+        android:id="@+id/tv_signupname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이름"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_signupnick" />
+
+    <EditText
+        android:id="@+id/edit_signupname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signupname" />
+
+    <TextView
+        android:id="@+id/tv_signuppw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_signupname" />
+
+    <EditText
+        android:id="@+id/edit_signuppw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signuppw" />
+
+    <TextView
+        android:id="@+id/tv_signupcheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호 확인"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_signuppw" />
+
+    <EditText
+        android:id="@+id/edit_signupcheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_signupcheck" />
+
+    <Button
+        android:id="@+id/btn_signupaccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="확인"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_signupcheck" />
+
+    <Button
+        android:id="@+id/btn_signupcancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="취소"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_signupaccept" />
+
+    <Button
+        android:id="@+id/btn_checknick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="중복확인"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_signupnick"
+        app:layout_constraintStart_toEndOf="@+id/edit_signupnick"
+        app:layout_constraintTop_toTopOf="@+id/edit_signupnick" />
+</androidx.constraintlayout.widget.ConstraintLayout>

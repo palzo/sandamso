@@ -27,11 +27,11 @@ class SignUpActivity : AppCompatActivity() {
         =======================================*/
         // 이메일 형식대로 입력하고 회원가입 정보를 제대로 입력한 경우
         binding.btnSignupaccept.setOnClickListener {
-            val email = binding.editSignupemail.text.toString()
-            val nick = binding.editSignupnick.text.toString()
-            val name = binding.editSignupname.text.toString()
-            val pw = binding.editSignuppw.text.toString()
-            val checkpw = binding.editSignupcheck.text.toString()
+            val email = binding.signupEtEmail.text.toString()
+            val nick = binding.signupEtNickname.text.toString()
+            val name = binding.signupEtName.text.toString()
+            val pw = binding.signupEtPw.text.toString()
+            val checkpw = binding.signupEtCheckpw.text.toString()
 
             val emailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 

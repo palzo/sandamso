@@ -7,112 +7,124 @@
     tools:context=".Activity.SignUpActivity">
 
     <TextView
-        android:id="@+id/tv_signupemail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="아이디"
+        android:id="@+id/signup_title"
+        android:layout_width="141dp"
+        android:layout_height="104dp"
+        android:text="Let's\nHike"
+        android:textColor="@color/mint"
+        android:textSize="40sp"
+        android:layout_marginVertical="35dp"
+        android:layout_marginHorizontal="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_signupemail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="700dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signupemail" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_title">
 
-    <TextView
-        android:id="@+id/tv_signupnick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="닉네임"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signupemail" />
+        <TextView
+            android:id="@+id/tv_signupemail"
+            android:layout_width="wrap_ content"
+            android:layout_height="wrap_content"
+            android:text="이메일"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_signupnick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signupnick" />
+        <EditText
+            android:id="@+id/edit_signupemail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_signupemail"
+            tools:layout_editor_absoluteY="21dp" />
 
-    <TextView
-        android:id="@+id/tv_signupname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="이름"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signupnick" />
+        <TextView
+            android:id="@+id/tv_signupnick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임"
+            app:layout_constraintStart_toStartOf="@+id/tv_signupemail"
+            app:layout_constraintTop_toBottomOf="@+id/edit_signupemail" />
 
-    <EditText
-        android:id="@+id/edit_signupname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signupname" />
+        <EditText
+            android:id="@+id/edit_signupnick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            tools:layout_editor_absoluteY="86dp" />
 
-    <TextView
-        android:id="@+id/tv_signuppw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비밀번호"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signupname" />
+        <TextView
+            android:id="@+id/tv_signupname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이름"
+            tools:layout_editor_absoluteY="131dp" />
 
-    <EditText
-        android:id="@+id/edit_signuppw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signuppw" />
+        <EditText
+            android:id="@+id/edit_signupname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            tools:layout_editor_absoluteY="152dp" />
 
-    <TextView
-        android:id="@+id/tv_signupcheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비밀번호 확인"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signuppw" />
+        <TextView
+            android:id="@+id/tv_signuppw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            tools:layout_editor_absoluteY="197dp" />
 
-    <EditText
-        android:id="@+id/edit_signupcheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signupcheck" />
+        <EditText
+            android:id="@+id/edit_signuppw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            tools:layout_editor_absoluteY="217dp" />
 
-    <Button
-        android:id="@+id/btn_signupaccept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="확인"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signupcheck" />
+        <TextView
+            android:id="@+id/tv_signupcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호 확인"
+            tools:layout_editor_absoluteY="262dp" />
 
-    <Button
-        android:id="@+id/btn_signupcancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="취소"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_signupaccept" />
+        <EditText
+            android:id="@+id/edit_signupcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            tools:layout_editor_absoluteY="283dp" />
 
-    <Button
-        android:id="@+id/btn_checknick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="중복확인"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_signupnick"
-        app:layout_constraintStart_toEndOf="@+id/edit_signupnick"
-        app:layout_constraintTop_toTopOf="@+id/edit_signupnick" />
+        <Button
+            android:id="@+id/btn_signupaccept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="확인"
+            tools:layout_editor_absoluteY="328dp" />
+
+        <Button
+            android:id="@+id/btn_signupcancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="취소"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/btn_checknick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="중복확인"
+            tools:layout_editor_absoluteX="210dp"
+            tools:layout_editor_absoluteY="85dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

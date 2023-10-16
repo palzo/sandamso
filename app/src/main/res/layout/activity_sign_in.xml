@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,54 +8,161 @@
     tools:context=".Activity.SignInActivity">
 
     <TextView
-        android:id="@+id/tv_signinemail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="이메일"
+        android:id="@+id/signin_title"
+        android:layout_width="141dp"
+        android:layout_height="104dp"
+        android:text="Let's\nHike"
+        android:textColor="@color/mint"
+        android:textSize="40sp"
+        android:layout_marginVertical="35dp"
+        android:layout_marginHorizontal="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_signinemail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="이메일을 입력하세요."
-        android:inputType="text"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="700dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/signin_roundbox"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signinemail" />
+        app:layout_constraintTop_toBottomOf="@+id/signin_title">
 
-    <TextView
-        android:id="@+id/tv_signinpw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비밀번호"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signinemail" />
+        <TextView
+            android:id="@+id/signin_tv_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그인"
+            android:textColor="@color/black"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:layout_marginVertical="35dp"
+            android:layout_marginHorizontal="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_signinpw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="비밀번호를 입력하세요."
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signinpw" />
+        <TextView
+            android:id="@+id/signin_tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="23dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signin_tv_login" />
 
-    <Button
-        android:id="@+id/btn_signin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="로그인"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_signinpw" />
+        <EditText
+            android:id="@+id/signin_et_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/signin_et_border"
+            android:ems="10"
+            android:textSize="15sp"
+            android:hint="이메일을 입력하세요."
+            android:inputType="text"
+            android:padding="10dp"
+            android:paddingStart="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/signin_tv_email"
+            app:layout_constraintTop_toBottomOf="@+id/signin_tv_email" />
 
-    <Button
-        android:id="@+id/btn_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="회원가입"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_signin" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\@"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/signin_et_email"
+            app:layout_constraintEnd_toStartOf="@+id/powerSpinnerView"
+            app:layout_constraintTop_toTopOf="@+id/signin_et_email" />
+
+        <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/powerSpinnerView"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="13dp"
+            android:hint="직접입력"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/signin_et_email"
+            app:layout_constraintEnd_toEndOf="@+id/signin_et_email"
+            app:layout_constraintTop_toTopOf="@+id/signin_et_email"
+            app:spinner_arrow_drawable="@color/dark_grey"
+            app:spinner_arrow_gravity="end"
+            app:spinner_popup_animation="normal"
+            app:spinner_arrow_tint="@color/dark_grey"
+            app:spinner_item_height="50dp"/>
+
+        <TextView
+            android:id="@+id/signin_tv_pw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            android:textColor="@color/black"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@+id/signin_tv_email"
+            app:layout_constraintTop_toBottomOf="@+id/signin_et_email" />
+
+        <EditText
+            android:id="@+id/signin_et_pw"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/signin_et_border"
+            android:ems="10"
+            android:hint="비밀번호를 입력하세요."
+            android:inputType="text"
+            android:padding="10dp"
+            android:paddingStart="15dp"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/signin_tv_pw"
+            app:layout_constraintTop_toBottomOf="@+id/signin_tv_pw" />
+
+        <Button
+            android:id="@+id/btn_signin"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="로그인"
+            android:layout_marginTop="40dp"
+            android:layout_marginHorizontal="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:background="@drawable/signin_btn_border"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signin_et_pw" />
+
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="회원가입"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/signin_btn_border"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/btn_signin"
+            app:layout_constraintStart_toStartOf="@+id/btn_signin"
+            app:layout_constraintTop_toBottomOf="@+id/btn_signin" />
+
+         <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="카카오톡 계정으로 로그인"
+             android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

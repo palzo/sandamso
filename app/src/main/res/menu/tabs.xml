@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tab_echo"
+        android:icon="@drawable/ic_megaphone"
+        android:title="@string/echo" />
+    <item
+        android:id="@+id/tab_search"
+
+        android:icon="@drawable/ic_search"
+        android:title="@string/search" />
+    <item
+        android:id="@+id/tab_my_page"
+        android:icon="@drawable/ic_hiker"
+        android:title="@string/my_page" />
+</menu>

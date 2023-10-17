@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Activity
+package com.example.sansaninfo.SignPage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

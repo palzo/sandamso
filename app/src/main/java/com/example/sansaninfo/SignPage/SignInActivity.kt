@@ -1,10 +1,10 @@
-package com.example.sansaninfo.Activity
+package com.example.sansaninfo.SignPage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.sansaninfo.MainActivity
+import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -31,9 +31,9 @@ class SignInActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             // 로그인 성공 시
                             val user = auth.currentUser
-                            val signinIntent = Intent(this, MainActivity::class.java)
+                            val signInIntent = Intent(this, MainActivity::class.java)
                             Toast.makeText(this, "로그인 성공 !", Toast.LENGTH_SHORT).show()
-                            startActivity(signinIntent)
+                            startActivity(signInIntent)
                         } else {
                             // 로그인 실패 시
                             Toast.makeText(this, "아이디 및 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT)
@@ -44,6 +44,12 @@ class SignInActivity : AppCompatActivity() {
             else {
                 Toast.makeText(this, "로그인 정보를 입력해 주세요.", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // 테스트로만 사용 후 삭제
+        binding.textView5.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
         // 회원가입 버튼 누를 경우 회원가입 페이지로 이동

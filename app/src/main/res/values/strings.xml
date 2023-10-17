@@ -13,4 +13,7 @@
     <string name="my_page_tv_mode_view">라이트모드 / 다크모드</string>
     <string name="my_page_tv_btn_logout">로그 아웃</string>
     <string name="my_page_tv_btn_secession">회원 탈퇴</string>
+    <string name="echo">Echo</string>
+    <string name="search">Search</string>
+    <string name="my_page">MyPage</string>
 </resources>

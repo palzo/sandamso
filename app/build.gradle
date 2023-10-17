@@ -39,6 +39,16 @@ android {
 
 dependencies {
 
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+
+    // Retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+
     // AnimateBottomBar
     implementation 'nl.joery.animatedbottombar:library:1.1.0'
 

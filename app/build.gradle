@@ -39,6 +39,9 @@ android {
 
 dependencies {
 
+    // AnimateBottomBar
+    implementation 'nl.joery.animatedbottombar:library:1.1.0'
+
     // powerspinner
     implementation "com.github.skydoves:powerspinner:1.2.7"
 

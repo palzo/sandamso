@@ -210,7 +210,7 @@
         android:id="@+id/detail_page_iv_ad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_ad_banner"
+        android:src="@drawable/ic_darkmode"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

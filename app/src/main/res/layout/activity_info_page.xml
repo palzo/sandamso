@@ -55,10 +55,10 @@
 
                 <ImageView
                     android:id="@+id/info_page_iv_mountain"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_launcher_background" />
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_mountain" />
             </androidx.cardview.widget.CardView>
 
             <LinearLayout
@@ -125,10 +125,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/info_page_linear_layout_info"
-            app:layout_constraintStart_toStartOf="@+id/info_page_linear_layout_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/info_page_rv_weather">
 
             <View
@@ -142,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_margin="5dp"
+                android:layout_margin="8dp"
                 android:text="@string/info_page_tv_location_view"
                 android:textSize="17sp"
                 android:textStyle="bold" />
@@ -182,8 +183,12 @@
                 android:id="@+id/info_page_tv_mountain_intro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="높이는 1,708.1m이다. 남한에서는 한라산 지리산에 이어 세 번째로 높은 산이며, '제 2의 금강산' 이라고 불린다." />
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/test_text" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -7,7 +7,7 @@
     tools:context=".AddPage.AddPage">
 
     <ImageView
-        android:id="@+id/add_page_iv_backbotton"
+        android:id="@+id/add_page_iv_backbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -24,7 +24,7 @@
         android:layout_marginTop="15dp"
         android:text="메아리 모임 게시물 올리기"
         android:textSize="26sp"
-        app:layout_constraintStart_toEndOf="@+id/add_page_iv_backbotton"
+        app:layout_constraintStart_toEndOf="@+id/add_page_iv_backbutton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View

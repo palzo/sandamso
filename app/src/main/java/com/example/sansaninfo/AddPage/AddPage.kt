@@ -7,6 +7,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
+import android.content.Intent
+import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivityAddPageBinding
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -22,6 +24,11 @@ class AddPage : AppCompatActivity() {
 
         binding.addPageIvAdd.setOnClickListener {
             permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        //뒤로가기
+        binding.addPageIvBackbutton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 

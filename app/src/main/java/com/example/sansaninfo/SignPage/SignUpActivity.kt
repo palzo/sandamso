@@ -46,6 +46,7 @@ class SignUpActivity : AppCompatActivity() {
                             .addOnCompleteListener { task ->
                                 // 회원가입 성공 시
                                 if (task.isSuccessful) {
+                                    sendVerifyEmail()
                                     Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show()
                                     val user = auth.currentUser
                                     //  RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
@@ -83,6 +84,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    // RealTimeDB
     private fun saveUserData(user: UserData) {
         val dataBase = FirebaseDatabase.getInstance()
         val userReference = dataBase.getReference("users")
@@ -106,5 +108,49 @@ class SignUpActivity : AppCompatActivity() {
                     }
                 }
         }
+    }
+
+    // 이메일 증명
+    private fun sendVerifyEmail() {
+        val user = auth.currentUser
+        user?.sendEmailVerification()
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    toastMessage("해당 이메일로 확인 메일이 전송되었습니다. 이메일을 확인하세요.")
+                    finish()
+                } else {
+                    toastMessage("오류..이메일 전송에 실패했습니다.")
+                }
+            }
+    }
+
+    // 중복 이메일이 있는지 확인하기
+    private fun checkDuplicateEmail(email: String) {
+        auth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val signInMethod = task.result?.signInMethods
+                    // 이메일이 중복되지 않은 경우
+                    if (signInMethod.isNullOrEmpty()) {
+                        registerUser(email, resultpw)
+                    }
+                }
+            }
+    }
+
+    // Firebase에 사용자 등록하기
+    private fun registerUser(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    sendVerifyEmail()
+                } else {
+                    toastMessage("회원가입에 실패했습니다. 이미 존재하는 이메일입니다.")
+                }
+            }
+    }
+
+    private fun toastMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -38,9 +38,15 @@ class SignInActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             // 로그인 성공 시
                             val user = auth.currentUser
-                            val signInIntent = Intent(this, MainActivity::class.java)
-                            Toast.makeText(this, "로그인 성공 !", Toast.LENGTH_SHORT).show()
-                            startActivity(signInIntent)
+                            if(user != null && user.isEmailVerified) {
+                                val signInIntent = Intent(this, MainActivity::class.java)
+                                Toast.makeText(this, "로그인 성공 !", Toast.LENGTH_SHORT).show()
+                                startActivity(signInIntent)
+                            }
+                            // 이메일 인증 안했을 경우
+                            else {
+                                toastMessage("이메일 확인 후 로그인이 가능합니다.")
+                            }
                         } else {
                             // 로그인 실패 시
                             Toast.makeText(this, "아이디 및 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT)
@@ -64,5 +70,8 @@ class SignInActivity : AppCompatActivity() {
             val signupIntent = Intent(this, SignUpActivity::class.java)
             startActivity(signupIntent)
         }
+    }
+    private fun toastMessage(message : String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

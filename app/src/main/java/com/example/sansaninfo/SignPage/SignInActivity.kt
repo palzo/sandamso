@@ -15,6 +15,12 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // 비밀번호 찾기 누를 경우
+        binding.signinTvFindpw.setOnClickListener {
+            val dialogIntent = Intent(this, FindpwDialogActivity::class.java)
+            startActivity(dialogIntent)
+        }
+
         // Firebase Authentication과 연결
         auth = FirebaseAuth.getInstance()
 

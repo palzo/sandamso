@@ -10,7 +10,7 @@ class FindpwResultActivity : AppCompatActivity() {
     private val binding by lazy { ActivityFindpwResultBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_findpw_result)
+        setContentView(binding.root)
 
         binding.findpwresultBtn.setOnClickListener {
             val intent = Intent(this, SignInActivity::class.java)

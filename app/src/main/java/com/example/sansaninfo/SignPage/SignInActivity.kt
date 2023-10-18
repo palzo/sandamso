@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -40,7 +39,7 @@ class SignInActivity : AppCompatActivity() {
                             val user = auth.currentUser
                             if(user != null && user.isEmailVerified) {
                                 val signInIntent = Intent(this, MainActivity::class.java)
-                                Toast.makeText(this, "로그인 성공 !", Toast.LENGTH_SHORT).show()
+                                toastMessage("로그인 성공 !")
                                 startActivity(signInIntent)
                             }
                             // 이메일 인증 안했을 경우
@@ -49,13 +48,12 @@ class SignInActivity : AppCompatActivity() {
                             }
                         } else {
                             // 로그인 실패 시
-                            Toast.makeText(this, "아이디 및 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT)
-                                .show()
+                            toastMessage("아이디 또는 비밀번호가 일치하지 않습니다.")
                         }
                     }
             }
             else {
-                Toast.makeText(this, "로그인 정보를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                toastMessage("로그인 정보를 입력해 주세요.")
             }
         }
 

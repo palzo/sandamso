@@ -217,6 +217,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
                     android:text="@string/my_page_tv_btn_logout"
                     android:textColor="@color/dark_grey"
                     android:textSize="11sp" />
@@ -232,6 +235,9 @@
                     android:id="@+id/my_page_tv_secession"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
                     android:text="@string/my_page_tv_btn_secession"
                     android:textColor="@color/dark_grey"
                     android:textSize="11sp" />

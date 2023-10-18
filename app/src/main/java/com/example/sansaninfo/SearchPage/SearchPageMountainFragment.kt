@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.sansaninfo.BuildConfig
 import com.example.sansaninfo.MountainInfoData.ApiClient
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
 import com.google.gson.annotations.SerializedName
@@ -47,6 +49,7 @@ class SearchPageMountainFragment : Fragment() {
         binding.searchPageRecyclerview.layoutManager = GridLayoutManager(context, 2)
         binding.searchPageRecyclerview.adapter = SearchPageAdapter
 
+
         val apiKey =
             "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
 
@@ -56,6 +59,7 @@ class SearchPageMountainFragment : Fragment() {
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
+
                     Log.d("test", "setOnClick")
 
                     val responseData = ApiClient.mntNetWork.getMountainInfo(
@@ -66,24 +70,11 @@ class SearchPageMountainFragment : Fragment() {
                     Log.d("test", "responseData")
 
 
-//                    val test = ApiClient.mntNetWork
-//                    val response2 = test.getMountainInfo(
-//                        mntHgt = "",
-//                        mntName = "한라산",
-//                        mntRegion = "",
-//                        mntArea = "",
-//                        mntBackground = "",
-//                        mntTheme = "",
-//                        key = apiKey,
-//                        numOfRows = "3",
-//                        pageNo = "1",
-//                    )
-//
-//                    response2.body?.let {
-//                        it.items?.item?.forEach {
-//                            Log.d("test", "success : ${it.mntName}")
-//                        }
-//                    }
+
+                    requireActivity().runOnUiThread {
+
+                    }
+
 
                 } catch (e: Exception) {
                     e.printStackTrace()

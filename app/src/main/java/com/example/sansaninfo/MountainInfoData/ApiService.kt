@@ -1,10 +1,8 @@
 package com.example.sansaninfo.MountainInfoData
 
 import com.example.sansaninfo.BuildConfig
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.http.QueryMap
 
 interface ApiService {
     @GET("getforeststoryservice")
@@ -18,5 +16,5 @@ interface ApiService {
         @Query("ServiceKey") key: String? = "",
         @Query("pageNo") pageNo: String? = null,
         @Query("numOfRows") numOfRows: String? = null,
-    ) : ApiResponse
+    ) : Response
 }

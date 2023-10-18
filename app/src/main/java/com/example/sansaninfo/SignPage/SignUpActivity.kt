@@ -71,7 +71,9 @@ class SignUpActivity : AppCompatActivity() {
                     val user = auth.currentUser
                     //  RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
                     val userData = UserData(name, email, nick)
-                    saveUserData(userData)
+                    if (user != null) {
+                        saveUserData(user.uid, userData)
+                    }
                     // 회원가입 성공 후 로그인 화면으로 돌아가기
                     val intent = Intent(this, SignInActivity::class.java)
                     startActivity(intent)
@@ -87,13 +89,14 @@ class SignUpActivity : AppCompatActivity() {
 
 
     // RealTimeDB
-    private fun saveUserData(user: UserData) {
+    private fun saveUserData(uid : String, user: UserData) {
         val dataBase = FirebaseDatabase.getInstance()
         val userReference = dataBase.getReference("users")
+        userReference.child(uid).setValue(user)
         val userId = userReference.push().key
 
         userId?.let {
-            userReference.child(it).setValue(user)
+            userReference.child(uid).setValue(user)
                 .addOnCompleteListener { task ->
                     // 회원가입 성공 시
                     if (task.isSuccessful) {

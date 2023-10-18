@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +18,7 @@ class SignInActivity : AppCompatActivity() {
 
         // 비밀번호 찾기 누를 경우
         binding.signinTvFindpw.setOnClickListener {
-            val dialogIntent = Intent(this, FindpwDialogActivity::class.java)
+            val dialogIntent = Intent(this, FindpwActivity::class.java)
             startActivity(dialogIntent)
         }
 

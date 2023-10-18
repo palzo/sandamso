@@ -16,10 +16,10 @@
         android:theme="@style/Theme.SanSanInfo"
         tools:targetApi="31">
         <activity
-            android:name=".SignPage.FindpwResultDialogActivity"
+            android:name=".SignPage.FindpwResultActivity"
             android:exported="false" />
         <activity
-            android:name=".SignPage.FindpwDialogActivity"
+            android:name=".SignPage.FindpwActivity"
             android:exported="false" />
         <activity
             android:name=".InfoPage.InfoPage"

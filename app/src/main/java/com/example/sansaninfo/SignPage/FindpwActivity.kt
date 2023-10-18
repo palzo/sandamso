@@ -53,12 +53,13 @@ class FindpwActivity : AppCompatActivity() {
                             .addOnCompleteListener { resetTask ->
                                 if (resetTask.isSuccessful) {
                                     toastMessage("비밀번호 재설정 이메일 발송 완료 !")
-                                    val resultIntent = Intent(this, FindpwResultActivity::class.java)
-                                    startActivity(resultIntent)
+
                                 } else {
                                     toastMessage("이메일 전송에 실패했습니다. 가입하신 이메일 주소를 확인해주세요.")
                                 }
                             }
+                        val resultIntent = Intent(this, FindpwResultActivity::class.java)
+                        startActivity(resultIntent)
                     }
                 }
                 else {

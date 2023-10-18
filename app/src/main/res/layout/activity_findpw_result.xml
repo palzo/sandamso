@@ -3,61 +3,108 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/grey_400"
     tools:context=".SignPage.FindpwResultActivity">
 
-    <TextView
-        android:id="@+id/findpwresult_tv_title"
+    <ImageButton
+        android:id="@+id/findpwresult_btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:text="비밀번호 찾기"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        android:src="@drawable/ic_back_arrow"
+        android:background="@color/transparency"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/findpwresult_tv_info1"
+        android:id="@+id/findpwresult_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:text="입력하신 이메일로 비밀번호 재설정 \n이메일이 발송되었습니다."
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_title" />
+        android:text="Find\nthe Route!"
+        android:textColor="@color/mint"
+        android:textSize="40sp"
+        app:layout_constraintStart_toEndOf="@+id/findpwresult_btn_back"
+        app:layout_constraintTop_toBottomOf="@+id/findpwresult_btn_back" />
 
-    <TextView
-        android:id="@+id/findpwresult_tv_info2"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="※ 받은 메일이 없을 경우, 스팸 메일함 확인 ※"
-        android:textSize="15sp"
-        android:layout_marginTop="40dp"
-        android:textColor="@color/red_500"
-        app:layout_constraintEnd_toEndOf="@+id/findpwresult_tv_info1"
-        app:layout_constraintStart_toStartOf="@+id/findpwresult_tv_info1"
-        app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_info1" />
-
-    <Button
-        android:id="@+id/findpwresult_btn"
-        android:layout_width="160dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginBottom="30dp"
-        android:text="로그인하러 가기"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:background="@drawable/signin_btn_border"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/findpw_box"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_info2" />
+        app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv">
+
+        <TextView
+            android:id="@+id/findpwresult_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:text="비밀번호 찾기"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/findpwresult_tv_info1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:gravity="center"
+            android:text="입력하신 이메일로 비밀번호 재설정 \n이메일이 발송되었습니다."
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_title" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="5분 이내로 메일 발송 예정"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/findpwresult_tv_info1"
+            app:layout_constraintStart_toStartOf="@+id/findpwresult_tv_info1"
+            app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_info1" />
+
+        <TextView
+            android:id="@+id/findpwresult_tv_info2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="※ 받은 메일이 없을 경우, 스팸 메일함 확인 ※"
+            android:textColor="@color/red_500"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@+id/findpwresult_tv_info1"
+            app:layout_constraintStart_toStartOf="@+id/findpwresult_tv_info1"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <Button
+            android:id="@+id/findpwresult_btn"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/signin_btn_border"
+            android:text="로그인하러 가기"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_info2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

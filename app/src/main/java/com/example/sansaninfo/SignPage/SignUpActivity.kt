@@ -67,7 +67,7 @@ class SignUpActivity : AppCompatActivity() {
                 // 회원가입 성공 시
                 if (task.isSuccessful) {
                     sendVerifyEmail()
-                    Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+                    toastMessage("회원가입 성공!")
                     val user = auth.currentUser
                     //  RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
                     val userData = UserData(name, email, nick)
@@ -134,6 +134,8 @@ class SignUpActivity : AppCompatActivity() {
                     // 이메일이 중복되지 않은 경우
                     if (signInMethod.isNullOrEmpty()) {
                         registerUser(email, resultpw)
+                    } else {
+                        toastMessage("이미 가입된 이메일 주소입니다.")
                     }
                 }
             }
@@ -145,8 +147,6 @@ class SignUpActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
                     sendVerifyEmail()
-                } else {
-                    toastMessage("회원가입에 실패했습니다. 이미 존재하는 이메일입니다.")
                 }
             }
     }

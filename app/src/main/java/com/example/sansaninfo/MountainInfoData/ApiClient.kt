@@ -7,39 +7,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
     private const val BASE_URL = "http://api.forest.go.kr/openapi/service/trailInfoService/"
-
-//    private val retrofit: Retrofit by lazy {
-//
-//        val loggingInterceptor = HttpLoggingInterceptor().apply {
-//            level = HttpLoggingInterceptor.Level.BODY
-//        }
-//
-//        val client = OkHttpClient.Builder()
-//            .addInterceptor(loggingInterceptor)
-//            .addInterceptor{ chain ->
-//                val request = chain.request()
-//                val response = chain.proceed(request)
-//                response
-//            }
-//            .build()
-//        var gson= GsonBuilder().setLenient().create()
-//        Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .addConverterFactory(SimpleXmlConverterFactory.create())
-//            .client(client)
-//            .build()
-//
-//    }
-//        val apiService: ApiService by lazy {
-//        retrofit.create(ApiService::class.java)
-//    }
 
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()

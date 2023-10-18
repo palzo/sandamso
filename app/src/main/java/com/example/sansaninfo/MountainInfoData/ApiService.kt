@@ -13,7 +13,7 @@ interface ApiService {
         @Query("mntnInfoAraCd") mntArea: String? = null,
         @Query("mntnInfoSsnCd") mntBackground: String? = null,
         @Query("mntnInfoThmCd") mntTheme: String? = null,
-        @Query("ServiceKey") key: String? = "",
+        @Query("ServiceKey") key: String? = "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg==",
         @Query("pageNo") pageNo: String? = null,
         @Query("numOfRows") numOfRows: String? = null,
     ) : Response

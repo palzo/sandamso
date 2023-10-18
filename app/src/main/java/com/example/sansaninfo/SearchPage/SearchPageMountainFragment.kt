@@ -1,6 +1,7 @@
 package com.example.sansaninfo.SearchPage
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -50,8 +51,8 @@ class SearchPageMountainFragment : Fragment() {
         binding.searchPageRecyclerview.adapter = SearchPageAdapter
 
 
-        val apiKey =
-            "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
+//        val apiKey =
+//            "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
 
         binding.searchPageIvSearch.setOnClickListener {
             val mntName = binding.searchPageEtSearchText.text.trim().toString()
@@ -62,19 +63,14 @@ class SearchPageMountainFragment : Fragment() {
 
                     Log.d("test", "setOnClick")
 
-                    val responseData = ApiClient.mntNetWork.getMountainInfo(
-                        mntName = mntName,
-                        key = apiKey
-                    )
+                    val responseDataList = ApiClient.mntNetWork.getMountainInfo(mntName = mntName)
 
-                    Log.d("test", "responseData")
-
-
+//                    Handler.
+                    Log.d("test", "$responseDataList")
 
                     requireActivity().runOnUiThread {
 
                     }
-
 
                 } catch (e: Exception) {
                     e.printStackTrace()

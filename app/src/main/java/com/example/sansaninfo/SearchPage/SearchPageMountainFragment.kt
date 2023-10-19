@@ -1,31 +1,32 @@
 package com.example.sansaninfo.SearchPage
 
+import android.content.Context
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sansaninfo.InfoPage.InfoPage
 import com.example.sansaninfo.MountainInfoData.ApiClient
 import com.example.sansaninfo.MountainInfoData.XmlResponse
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
-import com.google.gson.annotations.SerializedName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import retrofit2.Call
 import retrofit2.Callback
 
 
 class SearchPageMountainFragment : Fragment() {
 
-    private lateinit var binding: FragmentSearchPageMountainBinding
+    private var _binding: FragmentSearchPageMountainBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
         fun newInstance() = SearchPageMountainFragment()
@@ -42,7 +43,7 @@ class SearchPageMountainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentSearchPageMountainBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchPageMountainBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -58,6 +59,8 @@ class SearchPageMountainFragment : Fragment() {
 
         // 산 이름으로 검색 시
         binding.searchPageIvSearch.setOnClickListener {
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.searchPageEtSearchText.windowToken, 0)
 
             val mntName = binding.searchPageEtSearchText.text.trim().toString()
 
@@ -115,14 +118,24 @@ class SearchPageMountainFragment : Fragment() {
             clickMntItem()
         }
     }
-
     private fun clickMntItem() {
         searchPageAdapter.setOnClickListener(object : SearchPageAdapter.ItemClick {
             override fun onClick(view: View, position: Int, model: MntModel) {
                 Toast.makeText(context, "Item Position: $position", Toast.LENGTH_SHORT).show()
+
+                navigateToInfoPage()
             }
         })
     }
+    private fun navigateToInfoPage(){
+        val intent = Intent(activity, InfoPage::class.java)
+        // InfoPage로 이동 시 Bundle을 함께 전달
+        val bundle = Bundle()
+        bundle.putParcelableArrayList("mntList", mntList)
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
     private fun searchSwitch(position: Int) = with(binding) {
 
         val clickBtn = R.drawable.search_page_click_button_background
@@ -153,11 +166,17 @@ class SearchPageMountainFragment : Fragment() {
 
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }
+@Parcelize
 data class MntModel(
     val mntName: String,
     val mntHgt: String,
     val mntAddress: String,
     val mntMainInfo: String,
     val mntSubInfo: String
-)
+): Parcelable

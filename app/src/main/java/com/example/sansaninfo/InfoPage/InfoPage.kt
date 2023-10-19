@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
+import com.example.sansaninfo.SearchPage.MntModel
 import com.example.sansaninfo.databinding.ActivityInfoPageBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -69,16 +70,37 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             )
         )
-
-
-        // 산림청_산_정보 인증키 - 4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg==
-
         initView()
     }
-
-
     private fun initView() = with(binding) {
+        // Intent에서 Bundle을 가져옴
+        val receivedBundle = intent.extras
 
+        if (receivedBundle != null && receivedBundle.containsKey("mntList")){
+            val mntList = receivedBundle.getParcelableArrayList<MntModel>("mntList")
+
+            displayMountainInfo(mntList)
+
+        }
+
+        binding.infoPageBtnBackArrow.setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun displayMountainInfo(mntList: List<MntModel>?) {
+        if(!mntList.isNullOrEmpty()) {
+            val mntInfo = mntList[0]
+
+            binding.infoPageTvMountainName.text = mntInfo.mntName
+            binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
+            binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
+            if(mntInfo.mntMainInfo.isNotEmpty()){
+                binding.infoPageTvMountainIntro.text = mntInfo.mntMainInfo
+            }else{
+                binding.infoPageTvMountainIntro.text = mntInfo.mntSubInfo
+            }
+        }
     }
 
     override fun onMapReady(p0: GoogleMap) {

@@ -10,11 +10,23 @@ import androidx.fragment.app.Fragment
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+
 
 class MyPageFragment : Fragment() {
 
     private lateinit var binding: FragmentMyPageBinding
+    private var _binding: FragmentMyPageBinding? = null
     private lateinit var mAuth: FirebaseAuth
+
+//    private var mDatabase = FirebaseDatabase.getInstance().getReference("users.uid")
+//    val myRef = mDatabase.key
+//    val uid = mAuth.currentUser?.uid
+//    val userReference = mDatabase.child(uid!!)
+//    var changeNickname = ""
+//    val userData: ArrayList<UserData> = ArrayList()
+//    val database = Firebase.database
 
     companion object {
         fun newInstance() = MyPageFragment()
@@ -47,9 +59,31 @@ class MyPageFragment : Fragment() {
             startActivity(intent)
         }
 
+        //수정 버튼
+        binding.myPageIvNickname.setOnClickListener {
+
+            val intent = Intent(activity, ChangeNicknameActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.myPageEtNickname.setText("")
 
         return binding.root
     }
+//    private fun updateNickname(change : String) {
+//        userReference.child("nickname").setValue(change)
+//            .addOnCompleteListener { task ->
+// 닉네임 업데이트 성공 시
+//                if(task.isSuccessful) {
+//                    Toast.makeText(activity, "업데이트 성공", Toast.LENGTH_SHORT).show()
+//                    binding.myPageEtNickname.setText(change)
+//                }
+//                else {
+//                    Toast.makeText(activity, "업데이트 실패", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//    }
+
 
     //로그아웃
     private fun signOut() {
@@ -61,13 +95,24 @@ class MyPageFragment : Fragment() {
         mAuth.currentUser?.delete()
     }
 
+    private fun getUserProfile() {
+        val user = Firebase.auth.currentUser
+        user?.let {
+            val name = it.displayName
+            val email = it.email
+            val emailVerified = it.isEmailVerified
+            val uid = it.uid
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        binding = null
-//    }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }

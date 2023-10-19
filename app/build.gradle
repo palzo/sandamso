@@ -88,12 +88,17 @@ dependencies {
     // firebase storage
     implementation 'com.google.firebase:firebase-storage-ktx'
 
+    // GoogleMap
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
     // FirebaseUI for Cloud Firestore
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
     implementation("com.google.firebase:firebase-firestore-ktx")
 
     // firebase database
     implementation 'com.google.firebase:firebase-database-ktx'
+
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'

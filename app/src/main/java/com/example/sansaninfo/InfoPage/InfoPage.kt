@@ -105,7 +105,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         //설악산 위치
-        val mountainLocation = LatLng(38.112864, 128.452297)
+        val mountainLocation = LatLng(37.5674, 126.9799)
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
         mGoogleMap.apply {

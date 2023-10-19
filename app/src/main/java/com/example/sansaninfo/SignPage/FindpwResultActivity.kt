@@ -3,7 +3,6 @@ package com.example.sansaninfo.SignPage
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.ActivityFindpwResultBinding
 
 class FindpwResultActivity : AppCompatActivity() {
@@ -13,8 +12,12 @@ class FindpwResultActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.findpwresultBtn.setOnClickListener {
-            /*val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)*/
+            val intent = Intent(this, SignInActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.findpwresultBtnBack.setOnClickListener {
+            finish()
         }
     }
 }

@@ -40,41 +40,18 @@ class SignUpActivity : AppCompatActivity() {
                 if (emailValid) {
                     if (pw == checkpw) {
                         resultpw = pw
-
-                        // 올바른 정보 입력 후, 확인 버튼 클릭 시 Firebase의 Auth에 데이터 저장
-                        auth.createUserWithEmailAndPassword(email, resultpw)
-                            .addOnCompleteListener { task ->
-                                // 회원가입 성공 시
-                                if (task.isSuccessful) {
-                                    Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                                    val user = auth.currentUser
-                                    //  RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
-                                    val userData = UserData(name, email, nick)
-                                    saveUserData(userData)
-                                    // 회원가입 성공 후 로그인 화면으로 돌아가기
-                                    val intent = Intent(this, SignInActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                // 회원가입 실패 시
-                                else {
-                                    val error = task.exception?.message ?: "알 수 없는 오류"
-                                    Toast.makeText(
-                                        this,
-                                        "회원가입에 실패했습니다. 오류: $error",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
+                        // 이메일 중복 확인
+                        checkDuplicateEmail(email)
+                        // 새로운 사용자 등록
+                        createUser(email, name, nick, resultpw)
                     } else {
-                        Toast.makeText(this, "비밀번호가 일치하지 않습니다. (비밀번호는 최소 6자리)", Toast.LENGTH_SHORT)
-                            .show()
+                        toastMessage("비밀번호가 일치하지 않습니다.")
                     }
                 } else {
-                    Toast.makeText(this, "올바른 이메일 주소를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                    toastMessage("올바른 이메일 형식이 아닙니다.")
                 }
             } else {
-                Toast.makeText(this, "올바른 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                toastMessage("올바른 정보를 입력해주세요.")
             }
         }
         // 회원가입 취소 버튼 클릭 시 로그인 페이지로 돌아가기
@@ -83,28 +60,98 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserData(user: UserData) {
+    private fun createUser(email : String, name : String, nick : String, pw : String) {
+        // 올바른 정보 입력 후, 확인 버튼 클릭 시 Firebase의 Auth에 데이터 저장
+        auth.createUserWithEmailAndPassword(email, pw)
+            .addOnCompleteListener { task ->
+                // 회원가입 성공 시
+                if (task.isSuccessful) {
+                    sendVerifyEmail()
+                    toastMessage("회원가입 성공!")
+                    val user = auth.currentUser
+                    //  RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
+                    val userData = UserData(name, email, nick)
+                    if (user != null) {
+                        saveUserData(user.uid, userData)
+                    }
+                    // 회원가입 성공 후 로그인 화면으로 돌아가기
+                    val intent = Intent(this, SignInActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                // 회원가입 실패 시
+                else {
+                    val error = task.exception?.message ?: "알 수 없는 오류"
+                    toastMessage("회원가입에 실패했습니다. 오류 : $error")
+                }
+            }
+    }
+
+
+    // RealTimeDB
+    private fun saveUserData(uid : String, user: UserData) {
         val dataBase = FirebaseDatabase.getInstance()
         val userReference = dataBase.getReference("users")
+        userReference.child(uid).setValue(user)
         val userId = userReference.push().key
 
         userId?.let {
-            userReference.child(it).setValue(user)
+            userReference.child(uid).setValue(user)
                 .addOnCompleteListener { task ->
                     // 회원가입 성공 시
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "RealTime userData 생성 성공!", Toast.LENGTH_SHORT).show()
+                        //toastMessage("RealTime userData 생성 성공!")
                     }
                     // 회원가입 실패 시
                     else {
                         val error = task.exception?.message ?: "알 수 없는 오류"
-                        Toast.makeText(
-                            this,
-                            "RealTime userData 생성 실패! 오류: $error",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        toastMessage("RealTime userData 생성 실패! 오류: $error")
                     }
                 }
         }
+    }
+
+    // 인증 이메일 발송
+    private fun sendVerifyEmail() {
+        val user = auth.currentUser
+        user?.sendEmailVerification()
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    toastMessage("해당 이메일로 확인 메일이 전송되었습니다. 이메일을 확인하세요.")
+                    finish()
+                } else {
+                    toastMessage("오류..이메일 전송에 실패했습니다.")
+                }
+            }
+    }
+
+    // 중복 이메일이 있는지 확인하기
+    private fun checkDuplicateEmail(email: String) {
+        auth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val signInMethod = task.result?.signInMethods
+                    // 이메일이 중복되지 않은 경우
+                    if (signInMethod.isNullOrEmpty()) {
+                        registerUser(email, resultpw)
+                    } else {
+                        toastMessage("이미 가입된 이메일 주소입니다.")
+                    }
+                }
+            }
+    }
+
+    // Firebase에 사용자 등록하기
+    private fun registerUser(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    sendVerifyEmail()
+                }
+            }
+    }
+
+    private fun toastMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

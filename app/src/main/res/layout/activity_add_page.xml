@@ -92,13 +92,14 @@
 
     <ImageView
         android:id="@+id/add_page_iv_add_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
         android:layout_marginStart="15dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/add_page_iv_add"
         app:layout_constraintStart_toEndOf="@id/add_page_iv_add"
-        app:layout_constraintTop_toTopOf="@+id/view3"
+        app:layout_constraintTop_toTopOf="@+id/add_page_iv_add"
         app:srcCompat="@drawable/ic_add_photo" />
 
     <TextView

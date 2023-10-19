@@ -46,7 +46,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
         binding.infoPageTvFake.setOnClickListener {
             //검색하고싶은 위도,경도 순으로 입력하기 현재서울시청
-            val uri = Uri.parse("http://www.google.com/maps?q=37.566610,126.978403")
+            val uri = Uri.parse("http://www.google.com/maps?q=37.5667, 126.9784")
             val intent = Intent(Intent.ACTION_VIEW,uri)
             startActivity(intent)
         }
@@ -82,16 +82,16 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: GoogleMap) {
-
-        val seoul = LatLng(37.566610, 126.978403)
+        //설악산 위치
+        val mountainLocation = LatLng(38.112864, 128.452297)
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
         mGoogleMap.apply {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-            markerOptions.position(seoul)
-            markerOptions.title("서울시청")
-            markerOptions.snippet("Tel:01-120")
+            markerOptions.position(mountainLocation)
+            markerOptions.title("설악산")
+            markerOptions.snippet("Tel")
             addMarker(markerOptions)
         }
 

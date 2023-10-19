@@ -11,6 +11,7 @@ import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -21,7 +22,8 @@ class MyPageFragment : Fragment() {
     private lateinit var binding: FragmentMyPageBinding
     private var _binding: FragmentMyPageBinding? = null
     private lateinit var mAuth: FirebaseAuth
-    private val mDatabase = FirebaseDatabase.getInstance().getReference("users")
+
+//    private var mDatabase = FirebaseDatabase.getInstance().getReference("users.uid")
 //    val myRef = mDatabase.key
 //    val uid = mAuth.currentUser?.uid
 //    val userReference = mDatabase.child(uid!!)
@@ -40,7 +42,7 @@ class MyPageFragment : Fragment() {
 
         // Inflate the layout for this fragment
         binding = FragmentMyPageBinding.inflate(inflater, container, false)
-        binding.myPageEtNickname
+
         //FirebaseAuth 연결
         mAuth = FirebaseAuth.getInstance()
 
@@ -60,22 +62,22 @@ class MyPageFragment : Fragment() {
             startActivity(intent)
         }
 
-//수정 버튼
+        //수정 버튼
         binding.myPageIvNickname.setOnClickListener {
-            val changeNick = binding.myPageEtNickname.text.toString()
-//            updateNickname(changeNick)
-            // val nicknameText = myPage
-            // readNick()
-            // writeNick()
+//            val changeNick = binding.myPageEtNickname.text.toString()
+            // updateNickname(changeNick)
+            val intent = Intent(activity, ChangeNicknameActivity::class.java)
+            startActivity(intent)
         }
-//        binding.myPageEtNickname.setText("${myRef}")
+
+        binding.myPageEtNickname.setText("")
 
         return binding.root
     }
 //    private fun updateNickname(change : String) {
 //        userReference.child("nickname").setValue(change)
 //            .addOnCompleteListener { task ->
-//// 닉네임 업데이트 성공 시
+// 닉네임 업데이트 성공 시
 //                if(task.isSuccessful) {
 //                    Toast.makeText(activity, "업데이트 성공", Toast.LENGTH_SHORT).show()
 //                    binding.myPageEtNickname.setText(change)
@@ -96,6 +98,16 @@ class MyPageFragment : Fragment() {
     //회원탈퇴
     private fun revokeAccess() {
         mAuth.currentUser?.delete()
+    }
+
+    private fun getUserProfile(){
+        val user = Firebase.auth.currentUser
+        user?.let {
+            val name = it.displayName
+            val email = it.email
+            val emailVerified = it.isEmailVerified
+            val uid = it.uid
+        }
     }
 
 

@@ -47,7 +47,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         binding.infoPageTvFake.setOnClickListener {
             //검색하고싶은 위도,경도 순으로 입력하기 현재서울시청
             val uri = Uri.parse("http://www.google.com/maps?q=37.5667, 126.9784")
-            val intent = Intent(Intent.ACTION_VIEW,uri)
+            val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
         }
 

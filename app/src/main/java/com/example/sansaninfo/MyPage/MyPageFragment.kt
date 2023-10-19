@@ -2,7 +2,6 @@ package com.example.sansaninfo.MyPage
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +11,7 @@ import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -26,12 +21,13 @@ class MyPageFragment : Fragment() {
     private lateinit var binding: FragmentMyPageBinding
     private var _binding: FragmentMyPageBinding? = null
     private lateinit var mAuth: FirebaseAuth
-    val userData: ArrayList<UserData> = ArrayList()
     private val mDatabase = FirebaseDatabase.getInstance().getReference("users")
-    val database = Firebase.database
-    val myRef = mDatabase.key
-//    val myRef = database.getReference("${uid}")
-    var changeNickname = ""
+//    val myRef = mDatabase.key
+//    val uid = mAuth.currentUser?.uid
+//    val userReference = mDatabase.child(uid!!)
+//    var changeNickname = ""
+//    val userData: ArrayList<UserData> = ArrayList()
+//    val database = Firebase.database
 
     companion object {
         fun newInstance() = MyPageFragment()
@@ -64,38 +60,33 @@ class MyPageFragment : Fragment() {
             startActivity(intent)
         }
 
-        //수정 버튼
+//수정 버튼
         binding.myPageIvNickname.setOnClickListener {
-//            val nicknameText = myPage
-//            readNick()
-//            writeNick()
+            val changeNick = binding.myPageEtNickname.text.toString()
+//            updateNickname(changeNick)
+            // val nicknameText = myPage
+            // readNick()
+            // writeNick()
         }
-        binding.myPageEtNickname.setText("${myRef}")
+//        binding.myPageEtNickname.setText("${myRef}")
 
         return binding.root
     }
+//    private fun updateNickname(change : String) {
+//        userReference.child("nickname").setValue(change)
+//            .addOnCompleteListener { task ->
+//// 닉네임 업데이트 성공 시
+//                if(task.isSuccessful) {
+//                    Toast.makeText(activity, "업데이트 성공", Toast.LENGTH_SHORT).show()
+//                    binding.myPageEtNickname.setText(change)
+//                }
+//                else {
+//                    Toast.makeText(activity, "업데이트 실패", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//    }
 
-//    private fun readNick() {
-//        //읽기
-//        myRef.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val test = snapshot.child("nickname")
-//                for (ds in test.children)
-//                    Log.d("martin", ds.toString())
-//            }
-//
-//            //읽기 예외처리
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.d("martin", "Failed", error.toException())
-//            }
-//        })
-//    }
-//
-//    //쓰기
-//    private fun writeNick() {
-//        changeNickname = myRef.setValue("Hello, World").toString()
-//
-//    }
+
 
     //로그아웃
     private fun signOut() {
@@ -111,17 +102,6 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val profileUpdate = UserProfileChangeRequest.Builder()
-//            .setDisplayName("${nickNameText.text}")
-//            .build()
-//
-//        user?.updateProfile(profileUpdate)
-//            ?.addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    Toast.makeText(requireContext(), "닉네임을 지정했습니다.", Toast.LENGTH_SHORT).show()
-//                    user?.reload()
-//                }
-//            }
     }
 
     override fun onDestroyView() {

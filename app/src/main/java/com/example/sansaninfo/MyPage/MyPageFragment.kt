@@ -7,13 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 
@@ -64,8 +61,7 @@ class MyPageFragment : Fragment() {
 
         //수정 버튼
         binding.myPageIvNickname.setOnClickListener {
-//            val changeNick = binding.myPageEtNickname.text.toString()
-            // updateNickname(changeNick)
+
             val intent = Intent(activity, ChangeNicknameActivity::class.java)
             startActivity(intent)
         }
@@ -89,7 +85,6 @@ class MyPageFragment : Fragment() {
 //    }
 
 
-
     //로그아웃
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
@@ -100,7 +95,7 @@ class MyPageFragment : Fragment() {
         mAuth.currentUser?.delete()
     }
 
-    private fun getUserProfile(){
+    private fun getUserProfile() {
         val user = Firebase.auth.currentUser
         user?.let {
             val name = it.displayName

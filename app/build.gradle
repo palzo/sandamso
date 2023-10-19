@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 }
 
 apply plugin: 'kotlin-kapt'
@@ -16,7 +17,6 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -26,24 +26,41 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
+    
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+
     }
+
     kotlinOptions {
-//        jvmTarget = '1.8'
+    
         jvmTarget = '17'
+
     }
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
 dependencies {
+    // add coil implementation
+    implementation("io.coil-kt:coil:2.4.0")
 
+    implementation 'com.squareup.retrofit2:converter-jaxb:2.9.0'
+
+    // xml parser
+    implementation 'com.tickaroo.tikxml:annotation:0.8.13'
+    implementation 'com.tickaroo.tikxml:core:0.8.13'
+    implementation 'com.tickaroo.tikxml:retrofit-converter:0.8.13'
+    implementation 'org.simpleframework:simple-xml:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-simplexml:2.9.0'
+    kapt 'com.tickaroo.tikxml:processor:0.8.13'
+
+    // interceptor
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
@@ -61,7 +78,7 @@ dependencies {
     // AnimateBottomBar
     implementation 'nl.joery.animatedbottombar:library:1.1.0'
 
-    // powerspinner
+    // power spinner
     implementation "com.github.skydoves:powerspinner:1.2.7"
 
     // firebase

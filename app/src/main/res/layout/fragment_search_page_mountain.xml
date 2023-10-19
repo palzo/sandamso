@@ -1,72 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SearchPage.SearchPageMountainFragment">
 
-    <TextView
+    <Button
         android:id="@+id/search_page_bt_mountain"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@drawable/search_page_click_button_background"
-        android:text="산 이름으로 검색"
-        android:layout_marginStart="20dp"
         android:layout_marginVertical="18dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/search_page_bt_region"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/search_page_click_button_background"
+        android:gravity="center"
+        android:minHeight="10dp"
+        android:paddingHorizontal="25dp"
         android:paddingVertical="8dp"
-        android:paddingHorizontal="25dp"/>
+        android:text="@string/search_page_btn_mnt"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/search_page_bt_region"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <Button
         android:id="@+id/search_page_bt_region"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@drawable/search_page_button_background"
-        android:text="지역명으로 검색"
         android:layout_marginHorizontal="20dp"
-        app:layout_constraintTop_toTopOf="@id/search_page_bt_mountain"
-        app:layout_constraintStart_toEndOf="@id/search_page_bt_mountain"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/search_page_button_background"
+        android:gravity="center"
+        android:minHeight="10dp"
+        android:paddingHorizontal="25dp"
         android:paddingVertical="8dp"
-        android:paddingHorizontal="25dp"/>
+        android:text="@string/search_page_btn_goo"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/search_page_bt_mountain"
+        app:layout_constraintTop_toTopOf="@id/search_page_bt_mountain" />
 
     <EditText
         android:id="@+id/search_page_et_search_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="18"
-        android:paddingVertical="8dp"
-        android:paddingStart="20dp"
-        android:background="@drawable/search_page_background"
-        android:hint="검색어를 입력해주세요."
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
         android:layout_marginVertical="20dp"
         android:layout_marginStart="20dp"
-        android:textSize="15sp"/>
+        android:background="@drawable/search_page_background"
+        android:ems="18"
+        android:hint="@string/search_page_et_hint"
+        android:paddingVertical="8dp"
+        android:paddingStart="20dp"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_page_bt_region" />
 
     <ImageView
         android:id="@+id/search_page_iv_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_search"
-        app:layout_constraintStart_toEndOf="@id/search_page_et_search_text"
         android:layout_margin="15dp"
-        app:layout_constraintTop_toTopOf="@id/search_page_et_search_text"
-        app:layout_constraintBottom_toBottomOf="@id/search_page_et_search_text"/>
+        android:src="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/search_page_et_search_text"
+        app:layout_constraintStart_toEndOf="@id/search_page_et_search_text"
+        app:layout_constraintTop_toTopOf="@id/search_page_et_search_text" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="wrap_content"
+    <com.skydoves.powerspinner.PowerSpinnerView
+        android:id="@+id/search_page_spinner_sido"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/search_page_button_background"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:hint="@string/search_page_spinner_sido"
+        android:padding="7dp"
+        android:textColorHint="@color/black"
+        android:textSize="14sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/search_page_bt_mountain"
+        app:layout_constraintStart_toStartOf="@+id/search_page_bt_mountain"
+        app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
+        app:spinner_arrow_gravity="end"
+        app:spinner_arrow_tint="@color/black"
+        app:spinner_divider_color="@color/white"
+        app:spinner_divider_show="true"
+        app:spinner_divider_size="0.4dp"
+        app:spinner_item_height="46dp"
+        app:spinner_popup_animation="normal"
+        app:spinner_popup_background="@color/light_mint"
+        tools:ignore="HardcodedText, UnusedAttribute" />
+
+    <com.skydoves.powerspinner.PowerSpinnerView
+        android:id="@+id/search_page_spinner_goo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/search_page_button_background"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:hint="@string/search_page_spinner_goo"
+        android:padding="7dp"
+        android:textColorHint="@color/black"
+        android:textSize="14sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/search_page_bt_region"
+        app:layout_constraintStart_toStartOf="@+id/search_page_bt_region"
+        app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
+        app:spinner_arrow_gravity="end"
+        app:spinner_arrow_tint="@color/black"
+        app:spinner_divider_color="@color/white"
+        app:spinner_divider_show="true"
+        app:spinner_divider_size="0.4dp"
+        app:spinner_item_height="46dp"
+        app:spinner_popup_animation="normal"
+        app:spinner_popup_background="@color/light_mint"
+        tools:ignore="HardcodedText, UnusedAttribute" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_page_recyclerview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_page_et_search_text"/>
+        app:layout_constraintTop_toBottomOf="@id/search_page_et_search_text"
+        tools:itemCount="3"
+        tools:listitem="@layout/searchpage_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

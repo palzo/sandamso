@@ -23,7 +23,6 @@
         app:abb_tabColorSelected="@color/mint"
         app:abb_rippleColor="@color/mint"
         app:abb_indicatorColor="@color/mint"
-
         app:abb_indicatorAppearance="round"
         app:abb_indicatorHeight="4dp"
         app:abb_indicatorMargin="16dp"

@@ -3,6 +3,7 @@ package com.example.sansaninfo.InfoPage
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -41,6 +42,12 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
         binding.infoPageBtnBackArrow.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        binding.infoPageTvFake.setOnClickListener {
+            //검색하고싶은 위도,경도 순으로 입력하기 현재서울시청
+            val uri = Uri.parse("http://www.google.com/maps?q=37.566610,126.978403")
+            val intent = Intent(Intent.ACTION_VIEW,uri)
             startActivity(intent)
         }
 

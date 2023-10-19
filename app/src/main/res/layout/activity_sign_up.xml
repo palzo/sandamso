@@ -206,7 +206,7 @@
             app:layout_constraintTop_toBottomOf="@+id/signup_et_checkpw" />
 
         <Button
-            android:id="@+id/btn_checknick"
+            android:id="@+id/signup_btn_checknick"
             android:layout_width="85dp"
             android:layout_height="30dp"
             android:text="중복확인"

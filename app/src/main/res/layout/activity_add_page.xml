@@ -37,11 +37,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_page_tv_titlename" />
 
-    <TextView
+    <EditText
         android:id="@+id/add_page_tv_title"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:text="제목을 입력해주세요. (필수)"
+        android:hint="제목을 입력해주세요. (필수)"
+        android:background="@null"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="@+id/view2"
         app:layout_constraintStart_toStartOf="@+id/view2"
@@ -88,6 +90,18 @@
         app:layout_constraintTop_toTopOf="@+id/view3"
         app:srcCompat="@drawable/ic_add_photo" />
 
+    <ImageView
+        android:id="@+id/add_page_iv_add_photo"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:visibility="invisible"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/add_page_iv_add"
+        app:layout_constraintStart_toEndOf="@id/add_page_iv_add"
+        app:layout_constraintTop_toTopOf="@+id/add_page_iv_add"
+        app:srcCompat="@drawable/ic_add_photo" />
+
     <TextView
         android:id="@+id/add_page_tv_image_limit"
         android:layout_width="wrap_content"
@@ -127,12 +141,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_page_spn_spinner" />
 
-    <TextView
+    <EditText
         android:id="@+id/textView7"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="본문 내용 작성 (필수) - 최소 2자 ~ 5000자 이내를 작성할 수 있어요. - 다른 회원들을 위한 이쁜 언어로 작성해주는 센스 ~  - 우리 모두 깨끗한 등산 일지 작성해봐요 !"
+        android:textSize="15sp"
+        android:background="@null"
+        android:hint="본문 내용 작성 (필수) \n- 최소 2자 ~ 5000자 이내를 작성할 수 있어요. \n- 다른 회원들을 위한 이쁜 언어로 작성해주는 센스 ~  \n- 우리 모두 깨끗한 등산 일지 작성해봐요 !"
         app:layout_constraintEnd_toEndOf="@+id/view4"
         app:layout_constraintStart_toStartOf="@+id/view4"
         app:layout_constraintTop_toTopOf="@+id/view4" />

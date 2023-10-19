@@ -3,28 +3,144 @@ package com.example.sansaninfo.SignPage
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
     private lateinit var resultpw: String
 
+    private var emailCheck = false      // 이메일
+    private var nameCheck = false       // 이름
+    private var nickCheck = false       // 닉네임
+    private var pwCheck = false         // 비밀번호
+    private var pwSameCheck = false     // 비밀번호 확인
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        /* ==============================================
+           EditText 유효성 검사 기능
+           ==============================================
+        */
+        // 이메일 유효성 검사
+        binding.signupEtEmail.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val emailPattern = Regex("\\w+@\\w+\\.\\w+(\\.\\w+)?")
+                if (emailPattern.matches(binding.signupEtEmail.text))
+                    emailCheck = true
+                else {
+                    binding.signupEtEmail.error = "이메일 형식으로 입력"
+                    emailCheck = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        // 이름 유효성 검사
+        binding.signupEtName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val namePattern = Regex("^[가-힣]*\$")
+                if (namePattern.matches(binding.signupEtName.text))
+
+                    nameCheck = true
+                else {
+                    binding.signupEtName.error = "한글만 입력 가능"
+                    nameCheck = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+
+        // 닉네임 유효성 검사 (특수문자 제외 1 ~ 7 입력)
+        binding.signupEtNickname.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val nickPattern = Regex("^[^!@#\$%^&*()\\-_=+<>?/|\\[\\]{};:'\",.~`]{1,7}\$")
+                if (nickPattern.matches(binding.signupEtNickname.text)) {
+                    binding.signupBtnChecknick.setOnClickListener {
+                        checkNickDuplicate(binding.signupEtNickname.text.toString())
+                    }
+                } else {
+                    binding.signupEtNickname.error = "1 ~ 7자리 이내로 입력 (특수문자 제외)"
+                    nickCheck = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        // 비밀번호 유효성 검사
+        binding.signupEtPw.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val pwPattern = Regex("^(?![가-힣]).{8,15}\$")
+                if (pwPattern.matches(binding.signupEtPw.text))
+                    pwCheck = true
+                else {
+                    binding.signupEtPw.error = "8 ~ 15자리 이내 입력(한글제외)"
+                    pwCheck = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+
+        // 비밀번호 확인 유효성 검사
+        binding.signupEtCheckpw.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (binding.signupEtCheckpw.text.toString() == binding.signupEtPw.text.toString()) {
+                    binding.signupEtCheckpw.error = null
+                    pwSameCheck = true
+                } else {
+                    binding.signupEtCheckpw.error = "비밀번호가 일치하지 않습니다."
+                    pwSameCheck = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+
+        /* ==============================================
+           Firebase 회원 정보 등록 기능
+           ==============================================
+        */
         // Firebase Authentication과 연결
         auth = FirebaseAuth.getInstance()
 
-        /*수정 필요 부분
-        =======================================
-        회원가입 정보 입력칸의 형식 조건 추가 필요
-        =======================================*/
         // 이메일 형식대로 입력하고 회원가입 정보를 제대로 입력한 경우
         binding.btnSignupaccept.setOnClickListener {
             val email = binding.signupEtEmail.text.toString()
@@ -33,19 +149,23 @@ class SignUpActivity : AppCompatActivity() {
             val pw = binding.signupEtPw.text.toString()
             val checkpw = binding.signupEtCheckpw.text.toString()
 
-            val emailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            //val emailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
             if (email.isNotEmpty() && nick.isNotEmpty() && name.isNotEmpty() && pw.isNotEmpty() && checkpw.isNotEmpty()) {
                 // 이메일 형식이 아닌 경우
-                if (emailValid) {
-                    if (pw == checkpw) {
-                        resultpw = pw
-                        // 이메일 중복 확인
-                        checkDuplicateEmail(email)
-                        // 새로운 사용자 등록
-                        createUser(email, name, nick, resultpw)
+                if (emailCheck && nameCheck && pwCheck && pwSameCheck) {
+                    if (!nickCheck) {
+                        toastMessage("닉네임 중복체크를 확인해주세요.")
                     } else {
-                        toastMessage("비밀번호가 일치하지 않습니다.")
+                        if (pw == checkpw) {
+                            resultpw = pw
+                            // 이메일 중복 확인
+                            checkDuplicateEmail(email)
+                            // 새로운 사용자 등록
+                            createUser(email, name, nick, resultpw)
+                        } else {
+                            toastMessage("비밀번호가 일치하지 않습니다.")
+                        }
                     }
                 } else {
                     toastMessage("올바른 이메일 형식이 아닙니다.")
@@ -60,7 +180,35 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun createUser(email : String, name : String, nick : String, pw : String) {
+    /* ==============================================
+         아이디 중복 체크 기능
+         ==============================================
+      */
+    private fun checkNickDuplicate(nick: String) {
+        val userReference = FirebaseDatabase.getInstance().getReference("users")
+
+        userReference.orderByChild("nickname").equalTo(nick)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    // 이미 닉네임이 존재하는 경우
+                    if (snapshot.exists()) {
+                        nickCheck = false
+                        binding.signupEtNickname.error = "이미 존재하는 닉네임 입니다."
+                    } else {
+                        nickCheck = true
+                        toastMessage("사용가능한 닉네임 입니다.")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    nickCheck = false
+                    toastMessage("닉네임 중복 확인 중 에러 발생")
+                }
+
+            })
+    }
+
+    private fun createUser(email: String, name: String, nick: String, pw: String) {
         // 올바른 정보 입력 후, 확인 버튼 클릭 시 Firebase의 Auth에 데이터 저장
         auth.createUserWithEmailAndPassword(email, pw)
             .addOnCompleteListener { task ->
@@ -69,7 +217,7 @@ class SignUpActivity : AppCompatActivity() {
                     sendVerifyEmail()
                     toastMessage("회원가입 성공!")
                     val user = auth.currentUser
-                    //  RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
+                    // RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
                     val userData = UserData(name, email, nick)
                     if (user != null) {
                         saveUserData(user.uid, userData)
@@ -89,7 +237,7 @@ class SignUpActivity : AppCompatActivity() {
 
 
     // RealTimeDB
-    private fun saveUserData(uid : String, user: UserData) {
+    private fun saveUserData(uid: String, user: UserData) {
         val dataBase = FirebaseDatabase.getInstance()
         val userReference = dataBase.getReference("users")
         userReference.child(uid).setValue(user)
@@ -145,7 +293,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun registerUser(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if(task.isSuccessful) {
+                if (task.isSuccessful) {
                     sendVerifyEmail()
                 }
             }

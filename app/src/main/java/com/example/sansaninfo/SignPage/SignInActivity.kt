@@ -3,6 +3,8 @@ package com.example.sansaninfo.SignPage
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivitySignInBinding
@@ -11,9 +13,50 @@ import com.google.firebase.auth.FirebaseAuth
 class SignInActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivitySignInBinding.inflate(layoutInflater) }
+    private var emailCheck = false
+    private var pwCheck = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        // EditText 유효성 검사 기능 추가
+        binding.signinEtEmail.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val emailPattern = Regex("\\w+@\\w+\\.\\w+(\\.\\w+)?")
+                if(emailPattern.matches(binding.signinEtEmail.text))
+                    emailCheck = true
+                else {
+                    binding.signinEtEmail.error = "이메일 형식으로 입력"
+                    emailCheck = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        binding.signinEtPw.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val pwPattern = Regex("^(?![가-힣]).{8,15}\$")
+                if(pwPattern.matches(binding.signinEtPw.text))
+                    pwCheck = true
+                else {
+                    binding.signinEtPw.error = "8 ~ 15자리 이내 입력(한글제외)"
+                    pwCheck = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
 
         // 비밀번호 찾기 누를 경우
         binding.signinTvFindpw.setOnClickListener {
@@ -30,7 +73,7 @@ class SignInActivity : AppCompatActivity() {
             val pw = binding.signinEtPw.text.toString()
 
             // 이메일 및 패스워드가 비어있지 않을 경우
-            if (email.isNotEmpty() && pw.isNotEmpty()) {
+            if (email.isNotEmpty() && pw.isNotEmpty() && emailCheck && pwCheck) {
                 // Firebase에서 로그인 정보 가져오기
                 auth.signInWithEmailAndPassword(email, pw)
                     .addOnCompleteListener { task ->

@@ -11,7 +11,7 @@ import com.example.sansaninfo.databinding.SearchpageItemBinding
 class SearchPageAdapter : RecyclerView.Adapter<SearchPageAdapter.SearchViewHolder>() {
 
     interface ItemClick {
-        fun onClick(view: View, position: Int, model: BindingModel)
+        fun onClick(view: View, position: Int, model: MntModel)
     }
 
     var itemClick: ItemClick? = null
@@ -20,7 +20,7 @@ class SearchPageAdapter : RecyclerView.Adapter<SearchPageAdapter.SearchViewHolde
         itemClick = listener
     }
 
-    private val list = arrayListOf<BindingModel>()
+    private val list = arrayListOf<MntModel>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -32,30 +32,32 @@ class SearchPageAdapter : RecyclerView.Adapter<SearchPageAdapter.SearchViewHolde
     }
 
     override fun onBindViewHolder(holder: SearchPageAdapter.SearchViewHolder, position: Int) {
-//        holder.itemView.setOnClickListener {
-//            itemClick?.onClick(it, position, list[position])
-//            println(position)
-//        }
+        holder.itemView.setOnClickListener {
+            itemClick?.onClick(it, position, list[position])
+            println(position)
+        }
         holder.bind(list[position])
-
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    fun addItems(newItems: List<BindingModel>) {
+    fun addItems(newItems: List<MntModel>) {
         list.clear()
         list.addAll(newItems)
         notifyDataSetChanged()
-
     }
 
     inner class SearchViewHolder(private val binding: SearchpageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: BindingModel) = with(binding) {
+        fun bind(model: MntModel) = with(binding) {
                 searchPageTvMnt.text = model.mntName
         }
+    }
+    fun itemsClear(){
+        list.clear()
+        notifyDataSetChanged()
     }
 }

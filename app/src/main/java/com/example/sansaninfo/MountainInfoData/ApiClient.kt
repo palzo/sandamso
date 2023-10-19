@@ -2,6 +2,8 @@ package com.example.sansaninfo.MountainInfoData
 
 import com.example.sansaninfo.BuildConfig
 import com.google.gson.GsonBuilder
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,7 +17,6 @@ import java.util.concurrent.TimeUnit
 object ApiClient {
 
     private const val BASE_URL = "http://api.forest.go.kr/openapi/service/trailInfoService/"
-
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
 
@@ -31,42 +32,11 @@ object ApiClient {
             .addNetworkInterceptor(interceptor)
             .build()
     }
-
     private val mntRetrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL).addConverterFactory(SimpleXmlConverterFactory.create()).client(
-            createOkHttpClient()
-        ).build()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(TikXmlConverterFactory.create(TikXml.Builder().exceptionOnUnreadXml(false).build()))
+        .client(createOkHttpClient())
+        .build()
 
-// val mntNetwork: ApiService = mntRetrofit.create(ApiService::class.java)
     val mntNetwork: ApiService by lazy { mntRetrofit.create(ApiService::class.java) }
-
-//    private fun buildOkHttpClient(): OkHttpClient =
-//        OkHttpClient.Builder()
-//            .addInterceptor(
-//                //로깅 인터셉터
-//                HttpLoggingInterceptor().apply {
-//                    level = if (BuildConfig.DEBUG) {
-//                        HttpLoggingInterceptor.Level.BODY
-//                    } else {
-//                        HttpLoggingInterceptor.Level.NONE
-//                    }
-//                }
-//            )
-//            .build()
-//
-//    private val apiService: ApiService by lazy {
-//        Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .addConverterFactory(SimpleXmlConverterFactory.create())
-//            .client(buildOkHttpClient())
-//            .build()
-//            .create(ApiService::class.java)
-//    }
-//
-//
-//
-//    suspend fun getMountainInfo(MntName: String) {
-//         apiService.getMountainInfo(MntName)
-//    }
-
 }

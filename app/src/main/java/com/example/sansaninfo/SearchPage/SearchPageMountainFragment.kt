@@ -1,5 +1,7 @@
 package com.example.sansaninfo.SearchPage
 
+import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,7 +10,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.sansaninfo.InfoPage.InfoPage
 import com.example.sansaninfo.MountainInfoData.ApiClient
+import com.example.sansaninfo.MountainInfoData.XmlResponse
+import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
@@ -26,11 +31,11 @@ class SearchPageMountainFragment : Fragment() {
         fun newInstance() = SearchPageMountainFragment()
     }
 
-    private val SearchPageAdapter by lazy {
+    private val searchPageAdapter by lazy {
         SearchPageAdapter()
     }
 
-    private val mntList = arrayListOf<BindingModel>()
+    private val mntList = arrayListOf<MntModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,75 +51,113 @@ class SearchPageMountainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.searchPageRecyclerview.layoutManager = GridLayoutManager(context, 2)
-        binding.searchPageRecyclerview.adapter = SearchPageAdapter
-
+        binding.searchPageRecyclerview.adapter = searchPageAdapter
 
         val apiKey =
             "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
 
+        // 산 이름으로 검색 시
         binding.searchPageIvSearch.setOnClickListener {
+
             val mntName = binding.searchPageEtSearchText.text.trim().toString()
-            Toast.makeText(requireContext(), "검색 클릭", Toast.LENGTH_SHORT).show()
 
-//            GlobalScope.launch(Dispatchers.Main){
-//                val dataList = withContext(Dispatchers.IO){
-//                    try{
-//                        ApiClient.mntNetWork.getMountainInfo(mntName)
-//                    }catch (e: Exception) {
-//                        // 예외 처리
-//                        e.printStackTrace()
-//                        null
-//                    }
-//                }
-//                // 메인 스레드에서 API 응답 처리
-//                handleApiResponse(dataList)
-//            }
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    Log.d("test", "setOnClick")
-
-                    val responseDataList = ApiClient.mntNetwork.getMountainInfo(
-                        mntName = mntName,
-                        key = apiKey
-                    )
-
-                    responseDataList.body.let {
-                        it.items.forEach { item ->
+            ApiClient.mntNetwork.getMountainInfo(
+                mntName = mntName,
+                key = apiKey
+            )?.enqueue(object : Callback<XmlResponse?> {
+                override fun onResponse(
+                    call: Call<XmlResponse?>,
+                    response: retrofit2.Response<XmlResponse?>
+                ) {
+                    mntList.clear()
+//                    Log.d("test", "$response")
+//                    Log.d("test", "items body = ${response.body()}")
+                    response.body().let { XmlResponse ->
+                        XmlResponse?.body?.items?.item?.forEach { item ->
                             mntList.add(
-                                BindingModel(
-                                    mntName = item.mntName
+                                MntModel(
+                                    mntName = item.mntName,
+                                    mntHgt = item.mntHeight,
+                                    mntMainInfo = item.mntInfo,
+                                    mntSubInfo = item.mntSubInfo,
+                                    mntAddress = item.mntAddress
                                 )
                             )
                         }
                     }
-
-                    Log.d("test", "$responseDataList")
-
                     if (isAdded) {
                         requireActivity().runOnUiThread {
-                            SearchPageAdapter.addItems(mntList)
+                            searchPageAdapter.addItems(mntList)
                         }
                     }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.d("test", "message : ${e.message}")
                 }
-            }
+
+                override fun onFailure(call: Call<XmlResponse?>, t: Throwable) {
+                    Log.e("#jblee", "onFailure: ${t.message}")
+                    Toast.makeText(requireContext(), "정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+        // 산으로 검색 버튼 클릭 시
+        binding.searchPageBtMountain.setOnClickListener {
+            // 아이템 초기화 및 검색버튼 체인지
+            searchSwitch(1)
+        }
+        // 지역으로 검색 버튼 클릭 시
+        binding.searchPageBtRegion.setOnClickListener {
+            // 아이템 초기화 및 검색버튼 체인지
+            searchSwitch(2)
+        }
+
+        // recyclerview 초기화 - adapter
+        binding.searchPageRecyclerview.apply {
+            adapter = searchPageAdapter
+            clickMntItem()
         }
     }
 
-//    private fun handleApiResponse(response: Response?) {
-//        if(response != null){
-//            val item = response.body.items
-//            Log.d("test", "검색한 아이템 : $item")
-//        }
-//    }
+    private fun clickMntItem() {
+        searchPageAdapter.setOnClickListener(object : SearchPageAdapter.ItemClick {
+            override fun onClick(view: View, position: Int, model: MntModel) {
+                Toast.makeText(context, "Item Position: $position", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+    private fun searchSwitch(position: Int) = with(binding) {
 
+        val clickBtn = R.drawable.search_page_click_button_background
+        val btn = R.drawable.search_page_button_background
+
+        if (position == 1 && searchPageSpinnerSido.visibility == View.VISIBLE) {
+
+            mntList.clear()
+            searchPageAdapter.itemsClear()
+            searchPageEtSearchText.visibility = View.VISIBLE
+            searchPageIvSearch.visibility = View.VISIBLE
+            searchPageSpinnerSido.visibility = View.INVISIBLE
+            searchPageSpinnerGoo.visibility = View.INVISIBLE
+            searchPageBtMountain.setBackgroundResource(clickBtn)
+            searchPageBtRegion.setBackgroundResource(btn)
+            searchPageEtSearchText.text.clear()
+
+        } else if(position == 2 && searchPageSpinnerSido.visibility == View.INVISIBLE) {
+
+            mntList.clear()
+            searchPageAdapter.itemsClear()
+            searchPageEtSearchText.visibility = View.INVISIBLE
+            searchPageIvSearch.visibility = View.INVISIBLE
+            searchPageSpinnerSido.visibility = View.VISIBLE
+            searchPageSpinnerGoo.visibility = View.VISIBLE
+            searchPageBtMountain.setBackgroundResource(btn)
+            searchPageBtRegion.setBackgroundResource(clickBtn)
+
+        }
+    }
 }
-
-data class BindingModel(
-    @SerializedName("mntnnm")  // 산 이름
+data class MntModel(
     val mntName: String,
+    val mntHgt: String,
+    val mntAddress: String,
+    val mntMainInfo: String,
+    val mntSubInfo: String
 )

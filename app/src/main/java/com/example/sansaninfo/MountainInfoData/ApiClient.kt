@@ -7,7 +7,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
@@ -35,6 +37,36 @@ object ApiClient {
             createOkHttpClient()
         ).build()
 
- val mntNetWork: ApiService = mntRetrofit.create(ApiService::class.java)
+// val mntNetwork: ApiService = mntRetrofit.create(ApiService::class.java)
+    val mntNetwork: ApiService by lazy { mntRetrofit.create(ApiService::class.java) }
+
+//    private fun buildOkHttpClient(): OkHttpClient =
+//        OkHttpClient.Builder()
+//            .addInterceptor(
+//                //로깅 인터셉터
+//                HttpLoggingInterceptor().apply {
+//                    level = if (BuildConfig.DEBUG) {
+//                        HttpLoggingInterceptor.Level.BODY
+//                    } else {
+//                        HttpLoggingInterceptor.Level.NONE
+//                    }
+//                }
+//            )
+//            .build()
+//
+//    private val apiService: ApiService by lazy {
+//        Retrofit.Builder()
+//            .baseUrl(BASE_URL)
+//            .addConverterFactory(SimpleXmlConverterFactory.create())
+//            .client(buildOkHttpClient())
+//            .build()
+//            .create(ApiService::class.java)
+//    }
+//
+//
+//
+//    suspend fun getMountainInfo(MntName: String) {
+//         apiService.getMountainInfo(MntName)
+//    }
 
 }

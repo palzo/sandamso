@@ -1,6 +1,7 @@
 package com.example.sansaninfo.MountainInfoData
 
 import com.example.sansaninfo.BuildConfig
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -8,13 +9,13 @@ interface ApiService {
     @GET("getforeststoryservice")
     suspend fun getMountainInfo(
         @Query("mntnNm") mntName: String = "",
-        @Query("mntnHght") mntHgt: String? = null,
+        @Query("mntnHght") mntHgt: String? = "",
         @Query("mntnAdd") mntRegion: String = "",
-        @Query("mntnInfoAraCd") mntArea: String? = null,
-        @Query("mntnInfoSsnCd") mntBackground: String? = null,
-        @Query("mntnInfoThmCd") mntTheme: String? = null,
-        @Query("ServiceKey") key: String? = "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg==",
-        @Query("pageNo") pageNo: String? = null,
-        @Query("numOfRows") numOfRows: String? = null,
+        @Query("mntnInfoAraCd") mntArea: String? = "",
+        @Query("mntnInfoSsnCd") mntBackground: String? = "",
+        @Query("mntnInfoThmCd") mntTheme: String? = "",
+        @Query("ServiceKey") key: String? = "",
+        @Query("pageNo") pageNo: Int? = 1,
+        @Query("numOfRows") numOfRows: Int? = 30
     ) : Response
 }

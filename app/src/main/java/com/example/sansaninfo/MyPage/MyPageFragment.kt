@@ -7,10 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 
 
@@ -18,9 +24,46 @@ class MyPageFragment : Fragment() {
 
     private lateinit var binding: FragmentMyPageBinding
     private var _binding: FragmentMyPageBinding? = null
-    private lateinit var mAuth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
-//    private var mDatabase = FirebaseDatabase.getInstance().getReference("users.uid")
+    //    fun initializeDbRef() {
+//        // [START initialize_database_ref]
+//        database = Firebase.database.reference
+//        // [END initialize_database_ref]
+//    }
+    fun writeNewUser(userId: String, name: String, email: String, nickname: String) {
+        val user = UserData(name, email, nickname)
+
+        database.child("users").child(userId).setValue(user)
+    }
+    // [END rtdb_write_new_user]
+
+    fun writeNewUserWithTaskListeners(
+        userId: String,
+        name: String,
+        email: String,
+        nickname: String
+    ) {
+        val user = UserData(name, email, nickname)
+
+        // [START rtdb_write_new_user_task]
+        database.child("users").child(userId).setValue(user)
+            .addOnSuccessListener {
+                // Write was successful!
+                // ...
+            }
+            .addOnFailureListener {
+                // Write failed
+                // ...
+            }
+        // [END rtdb_write_new_user_task]
+    }
+
+    //    lateinit var firebaseDatabase: FirebaseDatabase
+//    lateinit var databaseReference: DatabaseReference
+    var firebaseDatabase = FirebaseDatabase.getInstance().reference
+//    var mDatabase = FirebaseDatabase.getInstance().getReference("users/$uid/nickname")
 //    val myRef = mDatabase.key
 //    val uid = mAuth.currentUser?.uid
 //    val userReference = mDatabase.child(uid!!)
@@ -41,7 +84,7 @@ class MyPageFragment : Fragment() {
         binding = FragmentMyPageBinding.inflate(inflater, container, false)
 
         //FirebaseAuth 연결
-        mAuth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         //로그인 페이지로 이동과 로그아웃
         binding.myPageTvLogout.setOnClickListener {
@@ -65,8 +108,22 @@ class MyPageFragment : Fragment() {
             val intent = Intent(activity, ChangeNicknameActivity::class.java)
             startActivity(intent)
         }
+        val uid = auth.currentUser?.uid ?: ""
+        firebaseDatabase.child("users").child(uid).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
 
-        binding.myPageEtNickname.setText("")
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val userData = snapshot.getValue(UserData::class.java)
+                    if (userData != null) {
+                        binding.myPageEtNickname.text = userData.nickname
+                    }
+                }
+            }
+        })
+
 
         return binding.root
     }
@@ -92,7 +149,7 @@ class MyPageFragment : Fragment() {
 
     //회원탈퇴
     private fun revokeAccess() {
-        mAuth.currentUser?.delete()
+        auth.currentUser?.delete()
     }
 
     private fun getUserProfile() {

@@ -1,6 +1,5 @@
 package com.example.sansaninfo.API.ModelData
 
-data class WeatherModel(val weatherRoot : Root, val weatherResponse : Response)
 data class Root(
     val response: Response,
 )

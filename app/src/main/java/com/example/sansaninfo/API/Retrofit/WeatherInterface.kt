@@ -1,5 +1,6 @@
 package com.example.sansaninfo.API.Retrofit
 
+import com.example.sansaninfo.API.ModelData.Root
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,5 +14,5 @@ interface WeatherInterface {
         @Query("base_time") base_time : String,
         @Query("nx") nx : String,
         @Query("ny") ny : String
-    )
+    ) : Root
 }

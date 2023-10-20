@@ -65,7 +65,7 @@ class MyPageFragment : Fragment() {
             startActivity(intent)
         }
 
-        // 닉네임 띄우기
+        // 이름, 닉네임 띄우기
         val uid = auth.currentUser?.uid ?: ""
         firebaseDatabase.child("users").child(uid).addListenerForSingleValueEvent(object :
             ValueEventListener {
@@ -76,13 +76,12 @@ class MyPageFragment : Fragment() {
                 if (snapshot.exists()) {
                     val userData = snapshot.getValue(UserData::class.java)
                     if (userData != null) {
+                        binding.myPageTvName.text = userData.name
                         binding.myPageEtNickname.text = userData.nickname
                     }
                 }
             }
         })
-
-
         return binding.root
     }
 

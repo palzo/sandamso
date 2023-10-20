@@ -100,6 +100,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             }else{
                 binding.infoPageTvMountainIntro.text = mntInfo.mntSubInfo
             }
+            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -72,11 +72,12 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         )
         initView()
     }
+
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
 
-        if (receivedBundle != null && receivedBundle.containsKey("mntList")){
+        if (receivedBundle != null && receivedBundle.containsKey("mntList")) {
             val mntList = receivedBundle.getParcelableArrayList<MntModel>("mntList")
 
             displayMountainInfo(mntList)
@@ -89,15 +90,15 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun displayMountainInfo(mntList: List<MntModel>?) {
-        if(!mntList.isNullOrEmpty()) {
+        if (!mntList.isNullOrEmpty()) {
             val mntInfo = mntList[0]
 
             binding.infoPageTvMountainName.text = mntInfo.mntName
             binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
             binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
-            if(mntInfo.mntMainInfo.isNotEmpty()){
+            if (mntInfo.mntMainInfo.isNotEmpty()) {
                 binding.infoPageTvMountainIntro.text = mntInfo.mntMainInfo
-            }else{
+            } else {
                 binding.infoPageTvMountainIntro.text = mntInfo.mntSubInfo
             }
         }
@@ -105,15 +106,15 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         //설악산 위치
-        val mountainLocation = LatLng(38.112864, 128.452297)
+        val mountainLocation = LatLng(37.5674, 126.9799)
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
         mGoogleMap.apply {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
-            markerOptions.title("설악산")
-            markerOptions.snippet("Tel")
+            markerOptions.title("산이름")
+            markerOptions.snippet("전화번호")
             addMarker(markerOptions)
         }
 

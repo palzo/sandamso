@@ -11,13 +11,11 @@ import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 
 
 class MyPageFragment : Fragment() {
@@ -27,49 +25,7 @@ class MyPageFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
-    //    fun initializeDbRef() {
-//        // [START initialize_database_ref]
-//        database = Firebase.database.reference
-//        // [END initialize_database_ref]
-//    }
-    fun writeNewUser(userId: String, name: String, email: String, nickname: String) {
-        val user = UserData(name, email, nickname)
-
-        database.child("users").child(userId).setValue(user)
-    }
-    // [END rtdb_write_new_user]
-
-    fun writeNewUserWithTaskListeners(
-        userId: String,
-        name: String,
-        email: String,
-        nickname: String
-    ) {
-        val user = UserData(name, email, nickname)
-
-        // [START rtdb_write_new_user_task]
-        database.child("users").child(userId).setValue(user)
-            .addOnSuccessListener {
-                // Write was successful!
-                // ...
-            }
-            .addOnFailureListener {
-                // Write failed
-                // ...
-            }
-        // [END rtdb_write_new_user_task]
-    }
-
-    //    lateinit var firebaseDatabase: FirebaseDatabase
-//    lateinit var databaseReference: DatabaseReference
     var firebaseDatabase = FirebaseDatabase.getInstance().reference
-//    var mDatabase = FirebaseDatabase.getInstance().getReference("users/$uid/nickname")
-//    val myRef = mDatabase.key
-//    val uid = mAuth.currentUser?.uid
-//    val userReference = mDatabase.child(uid!!)
-//    var changeNickname = ""
-//    val userData: ArrayList<UserData> = ArrayList()
-//    val database = Firebase.database
 
     companion object {
         fun newInstance() = MyPageFragment()
@@ -108,6 +64,8 @@ class MyPageFragment : Fragment() {
             val intent = Intent(activity, ChangeNicknameActivity::class.java)
             startActivity(intent)
         }
+
+        // 닉네임 띄우기
         val uid = auth.currentUser?.uid ?: ""
         firebaseDatabase.child("users").child(uid).addListenerForSingleValueEvent(object :
             ValueEventListener {
@@ -127,20 +85,6 @@ class MyPageFragment : Fragment() {
 
         return binding.root
     }
-//    private fun updateNickname(change : String) {
-//        userReference.child("nickname").setValue(change)
-//            .addOnCompleteListener { task ->
-// 닉네임 업데이트 성공 시
-//                if(task.isSuccessful) {
-//                    Toast.makeText(activity, "업데이트 성공", Toast.LENGTH_SHORT).show()
-//                    binding.myPageEtNickname.setText(change)
-//                }
-//                else {
-//                    Toast.makeText(activity, "업데이트 실패", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//    }
-
 
     //로그아웃
     private fun signOut() {
@@ -150,16 +94,6 @@ class MyPageFragment : Fragment() {
     //회원탈퇴
     private fun revokeAccess() {
         auth.currentUser?.delete()
-    }
-
-    private fun getUserProfile() {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            val name = it.displayName
-            val email = it.email
-            val emailVerified = it.isEmailVerified
-            val uid = it.uid
-        }
     }
 
 

@@ -11,14 +11,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
+import kotlinx.android.parcel.Parcelize
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sansaninfo.InfoPage.InfoPage
 import com.example.sansaninfo.MountainInfoData.ApiClient
 import com.example.sansaninfo.MountainInfoData.XmlResponse
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
-import kotlinx.parcelize.Parcelize
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -203,3 +202,4 @@ data class MntModel(
     val mntSubInfo: String,
     val mntCode: String?
 ) : Parcelable
+

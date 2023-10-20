@@ -69,13 +69,15 @@ class MyPageFragment : Fragment() {
 
         return binding.root
     }
+
     override fun onResume() {
         super.onResume()
         // Fragment가 다시 활성화될 때 데이터를 다시 불러오기
         newNickname()
 
     }
-    fun newNickname(){
+
+    fun newNickname() {
         // 이름, 닉네임 띄우기
         val uid = auth.currentUser?.uid ?: ""
         firebaseDatabase.child("users").child(uid).addListenerForSingleValueEvent(object :

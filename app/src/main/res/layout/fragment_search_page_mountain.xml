@@ -83,14 +83,19 @@
         app:layout_constraintEnd_toEndOf="@+id/search_page_bt_mountain"
         app:layout_constraintStart_toStartOf="@+id/search_page_bt_mountain"
         app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
+        app:spinner_item_array="@array/sido"
         app:spinner_arrow_gravity="end"
         app:spinner_arrow_tint="@color/black"
-        app:spinner_divider_color="@color/white"
+        android:textColor="@color/black"
+        app:spinner_divider_color="@color/light_grey"
         app:spinner_divider_show="true"
-        app:spinner_divider_size="0.4dp"
-        app:spinner_item_height="46dp"
+        app:spinner_divider_size="1dp"
+        app:spinner_selected_item_background="@color/light_mint"
+        app:spinner_item_height="33dp"
+        app:spinner_popup_max_height="240dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         app:spinner_popup_animation="normal"
-        app:spinner_popup_background="@color/light_mint"
+        app:spinner_popup_background="@color/white"
         tools:ignore="HardcodedText, UnusedAttribute" />
 
     <com.skydoves.powerspinner.PowerSpinnerView
@@ -104,40 +109,35 @@
         android:hint="@string/search_page_spinner_goo"
         android:padding="7dp"
         android:textColorHint="@color/black"
+        android:textColor="@color/black"
         android:textSize="14sp"
+        app:spinner_item_array="@array/sido"
         android:visibility="invisible"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         app:layout_constraintEnd_toEndOf="@+id/search_page_bt_region"
         app:layout_constraintStart_toStartOf="@+id/search_page_bt_region"
         app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
         app:spinner_arrow_gravity="end"
         app:spinner_arrow_tint="@color/black"
-        app:spinner_divider_color="@color/white"
+        app:spinner_divider_color="@color/light_grey"
         app:spinner_divider_show="true"
-        app:spinner_divider_size="0.4dp"
-        app:spinner_item_height="46dp"
+        app:spinner_divider_size="1dp"
+        app:spinner_item_height="33dp"
+        app:spinner_popup_max_height="240dp"
         app:spinner_popup_animation="normal"
-        app:spinner_popup_background="@color/light_mint"
+        app:spinner_popup_background="@color/white"
         tools:ignore="HardcodedText, UnusedAttribute" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_page_recyclerview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_margin="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/search_page_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_page_et_search_text"
         tools:itemCount="3"
         tools:listitem="@layout/searchpage_item" />
-
-    <View
-        android:id="@+id/search_page_view"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/search_page_recyclerview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

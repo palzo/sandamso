@@ -117,7 +117,7 @@ class SearchPageMountainFragment : Fragment() {
                                 mntSubInfo = item.mntSubInfo,
                                 mntAddress = item.mntAddress,
                                 mntCode = MountainMapping.getMountainCode(
-                                    item.mntName.trim().toString()
+                                    item.mntName.trim()
                                 )
                             )
                         )
@@ -140,19 +140,20 @@ class SearchPageMountainFragment : Fragment() {
     private fun clickMntItem() {
         searchPageAdapter.setOnClickListener(object : SearchPageAdapter.ItemClick {
             override fun onClick(view: View, position: Int, model: MntModel) {
-                Toast.makeText(context, "Item Position: $position", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "Item Position: $position", Toast.LENGTH_SHORT).show()
 
-                navigateToInfoPage()
+                navigateToInfoPage(position)
             }
         })
     }
 
-    private fun navigateToInfoPage() {
+    private fun navigateToInfoPage(position: Int) {
         val intent = Intent(activity, InfoPage::class.java)
         // InfoPage로 이동 시 Bundle을 함께 전달
         val bundle = Bundle()
         bundle.putParcelableArrayList("mntList", mntList)
         intent.putExtras(bundle)
+        intent.putExtra("position", position)
         startActivity(intent)
     }
 

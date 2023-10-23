@@ -29,8 +29,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import java.util.Locale
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -78,6 +78,24 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         initView()
     }
 
+
+    fun geoCoding(address: String): Location {
+        return try {
+            Geocoder(this, Locale.KOREA).getFromLocationName(address, 1)?.let {
+                Location("").apply {
+                    latitude = it[0].latitude
+                    longitude = it[0].longitude
+                }
+            } ?: Location("").apply {
+                latitude = 0.0
+                longitude = 0.0
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            geoCoding(address) //재시도
+        }
+    }
+
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
@@ -109,6 +127,27 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
         }
     }
+
+//    private fun convertAddressToLatLng(address: String) {
+//        val geocoder = Geocoder(this)
+//        try {
+//            val addresses = geocoder.getFromLocationName(address, 1)
+//            if (addresses != null) {
+//                if (addresses.isNotEmpty()) {
+//                    val location = addresses[0]
+//                    val latitude = location.latitude
+//                    val longitude = location.longitude
+//                    val locationLatLng = LatLng(latitude, longitude)
+//
+//                    onMapReady(locationLatLng)
+//                } else {
+//                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        } catch (e: Exception) {
+//            Log.e("주소 변환 오류", e.message.toString())
+//        }
+//    }
 
     override fun onMapReady(p0: GoogleMap) {
         // 파란 마커 위치
@@ -160,21 +199,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
-    //    fun setLastLocation(lastLocation: Location) {
-//        val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
-//        val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-//        val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(15.0f).build()
-//        mGoogleMap.addMarker(makerOptions)
-//        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-//    }
-//    fun setLastLocation(lastLocation: Location) {
-//        val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
-//        val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-//        userMarker?.remove()
-//        userMarker = mGoogleMap.addMarker(makerOptions)
-//        val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(15.0f).build()
-//        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-//    }
+    // 카메라 위치 조정
     fun setInitialUserLocation(lastLocation: Location) {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)

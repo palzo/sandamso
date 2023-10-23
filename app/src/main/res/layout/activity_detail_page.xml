@@ -45,26 +45,26 @@
         android:layout_marginTop="15dp"
         android:text="작성자: 화산파이리"
         android:textSize="13sp"
-        app:layout_constraintTop_toBottomOf="@id/detail_page_tv_title"
-        app:layout_constraintStart_toStartOf="@id/detail_page_tv_title" />
+        app:layout_constraintStart_toStartOf="@id/detail_page_tv_title"
+        app:layout_constraintTop_toBottomOf="@id/detail_page_tv_title" />
 
     <TextView
         android:id="@+id/detail_page_tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="작성일: 2023.xx.xx"
         android:layout_marginTop="5dp"
+        android:text="작성일: 2023.xx.xx"
         android:textSize="13sp"
         app:layout_constraintStart_toStartOf="@id/detail_page_tv_title"
-        app:layout_constraintTop_toBottomOf="@id/detail_page_tv_name"/>
+        app:layout_constraintTop_toBottomOf="@id/detail_page_tv_name" />
 
     <LinearLayout
         android:id="@+id/detail_page_ll_revise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="@id/detail_page_tv_date"
         app:layout_constraintEnd_toStartOf="@id/detail_page_ll_delete">
 
@@ -72,15 +72,15 @@
             android:id="@+id/detail_page_iv_revise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_pen"/>
+            android:src="@drawable/ic_pen" />
 
         <TextView
             android:id="@+id/detail_page_tv_revise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:text="수정하기"
-            android:textSize="11sp"
-            android:layout_marginTop="3dp"/>
+            android:textSize="11sp" />
 
     </LinearLayout>
 
@@ -88,9 +88,9 @@
         android:id="@+id/detail_page_ll_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginEnd="15dp"
         app:layout_constraintBottom_toBottomOf="@id/detail_page_tv_date"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -98,34 +98,71 @@
             android:id="@+id/detail_page_iv_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_trash"/>
+            android:src="@drawable/ic_trash" />
 
         <TextView
             android:id="@+id/detail_page_tv_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:text="삭제하기"
-            android:textSize="11sp"
-            android:layout_marginTop="3dp"/>
+            android:textSize="11sp" />
 
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/detail_page_card_view"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="14dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_page_ll_delete"
         app:layout_constraintStart_toStartOf="parent"
-        app:cardCornerRadius="14dp">
+        app:layout_constraintTop_toBottomOf="@id/detail_page_ll_delete">
 
-        <ImageView
-            android:id="@+id/detail_page_iv_main"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="261dp"
-            android:src="@drawable/photo"
-            android:adjustViewBounds="true" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/detail_page_iv_main"
+                android:layout_width="0dp"
+                android:layout_height="261dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/photo" />
+
+            <LinearLayout
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ProgressBar
+                    style="@android:style/Widget.Holo.ProgressBar.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading..."
+                    android:textColor="@color/dark_grey"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -133,15 +170,15 @@
         android:id="@+id/detail_page_ll_deadline"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:layout_marginVertical="15dp"
         android:layout_marginHorizontal="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_page_card_view"
+        android:layout_marginVertical="15dp"
+        android:background="@drawable/detail_page_background"
+        android:gravity="center"
+        android:padding="6dp"
         app:layout_constraintBottom_toTopOf="@id/detail_page_tv_memo"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"
-        android:background="@drawable/detail_page_background">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_page_card_view">
 
         <TextView
             android:id="@+id/detail_page_tv_gather"
@@ -150,17 +187,17 @@
             android:text="2023.xx.xx까지 모집"
             android:textColor="#606060"
             android:textSize="13sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/detail_page_tv_dday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:textColor="#4C4C4C"
             android:layout_marginStart="100dp"
-            android:text="D-7" />
+            android:text="D-7"
+            android:textColor="#4C4C4C"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -168,42 +205,42 @@
         android:id="@+id/detail_page_tv_memo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#4A4A4A"
-        app:layout_constraintTop_toBottomOf="@id/detail_page_ll_deadline"
-        android:layout_marginVertical="13dp"
         android:layout_marginHorizontal="25dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginVertical="13dp"
+        android:text="저랑 같이 설악산 한 번 정복하실 분 구합니다! \n날짜는 다음주 수요일 입니다 많은 분들 참여 바랍니다!  \n참여하실 분은 좋댓 구알~!"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="저랑 같이 설악산 한 번 정복하실 분 구합니다! \n날짜는 다음주 수요일 입니다 많은 분들 참여 바랍니다!  \n참여하실 분은 좋댓 구알~!"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_page_ll_deadline" />
 
-        <LinearLayout
-            android:id="@+id/detail_page_ll_kakao_chat"
+    <LinearLayout
+        android:id="@+id/detail_page_ll_kakao_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/detail_page_talk_background"
+        android:gravity="center"
+        android:padding="13dp"
+        app:layout_constraintBottom_toTopOf="@id/detail_page_iv_ad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/detail_page_tv_kakao_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/detail_page_iv_ad"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
-            android:padding="13dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/detail_page_talk_background">
+            android:text="카카오 오픈채팅"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/detail_page_tv_kakao_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="카카오 오픈채팅"/>
+        <ImageView
+            android:id="@+id/detail_page_iv_kakao_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_open_kakao" />
 
-            <ImageView
-                android:id="@+id/detail_page_iv_kakao_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_open_kakao"
-                android:layout_marginStart="10dp"/>
-
-        </LinearLayout>
+    </LinearLayout>
 
 
     <ImageView

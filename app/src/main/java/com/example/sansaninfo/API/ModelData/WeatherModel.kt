@@ -1,5 +1,7 @@
 package com.example.sansaninfo.API.ModelData
 
+data class regionList(val regionX : Long, val regionY : Long)
+
 data class Root(
     val response: Response,
 )
@@ -30,9 +32,9 @@ data class Item(
     val baseDate: String,
     val baseTime: String,
     val category: String,
-    val fcstDate: String,
-    val fcstTime: String,
-    val fcstValue: String,
+    //val fcstDate: String,
+    //val fcstTime: String,
+    //val fcstValue: String,
     val nx: Long,
     val ny: Long,
 )

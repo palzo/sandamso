@@ -2,6 +2,7 @@ package com.example.sansaninfo.InfoPage
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
@@ -37,6 +39,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     lateinit var fusedLocationClient: FusedLocationProviderClient //gps를 이용해 위치 확인
     lateinit var locationCallBack: LocationCallback // 위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationPermission: ActivityResultLauncher<Array<String>>
+    private lateinit var geocoder: Geocoder
+    private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -106,8 +111,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        //설악산 위치
-        val mountainLocation = LatLng(37.5674, 126.9799)
+        // 파란 마커 위치
+        val mountainLocation = LatLng(37.666512, 126.984489)
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
         mGoogleMap.apply {
@@ -115,7 +120,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
             markerOptions.title("산이름")
-            markerOptions.snippet("전화번호")
+//            markerOptions.snippet("")
             addMarker(markerOptions)
         }
 
@@ -134,7 +139,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 locationResult?.let {
                     for (location in it.locations) {
                         Log.d("위치정보", "위도:${location.latitude} 경도: ${location.longitude}")
-                        setLastLocation(location)
+                        setInitialUserLocation(location)
                     }
                 }
             }
@@ -155,11 +160,29 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
-    fun setLastLocation(lastLocation: Location) {
-        val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
-        val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-        val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(15.0f).build()
-        mGoogleMap.addMarker(makerOptions)
-        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+    //    fun setLastLocation(lastLocation: Location) {
+//        val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
+//        val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
+//        val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(15.0f).build()
+//        mGoogleMap.addMarker(makerOptions)
+//        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+//    }
+//    fun setLastLocation(lastLocation: Location) {
+//        val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
+//        val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
+//        userMarker?.remove()
+//        userMarker = mGoogleMap.addMarker(makerOptions)
+//        val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(15.0f).build()
+//        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+//    }
+    fun setInitialUserLocation(lastLocation: Location) {
+        if (!userLocationSet) {
+            val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
+            val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
+            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(10.0f).build()
+            mGoogleMap.addMarker(makerOptions)
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            userLocationSet = true // 사용자 위치를 설정했음을 표시
+        }
     }
 }

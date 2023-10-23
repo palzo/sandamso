@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import java.util.Locale
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -39,8 +38,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     lateinit var fusedLocationClient: FusedLocationProviderClient //gps를 이용해 위치 확인
     lateinit var locationCallBack: LocationCallback // 위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationPermission: ActivityResultLauncher<Array<String>>
-    private lateinit var geocoder: Geocoder
     private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
+    private var latitude = 0.0
+    private var longitude = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,23 +79,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    fun geoCoding(address: String): Location {
-        return try {
-            Geocoder(this, Locale.KOREA).getFromLocationName(address, 1)?.let {
-                Location("").apply {
-                    latitude = it[0].latitude
-                    longitude = it[0].longitude
-                }
-            } ?: Location("").apply {
-                latitude = 0.0
-                longitude = 0.0
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            geoCoding(address) //재시도
-        }
-    }
-
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
@@ -118,6 +101,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
             binding.infoPageTvMountainName.text = mntInfo.mntName
             binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
+            convertAddressToLatLng(mntInfo.mntAddress)
             binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
             if (mntInfo.mntMainInfo.isNotEmpty()) {
                 binding.infoPageTvMountainIntro.text = mntInfo.mntMainInfo
@@ -128,30 +112,31 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-//    private fun convertAddressToLatLng(address: String) {
-//        val geocoder = Geocoder(this)
-//        try {
-//            val addresses = geocoder.getFromLocationName(address, 1)
-//            if (addresses != null) {
-//                if (addresses.isNotEmpty()) {
-//                    val location = addresses[0]
-//                    val latitude = location.latitude
-//                    val longitude = location.longitude
-//                    val locationLatLng = LatLng(latitude, longitude)
-//
-//                    onMapReady(locationLatLng)
-//                } else {
-//                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        } catch (e: Exception) {
-//            Log.e("주소 변환 오류", e.message.toString())
-//        }
-//    }
+    private fun convertAddressToLatLng(address: String): LatLng? {
+        val geocoder = Geocoder(this)
+        try {
+            val addresses = geocoder.getFromLocationName(address, 1)
+            if (addresses != null) {
+                if (addresses.isNotEmpty()) {
+                    val location = addresses[0]
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    val locationLatLng = LatLng(latitude, longitude)
+//                    onMapReady(locationLatLng, latitude, longitude)
+                    return locationLatLng
+                } else {
+                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("주소 변환 오류", e.message.toString())
+        }
+        return null
+    }
 
     override fun onMapReady(p0: GoogleMap) {
         // 파란 마커 위치
-        val mountainLocation = LatLng(37.666512, 126.984489)
+        val mountainLocation = LatLng(latitude, longitude)
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
         mGoogleMap.apply {
@@ -204,7 +189,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
             val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(10.0f).build()
+            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(5.0f).build()
             mGoogleMap.addMarker(makerOptions)
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
             userLocationSet = true // 사용자 위치를 설정했음을 표시

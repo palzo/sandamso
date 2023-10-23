@@ -101,7 +101,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
             binding.infoPageTvMountainName.text = mntInfo.mntName
             binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
-            convertAddressToLatLng(mntInfo.mntAddress)
+            convertAddressToLatLng(mntInfo.mntName)
             binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
             if (mntInfo.mntMainInfo.isNotEmpty()) {
                 binding.infoPageTvMountainIntro.text = mntInfo.mntMainInfo

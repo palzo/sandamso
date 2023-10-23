@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPage
 import com.example.sansaninfo.Data.FBRef
 import com.example.sansaninfo.Data.UserModel
@@ -18,8 +20,8 @@ import com.google.firebase.database.ValueEventListener
 class CommunityPageFragment : Fragment() {
 
     private lateinit var binding: FragmentCommunityPageBinding
-    lateinit var communityPageAdapter: CommunityPageAdapter
     private val communityList = mutableListOf<UserModel>()
+    private val communityPageAdapter by lazy { CommunityPageAdapter() }
 
     companion object {
         fun newInstance() = CommunityPageFragment()
@@ -37,13 +39,28 @@ class CommunityPageFragment : Fragment() {
             startActivity(intent)
         }
 
-        communityPageAdapter = CommunityPageAdapter(communityList)
-        binding.communityPageRecyclerview.adapter = communityPageAdapter
-
+        return binding.root
+    }
+    override fun onResume() {
+        super.onResume()
 //        //데이터베이스에서 데이터 읽어오기
 //        getCommunityData()
+    }
 
-        return binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.communityPageRecyclerview.layoutManager = LinearLayoutManager(context)
+        binding.communityPageRecyclerview.adapter = communityPageAdapter
+
+        for (i in 0..5) {
+            communityList.add(UserModel(title = "용석님", time = "2023.10.20"))
+        }
+
+        communityPageAdapter.addItem(communityList)
+        binding.communityPageRecyclerview.apply {
+            adapter = communityPageAdapter
+            clickItem()
+        }
     }
 
 //    private fun getCommunityData() {
@@ -60,7 +77,7 @@ class CommunityPageFragment : Fragment() {
 //                }
 //
 //                communityList.reverse()
-////                // notifyDataSetChanged()를 호출하여 adapter에게 값이 변경 되었음을 알려준다.
+//              // notifyDataSetChanged()를 호출하여 adapter에게 값이 변경 되었음을 알려준다.
 //                communityPageAdapter.notifyDataSetChanged()
 //            }
 //
@@ -72,4 +89,12 @@ class CommunityPageFragment : Fragment() {
 //        // addValueEventListener() 메서드로 DatabaseReference에 ValueEventListener를 추가한다.
 //        FBRef.myRef.addValueEventListener(postListener)
 //    }
+
+    private fun clickItem() {
+        communityPageAdapter.setOnClickListener(object : CommunityPageAdapter.ItemClick{
+            override fun onClick(view: View, position: Int, model: UserModel) {
+                Toast.makeText(context,"$position", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 }

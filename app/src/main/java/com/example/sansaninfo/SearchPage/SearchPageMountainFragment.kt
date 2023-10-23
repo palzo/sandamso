@@ -11,14 +11,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
+import kotlinx.android.parcel.Parcelize
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sansaninfo.InfoPage.InfoPage
 import com.example.sansaninfo.MountainInfoData.ApiClient
 import com.example.sansaninfo.MountainInfoData.XmlResponse
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
-import kotlinx.parcelize.Parcelize
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -54,61 +53,27 @@ class SearchPageMountainFragment : Fragment() {
         binding.searchPageRecyclerview.layoutManager = GridLayoutManager(context, 2)
         binding.searchPageRecyclerview.adapter = searchPageAdapter
 
-        val apiKey =
-            "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
-
         // 산 이름으로 검색 시
         binding.searchPageIvSearch.setOnClickListener {
-            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.searchPageEtSearchText.windowToken, 0)
 
-            val mntName = binding.searchPageEtSearchText.text.trim().toString()
-
-            ApiClient.mntNetwork.getMountainInfo(
-                mntName = mntName,
-                key = apiKey
-            )?.enqueue(object : Callback<XmlResponse?> {
-                override fun onResponse(
-                    call: Call<XmlResponse?>,
-                    response: retrofit2.Response<XmlResponse?>
-                ) {
-                    mntList.clear()
-//                    Log.d("test", "$response")
-//                    Log.d("test", "items body = ${response.body()}")
-                    response.body().let { XmlResponse ->
-                        XmlResponse?.body?.items?.item?.forEach { item ->
-                            mntList.add(
-                                MntModel(
-                                    mntName = item.mntName,
-                                    mntHgt = item.mntHeight,
-                                    mntMainInfo = item.mntInfo,
-                                    mntSubInfo = item.mntSubInfo,
-                                    mntAddress = item.mntAddress
-                                )
-                            )
-                        }
-                    }
-                    if (isAdded) {
-                        requireActivity().runOnUiThread {
-                            searchPageAdapter.addItems(mntList)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<XmlResponse?>, t: Throwable) {
-                    Log.e("#jblee", "onFailure: ${t.message}")
-                    Toast.makeText(requireContext(), "정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                }
-            })
+            getMntInfo(0,binding.searchPageEtSearchText.text.trim().toString())
         }
-        // 산으로 검색 버튼 클릭 시
+
+        // 지역명으로 검색 시
+        binding.searchPageSpinnerSido.setOnSpinnerItemSelectedListener<String> { _, _, _, sido ->
+
+            getMntInfo(1, sido)
+        }
+
+        // 산으로 검색 버튼 클릭 시 UI 초기화
         binding.searchPageBtMountain.setOnClickListener {
-            // 아이템 초기화 및 검색버튼 체인지
             searchSwitch(1)
         }
-        // 지역으로 검색 버튼 클릭 시
+        // 지역으로 검색 버튼 클릭 시 UI 초기화
         binding.searchPageBtRegion.setOnClickListener {
-            // 아이템 초기화 및 검색버튼 체인지
             searchSwitch(2)
         }
 
@@ -118,6 +83,60 @@ class SearchPageMountainFragment : Fragment() {
             clickMntItem()
         }
     }
+
+    private fun getMntInfo(position: Int, inputValue: String) {
+
+        val apiKey =
+            "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
+
+        var mntName: String = ""
+        var mntRegion: String = ""
+        if (position == 0) {
+            mntName = inputValue
+        } else {
+            mntRegion = inputValue
+        }
+
+        ApiClient.mntNetwork.getMountainInfo(
+            mntName = mntName,
+            mntRegion = mntRegion,
+            key = apiKey
+        )?.enqueue(object : Callback<XmlResponse?> {
+            override fun onResponse(
+                call: Call<XmlResponse?>,
+                response: retrofit2.Response<XmlResponse?>
+            ) {
+                mntList.clear()
+                response.body().let { XmlResponse ->
+                    XmlResponse?.body?.items?.item?.forEach { item ->
+                        mntList.add(
+                            MntModel(
+                                mntName = item.mntName,
+                                mntHgt = item.mntHeight,
+                                mntMainInfo = item.mntInfo,
+                                mntSubInfo = item.mntSubInfo,
+                                mntAddress = item.mntAddress,
+                                mntCode = MountainMapping.getMountainCode(
+                                    item.mntName.trim().toString()
+                                )
+                            )
+                        )
+                    }
+                }
+                if (isAdded) {
+                    requireActivity().runOnUiThread {
+                        searchPageAdapter.addItems(mntList)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<XmlResponse?>, t: Throwable) {
+                Log.e("#jblee", "onFailure: ${t.message}")
+                Toast.makeText(requireContext(), "정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun clickMntItem() {
         searchPageAdapter.setOnClickListener(object : SearchPageAdapter.ItemClick {
             override fun onClick(view: View, position: Int, model: MntModel) {
@@ -127,7 +146,8 @@ class SearchPageMountainFragment : Fragment() {
             }
         })
     }
-    private fun navigateToInfoPage(){
+
+    private fun navigateToInfoPage() {
         val intent = Intent(activity, InfoPage::class.java)
         // InfoPage로 이동 시 Bundle을 함께 전달
         val bundle = Bundle()
@@ -153,7 +173,7 @@ class SearchPageMountainFragment : Fragment() {
             searchPageBtRegion.setBackgroundResource(btn)
             searchPageEtSearchText.text.clear()
 
-        } else if(position == 2 && searchPageSpinnerSido.visibility == View.INVISIBLE) {
+        } else if (position == 2 && searchPageSpinnerSido.visibility == View.INVISIBLE) {
 
             mntList.clear()
             searchPageAdapter.itemsClear()
@@ -172,11 +192,14 @@ class SearchPageMountainFragment : Fragment() {
         _binding = null
     }
 }
+
 @Parcelize
 data class MntModel(
     val mntName: String,
     val mntHgt: String,
     val mntAddress: String,
     val mntMainInfo: String,
-    val mntSubInfo: String
-): Parcelable
+    val mntSubInfo: String,
+    val mntCode: String?
+) : Parcelable
+

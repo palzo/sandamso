@@ -7,26 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class MyPageFragment : Fragment() {
 
     private lateinit var binding: FragmentMyPageBinding
     private var _binding: FragmentMyPageBinding? = null
-    private lateinit var mAuth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
-//    private var mDatabase = FirebaseDatabase.getInstance().getReference("users.uid")
-//    val myRef = mDatabase.key
-//    val uid = mAuth.currentUser?.uid
-//    val userReference = mDatabase.child(uid!!)
-//    var changeNickname = ""
-//    val userData: ArrayList<UserData> = ArrayList()
-//    val database = Firebase.database
+    var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     companion object {
         fun newInstance() = MyPageFragment()
@@ -41,7 +40,7 @@ class MyPageFragment : Fragment() {
         binding = FragmentMyPageBinding.inflate(inflater, container, false)
 
         //FirebaseAuth 연결
-        mAuth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         //로그인 페이지로 이동과 로그아웃
         binding.myPageTvLogout.setOnClickListener {
@@ -66,24 +65,25 @@ class MyPageFragment : Fragment() {
             startActivity(intent)
         }
 
-        binding.myPageEtNickname.setText("")
+        // 이름, 닉네임 띄우기
+        val uid = auth.currentUser?.uid ?: ""
+        firebaseDatabase.child("users").child(uid).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
 
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val userData = snapshot.getValue(UserData::class.java)
+                    if (userData != null) {
+                        binding.myPageTvName.text = userData.name
+                        binding.myPageEtNickname.text = userData.nickname
+                    }
+                }
+            }
+        })
         return binding.root
     }
-//    private fun updateNickname(change : String) {
-//        userReference.child("nickname").setValue(change)
-//            .addOnCompleteListener { task ->
-// 닉네임 업데이트 성공 시
-//                if(task.isSuccessful) {
-//                    Toast.makeText(activity, "업데이트 성공", Toast.LENGTH_SHORT).show()
-//                    binding.myPageEtNickname.setText(change)
-//                }
-//                else {
-//                    Toast.makeText(activity, "업데이트 실패", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//    }
-
 
     //로그아웃
     private fun signOut() {
@@ -92,17 +92,7 @@ class MyPageFragment : Fragment() {
 
     //회원탈퇴
     private fun revokeAccess() {
-        mAuth.currentUser?.delete()
-    }
-
-    private fun getUserProfile() {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            val name = it.displayName
-            val email = it.email
-            val emailVerified = it.isEmailVerified
-            val uid = it.uid
-        }
+        auth.currentUser?.delete()
     }
 
 

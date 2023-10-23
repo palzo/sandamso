@@ -1,5 +1,6 @@
 package com.example.sansaninfo.DetailPage
 
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,8 +8,11 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.sansaninfo.CommunityPage.CommunityPageFragment
 import com.example.sansaninfo.R
+import com.example.sansaninfo.databinding.ActivityDetailPageBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -19,6 +23,10 @@ import java.util.Calendar
 import java.util.Locale
 
 class DetailPage : AppCompatActivity() {
+
+    private val binding by lazy { ActivityDetailPageBinding.inflate(layoutInflater) }
+
+    lateinit var communityPageFragment: CommunityPageFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +57,10 @@ class DetailPage : AppCompatActivity() {
             Glide.with(this).load(it).into(imageView)
         }.addOnFailureListener {
             Log.d("Image Tag333", "${it}")
+        }
+
+        binding.detailPageIvBack.setOnClickListener {
+            communityPageFragment
         }
     }
 

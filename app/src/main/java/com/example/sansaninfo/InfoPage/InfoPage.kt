@@ -85,8 +85,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
         if (receivedBundle != null && receivedBundle.containsKey("mntList")) {
             val mntList = receivedBundle.getParcelableArrayList<MntModel>("mntList")
-
-            displayMountainInfo(mntList)
+            val position = intent.getIntExtra("position", 0)
+            displayMountainInfo(mntList, position)
 
         }
 
@@ -95,21 +95,25 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun displayMountainInfo(mntList: List<MntModel>?) {
+    private fun displayMountainInfo(mntList: List<MntModel>?, position: Int) {
         if (!mntList.isNullOrEmpty()) {
-            val mntInfo = mntList[0]
+            val mntInfo = mntList[position]
 
             binding.infoPageTvMountainName.text = mntInfo.mntName
             binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
             convertAddressToLatLng(mntInfo.mntName)
             binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
             if (mntInfo.mntMainInfo.isNotEmpty()) {
-                binding.infoPageTvMountainIntro.text = mntInfo.mntMainInfo
+                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntMainInfo)
             } else {
-                binding.infoPageTvMountainIntro.text = mntInfo.mntSubInfo
+                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntSubInfo)
             }
-            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun removeSpecialCharacters(inputText: String): String{
+        val pattern = Regex("&[^;]+;")
+        return pattern.replace(inputText," ")
     }
 
     private fun convertAddressToLatLng(address: String): LatLng? {

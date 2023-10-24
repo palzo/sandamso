@@ -6,6 +6,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
@@ -13,6 +14,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+/*import com.example.sansaninfo.API.Model
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sansaninfo.API.Constrants.Constrant
+import com.example.sansaninfo.API.ModelData.RegionLocation
+import com.example.sansaninfo.API.ModelData.Root
+import com.example.sansaninfo.API.Retrofit.WeatherClient*/
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.MntModel
@@ -30,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import retrofit2.Response
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -41,6 +49,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
     private var latitude = 0.0
     private var longitude = 0.0
+
+
+/*    private val handler = Handler(Looper.getMainLooper())
+    private var weatherData = mutableListOf<WeatherData>()
+    private val itemList: List<Item> = mutableListOf()*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +90,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         )
         initView()
     }
-
 
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
@@ -202,4 +214,37 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             userLocationSet = true // 사용자 위치를 설정했음을 표시
         }
     }
+
+   /* private suspend fun communicateWeather() {
+        val baseTime = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
+        for(region in RegionLocation().regionList) {
+            for (baseTime in baseTime) {
+                val response : Reskseponse<Root> = WeatherClient.apiService.getWeatherInfo(
+                    Constrant.WEATHER_API_KEY, "1", "JSON", "20231023", baseTime, region.regionX.toString(),region.regionY.toString()
+                )
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    if(body != null) {
+                        for(item in itemList) {
+                            val baseDate = item.baseDate
+                            val baseTime = item.baseTime
+                            val category = item.category
+                            val nx = item.nx
+                            val ny = item.ny
+
+                            // tmp로 가져올 값 수정하기
+                            val weatherItemData = WeatherData(baseDate, baseTime, category, nx,  ny, "tmp")
+                            weatherData.add(weatherItemData)
+                        }
+                    }
+                }
+                handler.post {
+                    binding.infoPageRvWeather.apply {
+                        adapter = InfoPageAdapter(weatherData)
+                        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    }
+                }
+            }
+        }
+    }*/
 }

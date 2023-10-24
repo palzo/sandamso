@@ -15,6 +15,6 @@ interface ApiService {
         @Query("mntnInfoThmCd") mntTheme: String? = "",
         @Query("ServiceKey") key: String? = "",
         @Query("pageNo") pageNo: Int? = 1,
-        @Query("numOfRows") numOfRows: Int? = 100
+        @Query("numOfRows") numOfRows: Int? = 200
     ) : Call<XmlResponse?>?
 }

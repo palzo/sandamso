@@ -141,13 +141,16 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(p0: GoogleMap) {
         // 파란 마커 위치
         val mountainLocation = LatLng(latitude, longitude)
+//        val mntList: List<MntModel>? =
+//        val mntList = List
+//        var mountainName = mntList.mntName
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
         mGoogleMap.apply {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
-            markerOptions.title("산이름")
+//            markerOptions.title("${mountainName}")
 //            markerOptions.snippet("")
             addMarker(markerOptions)
         }

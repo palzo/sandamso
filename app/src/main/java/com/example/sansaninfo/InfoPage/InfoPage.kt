@@ -163,14 +163,14 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-
+        if (mountainName != null) {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
             markerOptions.title(mountainName)   // 마커 클릭시 산 이름 표시
             if (mountainHeight != null) {
                 markerOptions.snippet("높이: $mountainHeight")
-
+            }
 
             mGoogleMap.addMarker(markerOptions) // 마커 추가
 

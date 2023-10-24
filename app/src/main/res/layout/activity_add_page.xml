@@ -10,7 +10,7 @@
         android:id="@+id/add_page_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="view2,add_page_tv_title,add_page_tv_title_limit,add_page_tv_title_limit_max,add_page_iv_add,add_page_spn_spinner,view4,textView7,textView8,textView9,textView10,imageView6,button" />
+        app:constraint_referenced_ids="button,add_page_tv_title,add_page_tv_title_limit_max,add_page_tv_title_limit,add_page_iv_add,add_page_spn_spinner,add_page_et_text,add_page_tv_text_limit,add_page_tv_text_limit_max,add_page_tv_kakao_open,textView10,imageView6" />
 
     <ImageView
         android:id="@+id/add_page_iv_backbutton"
@@ -33,27 +33,18 @@
         app:layout_constraintStart_toEndOf="@+id/add_page_iv_backbutton"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="350dp"
-        android:layout_height="50dp"
+    <EditText
+        android:id="@+id/add_page_tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/add_page_stroke_round_rec"
+        android:hint=" 제목을 입력해주세요. (필수)"
+        android:padding="13dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_page_tv_titlename" />
-
-    <EditText
-        android:id="@+id/add_page_tv_title"
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:hint="제목을 입력해주세요. (필수)"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view2"
-        app:layout_constraintEnd_toEndOf="@+id/view2"
-        app:layout_constraintStart_toStartOf="@+id/view2"
-        app:layout_constraintTop_toTopOf="@+id/view2" />
 
     <TextView
         android:id="@+id/add_page_tv_title_limit_max"
@@ -62,8 +53,8 @@
         android:layout_marginTop="5dp"
         android:text="/ 30"
         android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/view2"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintEnd_toEndOf="@id/add_page_tv_title"
+        app:layout_constraintTop_toBottomOf="@id/add_page_tv_title" />
 
     <TextView
         android:id="@+id/add_page_tv_title_limit"
@@ -93,61 +84,68 @@
         android:id="@+id/add_page_spn_spinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="@id/view2"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/add_page_stroke_round_rec"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
         app:layout_constraintTop_toBottomOf="@id/add_page_iv_add" />
 
-    <View
-        android:id="@+id/view4"
-        android:layout_width="350dp"
-        android:layout_height="280dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/add_page_stroke_round_rec"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_page_spn_spinner" />
-
     <EditText
-        android:id="@+id/textView7"
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@null"
+        android:id="@+id/add_page_et_text"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/add_page_stroke_round_rec"
         android:hint="본문 내용 작성 (필수) \n- 최소 2자 ~ 5000자 이내를 작성할 수 있어요. \n- 다른 회원들을 위한 이쁜 언어로 작성해주는 센스 ~  \n- 우리 모두 깨끗한 등산 일지 작성해봐요 !"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="@+id/view4"
-        app:layout_constraintStart_toStartOf="@+id/view4"
-        app:layout_constraintTop_toTopOf="@+id/view4" />
+        app:layout_constraintBottom_toTopOf="@id/add_page_tv_text_limit"
+        app:layout_constraintEnd_toEndOf="@id/add_page_tv_title"
+        app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/add_page_spn_spinner" />
 
     <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 "
-        android:textColor="@color/mint"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView9"
-        app:layout_constraintEnd_toStartOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="@+id/textView9" />
-
-    <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/add_page_tv_text_limit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:text="0 "
+        android:textColor="@color/mint"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@id/add_page_tv_text_limit_max"
+        app:layout_constraintTop_toBottomOf="@id/add_page_et_text" />
+
+    <TextView
+        android:id="@+id/add_page_tv_text_limit_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="/ 5000"
         android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/view4"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintBottom_toBottomOf="@id/add_page_tv_text_limit"
+        app:layout_constraintEnd_toEndOf="@id/add_page_tv_title" />
+
+    <EditText
+        android:id="@+id/add_page_tv_kakao_open"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/add_page_stroke_round_rec"
+        android:hint="  카카오톡 오픈 채팅방 링크 남기기 (필수)"
+        android:padding="10dp"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/add_page_tv_title"
+        app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
+        app:layout_constraintTop_toBottomOf="@id/add_page_tv_text_limit" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:text="카카오톡 오픈채팅 만들러가기"
-        app:layout_constraintStart_toStartOf="@+id/view4"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/add_page_tv_kakao_open"
+        app:layout_constraintTop_toBottomOf="@+id/add_page_tv_kakao_open" />
 
     <ImageView
         android:id="@+id/imageView6"
@@ -161,12 +159,15 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/add_page_mint_button"
         android:text="올리기"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
     <LinearLayout

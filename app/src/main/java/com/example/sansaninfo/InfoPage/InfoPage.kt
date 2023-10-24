@@ -13,12 +13,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+/*import com.example.sansaninfo.API.Model
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.API.Constrants.Constrant
-import com.example.sansaninfo.API.ModelData.Item
 import com.example.sansaninfo.API.ModelData.RegionLocation
 import com.example.sansaninfo.API.ModelData.Root
-import com.example.sansaninfo.API.Retrofit.WeatherClient
+import com.example.sansaninfo.API.Retrofit.WeatherClient*/
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.MntModel
@@ -46,9 +46,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     lateinit var locationCallBack: LocationCallback // 위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationPermission: ActivityResultLauncher<Array<String>>
 
-    private val handler = Handler(Looper.getMainLooper())
+/*    private val handler = Handler(Looper.getMainLooper())
     private var weatherData = mutableListOf<WeatherData>()
-    private val itemList: List<Item> = mutableListOf()
+    private val itemList: List<Item> = mutableListOf()*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -176,11 +176,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
 
-    private suspend fun communicateWeather() {
+   /* private suspend fun communicateWeather() {
         val baseTime = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
         for(region in RegionLocation().regionList) {
             for (baseTime in baseTime) {
-                val response : Response<Root> = WeatherClient.apiService.getWeatherInfo(
+                val response : Reskseponse<Root> = WeatherClient.apiService.getWeatherInfo(
                     Constrant.WEATHER_API_KEY, "1", "JSON", "20231023", baseTime, region.regionX.toString(),region.regionY.toString()
                 )
                 if(response.isSuccessful) {
@@ -207,5 +207,5 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         }
-    }
+    }*/
 }

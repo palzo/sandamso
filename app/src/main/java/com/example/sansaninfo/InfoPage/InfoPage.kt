@@ -2,6 +2,7 @@ package com.example.sansaninfo.InfoPage
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
@@ -37,6 +38,10 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     lateinit var fusedLocationClient: FusedLocationProviderClient //gps를 이용해 위치 확인
     lateinit var locationCallBack: LocationCallback // 위치 값 요청에 대한 갱신 정보를 받는 변수
     lateinit var locationPermission: ActivityResultLauncher<Array<String>>
+    private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
+    private var latitude = 0.0
+    private var longitude = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -73,14 +78,15 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         initView()
     }
 
+
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
 
         if (receivedBundle != null && receivedBundle.containsKey("mntList")) {
             val mntList = receivedBundle.getParcelableArrayList<MntModel>("mntList")
-
-            displayMountainInfo(mntList)
+            val position = intent.getIntExtra("position", 0)
+            displayMountainInfo(mntList, position)
 
         }
 
@@ -89,33 +95,63 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun displayMountainInfo(mntList: List<MntModel>?) {
+    private fun displayMountainInfo(mntList: List<MntModel>?, position: Int) {
         if (!mntList.isNullOrEmpty()) {
-            val mntInfo = mntList[0]
+            val mntInfo = mntList[position]
 
             binding.infoPageTvMountainName.text = mntInfo.mntName
             binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
+            convertAddressToLatLng(mntInfo.mntName)
             binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
             if (mntInfo.mntMainInfo.isNotEmpty()) {
-                binding.infoPageTvMountainIntro.text = mntInfo.mntMainInfo
+                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntMainInfo)
             } else {
-                binding.infoPageTvMountainIntro.text = mntInfo.mntSubInfo
+                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntSubInfo)
             }
-            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun removeSpecialCharacters(inputText: String): String{
+        val pattern = Regex("&[^;]+;")
+        return pattern.replace(inputText," ")
+    }
+
+    private fun convertAddressToLatLng(address: String): LatLng? {
+        val geocoder = Geocoder(this)
+        try {
+            val addresses = geocoder.getFromLocationName(address, 1)
+            if (addresses != null) {
+                if (addresses.isNotEmpty()) {
+                    val location = addresses[0]
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    val locationLatLng = LatLng(latitude, longitude)
+//                    onMapReady(locationLatLng, latitude, longitude)
+                    return locationLatLng
+                } else {
+                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("주소 변환 오류", e.message.toString())
+        }
+        return null
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        //설악산 위치
-        val mountainLocation = LatLng(37.5674, 126.9799)
+        // 파란 마커 위치
+        val mountainLocation = LatLng(latitude, longitude)
+//        val mntList: List<MntModel>? =
+//        val mntList = List
+//        var mountainName = mntList.mntName
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
         mGoogleMap.apply {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
-            markerOptions.title("산이름")
-            markerOptions.snippet("전화번호")
+//            markerOptions.title("${mountainName}")
+//            markerOptions.snippet("")
             addMarker(markerOptions)
         }
 
@@ -134,7 +170,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 locationResult?.let {
                     for (location in it.locations) {
                         Log.d("위치정보", "위도:${location.latitude} 경도: ${location.longitude}")
-                        setLastLocation(location)
+                        setInitialUserLocation(location)
                     }
                 }
             }
@@ -155,11 +191,15 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
-    fun setLastLocation(lastLocation: Location) {
-        val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
-        val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-        val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(15.0f).build()
-        mGoogleMap.addMarker(makerOptions)
-        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+    // 카메라 위치 조정
+    fun setInitialUserLocation(lastLocation: Location) {
+        if (!userLocationSet) {
+            val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
+            val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
+            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(5.0f).build()
+            mGoogleMap.addMarker(makerOptions)
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            userLocationSet = true // 사용자 위치를 설정했음을 표시
+        }
     }
 }

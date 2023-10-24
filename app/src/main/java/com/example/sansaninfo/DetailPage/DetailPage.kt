@@ -1,72 +1,125 @@
 package com.example.sansaninfo.DetailPage
 
-import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.sansaninfo.CommunityPage.CommunityPageFragment
-import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.ActivityDetailPageBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.concurrent.thread
 
 class DetailPage : AppCompatActivity() {
 
+    private lateinit var auth: FirebaseAuth
+
     private val binding by lazy { ActivityDetailPageBinding.inflate(layoutInflater) }
 
-    lateinit var communityPageFragment: CommunityPageFragment
+    private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_page)
+        setContentView(binding.root)
 
         Toast.makeText(this, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
 
+        init()
+        dataView()
+
+        binding.detailPageIvBack.setOnClickListener {
+            finish()
+        }
+    }
+
+    // 프로그래스 바
+    fun init() {
+        blockLayoutTouch()
+        showProgress(true)
+        thread(start = true) {
+            Thread.sleep(2000)
+            runOnUiThread {
+                clearBlockLayoutTouch()
+                showProgress(false)
+            }
+        }
+    }
+
+    fun showProgress(isShow: Boolean) {
+        if (isShow) binding.progressBar.visibility = View.VISIBLE
+        else binding.progressBar.visibility = View.GONE
+    }
+
+    // 화면 터치 막기
+    private fun blockLayoutTouch() {
+        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    // 화면 터치 풀기
+    private fun clearBlockLayoutTouch() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    fun dataView() {
+        auth = FirebaseAuth.getInstance()
+
         val titleData = intent.getStringExtra("dataFromAddPageTitle")
-        val title = findViewById<TextView>(R.id.detail_page_tv_title)
         val maintextData = intent.getStringExtra("dataFromAddPageMaintext")
-        val maintext = findViewById<TextView>(R.id.detail_page_tv_memo)
         val imageData = intent.getStringExtra("dataFromAddPageimage")
         val date = getData()
-        val datetime = findViewById<TextView>(R.id.detail_page_tv_date)
 
-        title.text = titleData
-        maintext.text = maintextData
-        datetime.text = "작성일: ${date}"
-        Log.d("Image Tag", "${imageData}")
+        binding.detailPageTvTitle.text = titleData
+        binding.detailPageTvMemo.text = maintextData
+        binding.detailPageTvDate.text = "작성일: ${date}"
+        Log.d("Image Tag", "$imageData")
+
+        viewNickname()
 
         // 이미지 URI를 사용하여 Glide를 통해 이미지를 표시
-        val imageView = findViewById<ImageView>(R.id.detail_page_iv_main)
         val storage = FirebaseStorage.getInstance()
         val pathReference = storage.reference.child("images/${imageData}")
 
         pathReference.downloadUrl.addOnSuccessListener {
-            Log.d("Image Tag222", "${it}")
-            Glide.with(this).load(it).into(imageView)
+            Log.d("Image Tag222", "$it")
+            Glide.with(this).load(it).into(binding.detailPageIvMain)
         }.addOnFailureListener {
-            Log.d("Image Tag333", "${it}")
-        }
-
-        binding.detailPageIvBack.setOnClickListener {
-            communityPageFragment
+            Log.d("Image Tag333", "$it")
         }
     }
 
     fun getData(): String {
         val currentDateTime = Calendar.getInstance().time
-        val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(currentDateTime)
-        return dateFormat
+        return SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(currentDateTime)
+    }
+
+    fun viewNickname() {
+        val uid = auth.currentUser?.uid ?: ""
+        firebaseDatabase.child("users").child(uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val userData =
+                            snapshot.getValue(com.example.sansaninfo.Data.UserData::class.java)
+                        if (userData != null) {
+                            val nickname = userData.nickname
+                            binding.detailPageTvName.text = "작성자: ${nickname}"
+                            Log.d("Nickname", "작성자: ${nickname}")
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("Nickname", "error = $error")
+                }
+            })
     }
 }

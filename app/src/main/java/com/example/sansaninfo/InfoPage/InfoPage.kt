@@ -97,12 +97,16 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
             binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
             if (mntInfo.mntMainInfo.isNotEmpty()) {
-                binding.infoPageTvMountainIntro.text = mntInfo.mntMainInfo
+                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntMainInfo)
             } else {
-                binding.infoPageTvMountainIntro.text = mntInfo.mntSubInfo
+                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntSubInfo)
             }
 //            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun removeSpecialCharacters(inputText: String): String{
+        val pattern = Regex("&[^;]+;")
+        return pattern.replace(inputText," ")
     }
 
     override fun onMapReady(p0: GoogleMap) {

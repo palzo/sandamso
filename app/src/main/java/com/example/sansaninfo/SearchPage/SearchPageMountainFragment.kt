@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.parcel.Parcelize
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sansaninfo.InfoPage.InfoPage
@@ -18,14 +20,19 @@ import com.example.sansaninfo.MountainInfoData.ApiClient
 import com.example.sansaninfo.MountainInfoData.XmlResponse
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
+import com.skydoves.powerspinner.IconSpinnerAdapter
+import com.skydoves.powerspinner.createPowerSpinnerView
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import java.lang.Exception
 
 
 class SearchPageMountainFragment : Fragment() {
 
     private var _binding: FragmentSearchPageMountainBinding? = null
     private val binding get() = _binding!!
+    private var city = ""
 
     companion object {
         fun newInstance() = SearchPageMountainFragment()
@@ -59,13 +66,18 @@ class SearchPageMountainFragment : Fragment() {
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.searchPageEtSearchText.windowToken, 0)
 
-            getMntInfo(0,binding.searchPageEtSearchText.text.trim().toString())
+            getMntInfo(0, binding.searchPageEtSearchText.text.trim().toString())
+
+
         }
 
-        // 지역명으로 검색 시
+        // 지역명으로 검색 시 spinner 1
         binding.searchPageSpinnerSido.setOnSpinnerItemSelectedListener<String> { _, _, _, sido ->
 
             getMntInfo(1, sido)
+
+            // spinner 2 초기화 (첫 번째 spinner에 알맞은 구, 군을 가져옴)
+            initSpinner(sido)
         }
 
         // 산으로 검색 버튼 클릭 시 UI 초기화
@@ -77,11 +89,24 @@ class SearchPageMountainFragment : Fragment() {
             searchSwitch(2)
         }
 
+        // 지역명으로 검색 시 spinner 2
+        binding.searchPageSpinnerGoo.setOnSpinnerItemSelectedListener<String> { _, _, _, goo ->
+
+            getMntInfo(1, "$city $goo")
+        }
+
         // recyclerview 초기화 - adapter
         binding.searchPageRecyclerview.apply {
             adapter = searchPageAdapter
             clickMntItem()
         }
+    }
+
+    private fun initSpinner(city: String) = with(binding) {
+
+        searchPageSpinnerGoo.setItems(GooData.getRegionList(city))
+        searchPageSpinnerGoo.dismiss()
+
     }
 
     private fun getMntInfo(position: Int, inputValue: String) {
@@ -173,6 +198,8 @@ class SearchPageMountainFragment : Fragment() {
             searchPageBtMountain.setBackgroundResource(clickBtn)
             searchPageBtRegion.setBackgroundResource(btn)
             searchPageEtSearchText.text.clear()
+            binding.searchPageSpinnerSido.dismiss()
+            binding.searchPageSpinnerGoo.dismiss()
 
         } else if (position == 2 && searchPageSpinnerSido.visibility == View.INVISIBLE) {
 

@@ -112,7 +112,6 @@
         android:textColorHint="@color/black"
         android:textColor="@color/black"
         android:textSize="14sp"
-        app:spinner_item_array="@array/sido"
         android:visibility="invisible"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         app:layout_constraintEnd_toEndOf="@+id/search_page_bt_region"

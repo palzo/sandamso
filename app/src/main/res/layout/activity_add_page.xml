@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".AddPage.AddPage">
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/add_page_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="view2,add_page_tv_title,add_page_tv_title_limit,add_page_tv_title_limit_max,add_page_iv_add,add_page_spn_spinner,view4,textView7,textView8,textView9,textView10,imageView6,button" />
+
     <ImageView
         android:id="@+id/add_page_iv_backbutton"
         android:layout_width="wrap_content"
@@ -41,8 +47,8 @@
         android:id="@+id/add_page_tv_title"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:hint="제목을 입력해주세요. (필수)"
         android:background="@null"
+        android:hint="제목을 입력해주세요. (필수)"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="@+id/view2"
@@ -70,72 +76,32 @@
         app:layout_constraintEnd_toStartOf="@+id/add_page_tv_title_limit_max"
         app:layout_constraintTop_toTopOf="@+id/add_page_tv_title_limit_max" />
 
-    <View
-        android:id="@+id/view3"
-        android:layout_width="350dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/add_page_filled_round_rec"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_page_tv_title_limit_max" />
-
     <ImageView
         android:id="@+id/add_page_iv_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/view3"
-        app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toTopOf="@+id/view3"
-        app:srcCompat="@drawable/ic_add_photo" />
-
-    <ImageView
-        android:id="@+id/add_page_iv_add_photo"
-        android:layout_width="60dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="15dp"
-        android:visibility="invisible"
+        android:adjustViewBounds="true"
+        android:maxWidth="380dp"
+        android:maxHeight="150dp"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/add_page_iv_add"
-        app:layout_constraintStart_toEndOf="@id/add_page_iv_add"
-        app:layout_constraintTop_toTopOf="@+id/add_page_iv_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_page_tv_title_limit_max"
         app:srcCompat="@drawable/ic_add_photo" />
-
-    <TextView
-        android:id="@+id/add_page_tv_image_limit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 "
-        android:textColor="@color/mint"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/add_page_tv_image_limit_max"
-        app:layout_constraintEnd_toStartOf="@+id/add_page_tv_image_limit_max"
-        app:layout_constraintTop_toTopOf="@+id/add_page_tv_image_limit_max" />
-
-    <TextView
-        android:id="@+id/add_page_tv_image_limit_max"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:text="/ 5"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/add_page_iv_add"
-        app:layout_constraintTop_toBottomOf="@+id/add_page_iv_add" />
 
     <Spinner
         android:id="@+id/add_page_spn_spinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="@id/view2"
+        app:layout_constraintTop_toBottomOf="@id/add_page_iv_add" />
 
     <View
         android:id="@+id/view4"
         android:layout_width="350dp"
         android:layout_height="280dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/add_page_stroke_round_rec"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -146,9 +112,9 @@
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textSize="15sp"
         android:background="@null"
         android:hint="본문 내용 작성 (필수) \n- 최소 2자 ~ 5000자 이내를 작성할 수 있어요. \n- 다른 회원들을 위한 이쁜 언어로 작성해주는 센스 ~  \n- 우리 모두 깨끗한 등산 일지 작성해봐요 !"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/view4"
         app:layout_constraintStart_toStartOf="@+id/view4"
         app:layout_constraintTop_toTopOf="@+id/view4" />
@@ -202,4 +168,30 @@
         android:text="올리기"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+    <LinearLayout
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textColor="@color/dark_grey"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

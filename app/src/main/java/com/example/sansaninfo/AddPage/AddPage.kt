@@ -8,13 +8,14 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
 import android.content.Intent
-import androidx.core.view.isVisible
+import android.view.View
 import com.example.sansaninfo.Data.FBRef
 import com.example.sansaninfo.DetailPage.DetailPage
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivityAddPageBinding
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlin.concurrent.thread
 
 class AddPage : AppCompatActivity() {
 
@@ -26,23 +27,17 @@ class AddPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        init()
+
         with(binding) {
             button.setOnClickListener {
-                val title = addPageTvTitle.text.toString()
-                val maintext = textView7.text.toString()
-                val uri = Uri.parse(addPageIvAddPhoto.tag.toString())
-                uploadImage(uri) {
-                    if (it != null) {
-                        val user = User(title, maintext, it)
-                        val id = addItem(user)
-
-                        val intent = Intent(this@AddPage, DetailPage::class.java)
-                        intent.putExtra("dataFromAddPageTitle", title)
-                        intent.putExtra("dataFromAddPageMaintext", maintext)
-                        intent.putExtra("dataFromAddPageimage", it)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this@AddPage, "사진을 올려주세요.", Toast.LENGTH_SHORT).show()
+                showProgress(true)
+                goneData()
+                data()
+                thread(start = true) {
+                    Thread.sleep(2500)
+                    runOnUiThread {
+                        showProgress(false)
                     }
                 }
             }
@@ -59,6 +54,39 @@ class AddPage : AppCompatActivity() {
         }
     }
 
+    // 데이터 입력한 값 넘겨주기
+    fun data() {
+        with(binding) {
+            val title = addPageTvTitle.text.toString()
+            val maintext = textView7.text.toString()
+            val uri = Uri.parse(addPageIvAdd.tag.toString())
+
+            uploadImage(uri) {
+                if (it != null) {
+                    val user = User(title, maintext, it)
+                    val id = addItem(user)
+
+                    val intent = Intent(this@AddPage, DetailPage::class.java)
+                    intent.putExtra("dataFromAddPageTitle", title)
+                    intent.putExtra("dataFromAddPageMaintext", maintext)
+                    intent.putExtra("dataFromAddPageimage", it)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this@AddPage, "사진을 올려주세요.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    // firebase database 키 생성하기
+    fun addItem(user: User): String {
+        val id = FBRef.myRef.push().key!!
+        user.id = id
+        FBRef.myRef.child(id).setValue(user)
+        return id
+    }
+
     //권한 요청하기
     val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -73,18 +101,9 @@ class AddPage : AppCompatActivity() {
     //이미지 갤러리 불러오기
     val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            binding.addPageIvAddPhoto.isVisible = true
-            binding.addPageIvAddPhoto.setImageURI(uri)
-            binding.addPageIvAddPhoto.tag = uri.toString()
+            binding.addPageIvAdd.setImageURI(uri)
+            binding.addPageIvAdd.tag = uri.toString()
         }
-
-    // firebase database 키 생성하기
-    fun addItem(user: User): String {
-        val id = FBRef.myRef.push().key!!
-        user.id = id
-        FBRef.myRef.child(id).setValue(user)
-        return id
-    }
 
     fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
         val fullPath = makeFilePath("images", "temp", uri)
@@ -109,6 +128,22 @@ class AddPage : AppCompatActivity() {
         val timeSuffix = System.currentTimeMillis() // 시간값 ex) 1235421532
         val filename = "${path}/${userId}_${timeSuffix}.${ext}" // 완성!
         return filename
+    }
+
+    // 프로그래스 바
+    private fun init() {
+        showProgress(false)
+    }
+
+    fun showProgress(isShow: Boolean) {
+        if (isShow) binding.progressBar.visibility = View.VISIBLE
+        else binding.progressBar.visibility = View.GONE
+    }
+
+    fun goneData() {
+        with(binding) {
+            addPageGroup.visibility = View.GONE
+        }
     }
 }
 

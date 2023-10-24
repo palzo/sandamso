@@ -2,7 +2,6 @@ package com.example.sansaninfo.CommunityPage
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +9,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPage
-import com.example.sansaninfo.Data.FBRef
 import com.example.sansaninfo.Data.UserModel
 import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.auth.FirebaseAuth
 
 class CommunityPageFragment : Fragment() {
 
     private lateinit var binding: FragmentCommunityPageBinding
+    private lateinit var auth: FirebaseAuth
     private val communityList = mutableListOf<UserModel>()
     private val communityPageAdapter by lazy { CommunityPageAdapter() }
 
@@ -31,6 +28,10 @@ class CommunityPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        //FirebaseAuth 연결
+        auth = FirebaseAuth.getInstance()
+
         // Inflate the layout for this fragment
         binding = FragmentCommunityPageBinding.inflate(inflater, container, false)
 
@@ -43,7 +44,7 @@ class CommunityPageFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
-//        //데이터베이스에서 데이터 읽어오기
+        //데이터베이스에서 데이터 읽어오기
 //        getCommunityData()
     }
 

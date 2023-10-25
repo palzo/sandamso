@@ -9,10 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import kotlinx.android.parcel.Parcelize
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sansaninfo.InfoPage.InfoPage
@@ -20,12 +18,8 @@ import com.example.sansaninfo.MountainInfoData.ApiClient
 import com.example.sansaninfo.MountainInfoData.XmlResponse
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
-import com.skydoves.powerspinner.IconSpinnerAdapter
-import com.skydoves.powerspinner.createPowerSpinnerView
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
-import java.lang.Exception
 
 
 class SearchPageMountainFragment : Fragment() {
@@ -173,6 +167,10 @@ class SearchPageMountainFragment : Fragment() {
     }
 
     private fun navigateToInfoPage(position: Int) {
+        /*val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.replace(R.id.info_fragment, InfoPageFragment())
+        transaction?.commit()*/
+
         val intent = Intent(activity, InfoPage::class.java)
         // InfoPage로 이동 시 Bundle을 함께 전달
         val bundle = Bundle()

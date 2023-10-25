@@ -1,4 +1,3 @@
-/*
 package com.example.sansaninfo.API.ModelData
 
 // 날씨의 nx, ny 데이터 리스트
@@ -6,8 +5,7 @@ class RegionLocation {
     val regionList : List<regionList> = listOf(
         // 인천광역시 옹진군
         regionList(21, 132),
-        */
-/*regionList(21, 135),
+        regionList(21, 135),
         regionList(38, 129),
 
         // 이어도 -> 없을듯
@@ -64,8 +62,8 @@ class RegionLocation {
         regionList(101, 109),
 
         // 강원특별자치도 삼척시
-        regionList(101, 119),*//*
+        regionList(101, 119),
 
 
     )
-}*/
+}

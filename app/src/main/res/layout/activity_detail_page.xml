@@ -17,44 +17,42 @@
 
     <TextView
         android:id="@+id/detail_page_tv_top_title"
+        style="@style/PageTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="메아리"
-        android:textSize="25sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/detail_page_iv_back"
         app:layout_constraintStart_toEndOf="@id/detail_page_iv_back"
         app:layout_constraintTop_toTopOf="@id/detail_page_iv_back" />
 
     <TextView
         android:id="@+id/detail_page_tv_title"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
         android:text="설악산 한 번 정복하실 분??"
-        android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detail_page_tv_top_title" />
 
     <TextView
         android:id="@+id/detail_page_tv_name"
+        style="@style/RegularText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="작성자: 화산파이리"
-        android:textSize="13sp"
         app:layout_constraintStart_toStartOf="@id/detail_page_tv_title"
         app:layout_constraintTop_toBottomOf="@id/detail_page_tv_title" />
 
     <TextView
         android:id="@+id/detail_page_tv_date"
+        style="@style/RegularText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="작성일: 2023.xx.xx"
-        android:textSize="13sp"
         app:layout_constraintStart_toStartOf="@id/detail_page_tv_title"
         app:layout_constraintTop_toBottomOf="@id/detail_page_tv_name" />
 
@@ -62,7 +60,6 @@
         android:id="@+id/detail_page_ll_revise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@id/detail_page_tv_date"
@@ -76,6 +73,7 @@
 
         <TextView
             android:id="@+id/detail_page_tv_revise"
+            style="@style/SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -102,6 +100,7 @@
 
         <TextView
             android:id="@+id/detail_page_tv_delete"
+            style="@style/SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -156,6 +155,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendard_regular"
                     android:text="Loading..."
                     android:textColor="@color/dark_grey"
                     android:textSize="18sp" />
@@ -182,34 +182,34 @@
 
         <TextView
             android:id="@+id/detail_page_tv_gather"
+            style="@style/RegularText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2023.xx.xx까지 모집"
             android:textColor="#606060"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/detail_page_tv_dday"
+            style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="100dp"
             android:text="D-7"
             android:textColor="#4C4C4C"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/detail_page_tv_memo"
+        style="@style/RegularText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
         android:layout_marginVertical="13dp"
         android:text="저랑 같이 설악산 한 번 정복하실 분 구합니다! \n날짜는 다음주 수요일 입니다 많은 분들 참여 바랍니다!  \n참여하실 분은 좋댓 구알~!"
         android:textColor="#4A4A4A"
-        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detail_page_ll_deadline" />
@@ -230,6 +230,7 @@
             android:id="@+id/detail_page_tv_kakao_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
             android:text="카카오 오픈채팅"
             android:textStyle="bold" />
 
@@ -247,7 +248,7 @@
         android:id="@+id/detail_page_iv_ad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_darkmode"
+        android:src="@drawable/iv_ad_banner"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,14 +4,13 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.example.sansaninfo.Main.MainActivity
-import com.example.sansaninfo.R
 import androidx.lifecycle.lifecycleScope
 import com.example.sansaninfo.API.ModelData.Item
 import androidx.recyclerview.widget.LinearLayoutManager

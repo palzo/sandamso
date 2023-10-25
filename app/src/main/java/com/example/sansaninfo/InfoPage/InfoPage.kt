@@ -95,11 +95,20 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
 
-        if (receivedBundle != null && receivedBundle.containsKey("mntList")) {
-            val mntList = receivedBundle.getParcelableArrayList<MntModel>("mntList")
-            val position = intent.getIntExtra("position", 0)
-            displayMountainInfo(mntList, position)
+        receivedBundle?.let {
+            val receivedList : MntModel? = it.getParcelable("mntList")
 
+            receivedList?.let {
+                binding.infoPageTvMountainName.text = it.mntName
+                binding.infoPageTvMountainAddress.text = it.mntAddress
+                convertAddressToLatLng(it.mntName)
+                binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
+                if (it.mntMainInfo.isNotEmpty()) {
+                    binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntMainInfo)
+                } else {
+                    binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntSubInfo)
+                }
+            }
         }
 
         binding.infoPageBtnBackArrow.setOnClickListener {
@@ -107,22 +116,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun displayMountainInfo(mntList: List<MntModel>?, position: Int) {
-        if (!mntList.isNullOrEmpty()) {
-            val mntInfo = mntList[position]
-
-            binding.infoPageTvMountainName.text = mntInfo.mntName
-            binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
-            convertAddressToLatLng(mntInfo.mntName)
-            binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
-            if (mntInfo.mntMainInfo.isNotEmpty()) {
-                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntMainInfo)
-            } else {
-                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntSubInfo)
-            }
-//            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
-        }
-    }
     private fun removeSpecialCharacters(inputText: String): String{
         val pattern = Regex("&[^;]+;")
         return pattern.replace(inputText," ")

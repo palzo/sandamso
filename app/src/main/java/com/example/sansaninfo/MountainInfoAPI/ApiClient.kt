@@ -1,17 +1,11 @@
-package com.example.sansaninfo.MountainInfoData
+package com.example.sansaninfo.MountainInfoAPI
 
 import com.example.sansaninfo.BuildConfig
-import com.google.gson.GsonBuilder
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 object ApiClient {

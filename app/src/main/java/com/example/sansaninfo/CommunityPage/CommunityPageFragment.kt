@@ -2,6 +2,7 @@ package com.example.sansaninfo.CommunityPage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,16 +10,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPage
-import com.example.sansaninfo.Data.UserModel
+import com.example.sansaninfo.Data.PostModel
 import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class CommunityPageFragment : Fragment() {
 
     private lateinit var binding: FragmentCommunityPageBinding
     private lateinit var auth: FirebaseAuth
-    private val communityList = mutableListOf<UserModel>()
+    private val communityList = mutableListOf<PostModel>()
     private val communityPageAdapter by lazy { CommunityPageAdapter() }
+    private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     companion object {
         fun newInstance() = CommunityPageFragment()
@@ -42,20 +48,17 @@ class CommunityPageFragment : Fragment() {
 
         return binding.root
     }
+
     override fun onResume() {
         super.onResume()
         //데이터베이스에서 데이터 읽어오기
-//        getCommunityData()
+        getItems()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.communityPageRecyclerview.layoutManager = LinearLayoutManager(context)
         binding.communityPageRecyclerview.adapter = communityPageAdapter
-
-        for (i in 0..5) {
-            communityList.add(UserModel(title = "용석님", time = "2023.10.20"))
-        }
 
         communityPageAdapter.addItem(communityList)
         binding.communityPageRecyclerview.apply {
@@ -64,38 +67,39 @@ class CommunityPageFragment : Fragment() {
         }
     }
 
-//    private fun getCommunityData() {
-//        val postListener = object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                communityList.clear()
-//
-//                for (data in snapshot.children) {
-//                    val item = data.getValue(UserModel::class.java)
-//                    Log.d("CommunityList", "item: ${item}")
-//                    if (item != null) {
-//                        communityList.add(item)
-//                    }
-//                }
-//
-//                communityList.reverse()
-//              // notifyDataSetChanged()를 호출하여 adapter에게 값이 변경 되었음을 알려준다.
-//                communityPageAdapter.notifyDataSetChanged()
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.e("Firebase Error", error.message)
-//            }
-//        }
-//
-//        // addValueEventListener() 메서드로 DatabaseReference에 ValueEventListener를 추가한다.
-//        FBRef.myRef.addValueEventListener(postListener)
-//    }
-
+    // 아이템 클릭 처리
     private fun clickItem() {
         communityPageAdapter.setOnClickListener(object : CommunityPageAdapter.ItemClick{
-            override fun onClick(view: View, position: Int, model: UserModel) {
+            override fun onClick(view: View, position: Int, model: PostModel) {
                 Toast.makeText(context,"$position", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    // Realtime Database에서 POST 데이터 값 전부 가져오기
+    fun getItems() {
+
+        // 기존 데이터 초기화 하기
+        communityList.clear()
+
+        firebaseDatabase.child("POST")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        for (item in snapshot.children) {
+                            Log.d("item", "${item.value}")
+                            val userData =
+                                item.getValue(PostModel::class.java)
+                            if (userData != null) {
+                                communityList.add(userData)
+                                communityPageAdapter.addItem(communityList)
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
     }
 }

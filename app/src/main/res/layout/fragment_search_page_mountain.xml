@@ -8,6 +8,7 @@
 
     <Button
         android:id="@+id/search_page_bt_mountain"
+        style="@style/BtnText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="18dp"
@@ -18,8 +19,7 @@
         android:paddingHorizontal="26dp"
         android:paddingVertical="8dp"
         android:text="@string/search_page_btn_mnt"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@id/search_page_bt_region"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +27,7 @@
 
     <Button
         android:id="@+id/search_page_bt_region"
+        style="@style/BtnText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -36,14 +37,14 @@
         android:paddingHorizontal="26dp"
         android:paddingVertical="8dp"
         android:text="@string/search_page_btn_goo"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/search_page_bt_mountain"
         app:layout_constraintTop_toTopOf="@id/search_page_bt_mountain" />
 
     <EditText
         android:id="@+id/search_page_et_search_text"
+        style="@style/HintText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
@@ -53,20 +54,19 @@
         android:hint="@string/search_page_et_hint"
         android:paddingVertical="8dp"
         android:paddingStart="20dp"
-        android:textSize="15sp"
-        app:layout_constraintWidth_percent="0.7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_page_bt_region" />
+        app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
+        app:layout_constraintWidth_percent="0.7" />
 
     <ImageView
         android:id="@+id/search_page_iv_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_search"
-        app:layout_constraintWidth_percent="0.2"
         app:layout_constraintBottom_toBottomOf="@id/search_page_et_search_text"
         app:layout_constraintStart_toEndOf="@id/search_page_et_search_text"
-        app:layout_constraintTop_toTopOf="@id/search_page_et_search_text" />
+        app:layout_constraintTop_toTopOf="@id/search_page_et_search_text"
+        app:layout_constraintWidth_percent="0.2" />
 
     <com.skydoves.powerspinner.PowerSpinnerView
         android:id="@+id/search_page_spinner_sido"
@@ -78,25 +78,25 @@
         android:gravity="center"
         android:hint="@string/search_page_spinner_sido"
         android:padding="7dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:textSize="14sp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/search_page_bt_mountain"
         app:layout_constraintStart_toStartOf="@+id/search_page_bt_mountain"
         app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
-        app:spinner_item_array="@array/sido"
         app:spinner_arrow_gravity="end"
         app:spinner_arrow_tint="@color/black"
-        android:textColor="@color/black"
         app:spinner_divider_color="@color/light_grey"
         app:spinner_divider_show="true"
         app:spinner_divider_size="1dp"
-        app:spinner_selected_item_background="@color/light_mint"
+        app:spinner_item_array="@array/sido"
         app:spinner_item_height="33dp"
-        app:spinner_popup_max_height="240dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
         app:spinner_popup_animation="normal"
         app:spinner_popup_background="@color/white"
+        app:spinner_popup_max_height="240dp"
+        app:spinner_selected_item_background="@color/light_mint"
         tools:ignore="HardcodedText, UnusedAttribute" />
 
     <com.skydoves.powerspinner.PowerSpinnerView
@@ -109,11 +109,11 @@
         android:gravity="center"
         android:hint="@string/search_page_spinner_goo"
         android:padding="7dp"
-        android:textColorHint="@color/black"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textSize="14sp"
         android:visibility="invisible"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
         app:layout_constraintEnd_toEndOf="@+id/search_page_bt_region"
         app:layout_constraintStart_toStartOf="@+id/search_page_bt_region"
         app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
@@ -123,9 +123,9 @@
         app:spinner_divider_show="true"
         app:spinner_divider_size="1dp"
         app:spinner_item_height="33dp"
-        app:spinner_popup_max_height="240dp"
         app:spinner_popup_animation="normal"
         app:spinner_popup_background="@color/white"
+        app:spinner_popup_max_height="240dp"
         tools:ignore="HardcodedText, UnusedAttribute" />
 
     <androidx.recyclerview.widget.RecyclerView

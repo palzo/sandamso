@@ -1,22 +1,16 @@
 package com.example.sansaninfo.DetailPage
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
-import com.bumptech.glide.Glide
+import coil.load
 import com.example.sansaninfo.databinding.ActivityDetailPageBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 import kotlin.concurrent.thread
 
 class DetailPage : AppCompatActivity() {
@@ -25,13 +19,10 @@ class DetailPage : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailPageBinding.inflate(layoutInflater) }
 
-    private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        Toast.makeText(this, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
 
         init()
         dataView()
@@ -46,7 +37,7 @@ class DetailPage : AppCompatActivity() {
         blockLayoutTouch()
         showProgress(true)
         thread(start = true) {
-            Thread.sleep(2000)
+            Thread.sleep(1500)
             runOnUiThread {
                 clearBlockLayoutTouch()
                 showProgress(false)
@@ -69,57 +60,38 @@ class DetailPage : AppCompatActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
+    // Add Page에서 입력한 데이터 가져오기
     fun dataView() {
         auth = FirebaseAuth.getInstance()
 
         val titleData = intent.getStringExtra("dataFromAddPageTitle")
         val maintextData = intent.getStringExtra("dataFromAddPageMaintext")
         val imageData = intent.getStringExtra("dataFromAddPageimage")
-        val date = getData()
+        val kakaoData = intent.getStringExtra("dataFromAddPagekakao")
+        val dateData = intent.getStringExtra("dataFromAddPagedate")
+        val nicknameData = intent.getStringExtra("dataFromAddPagenickname")
 
         binding.detailPageTvTitle.text = titleData
         binding.detailPageTvMemo.text = maintextData
-        binding.detailPageTvDate.text = "작성일: ${date}"
+        binding.detailPageTvDate.text = "작성일: ${dateData}"
+        binding.detailPageTvName.text = "작성자: ${nicknameData}"
         Log.d("Image Tag", "$imageData")
 
-        viewNickname()
+        // 카카오톡 오픈채팅으로 이동하기
+        binding.detailPageLlKakaoChat.setOnClickListener {
+            var intent = Intent(Intent.ACTION_VIEW, Uri.parse(kakaoData))
+            startActivity(intent)
+        }
 
-        // 이미지 URI를 사용하여 Glide를 통해 이미지를 표시
+        // 이미지 URI를 사용하여 이미지 표시
         val storage = FirebaseStorage.getInstance()
         val pathReference = storage.reference.child("images/${imageData}")
 
         pathReference.downloadUrl.addOnSuccessListener {
             Log.d("Image Tag222", "$it")
-            Glide.with(this).load(it).into(binding.detailPageIvMain)
+            binding.detailPageIvMain.load(it)
         }.addOnFailureListener {
             Log.d("Image Tag333", "$it")
         }
-    }
-
-    fun getData(): String {
-        val currentDateTime = Calendar.getInstance().time
-        return SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(currentDateTime)
-    }
-
-    fun viewNickname() {
-        val uid = auth.currentUser?.uid ?: ""
-        firebaseDatabase.child("users").child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        val userData =
-                            snapshot.getValue(com.example.sansaninfo.Data.UserData::class.java)
-                        if (userData != null) {
-                            val nickname = userData.nickname
-                            binding.detailPageTvName.text = "작성자: ${nickname}"
-                            Log.d("Nickname", "작성자: ${nickname}")
-                        }
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("Nickname", "error = $error")
-                }
-            })
     }
 }

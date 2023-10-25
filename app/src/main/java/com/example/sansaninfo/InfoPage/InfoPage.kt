@@ -4,13 +4,14 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.sansaninfo.Main.MainActivity
+import com.example.sansaninfo.R
 import androidx.lifecycle.lifecycleScope
 import com.example.sansaninfo.API.ModelData.Item
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,6 +45,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
     private var latitude = 0.0
     private var longitude = 0.0
+    private var mountainName: String? = null
+    private var mountainHeight: String? = null
 
     private val handler = Handler(Looper.getMainLooper())
     private val itemList: List<Item> = mutableListOf()
@@ -67,6 +70,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             startActivity(intent)
         }
 
+        // 맵 위젯 연결
         locationPermission = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { result ->
@@ -78,6 +82,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this, "권한 승인이 필요합니다.", Toast.LENGTH_SHORT).show()
             }
         }
+
         //맵 권한 요청
         locationPermission.launch(
             arrayOf(
@@ -92,32 +97,26 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
 
-        if (receivedBundle != null && receivedBundle.containsKey("mntList")) {
-            val mntList = receivedBundle.getParcelableArrayList<MntModel>("mntList")
-            val position = intent.getIntExtra("position", 0)
-            displayMountainInfo(mntList, position)
+        receivedBundle?.let {
+            val receivedList : MntModel? = it.getParcelable("mntList")
 
+            receivedList?.let {
+                mountainName = it.mntName
+                mountainHeight = it.mntHgt
+                binding.infoPageTvMountainName.text = it.mntName
+                binding.infoPageTvMountainAddress.text = it.mntAddress
+                convertAddressToLatLng(it.mntName)
+                binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
+                if (it.mntMainInfo.isNotEmpty()) {
+                    binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntMainInfo)
+                } else {
+                    binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntSubInfo)
+                }
+            }
         }
 
         binding.infoPageBtnBackArrow.setOnClickListener {
             finish()
-        }
-    }
-
-    private fun displayMountainInfo(mntList: List<MntModel>?, position: Int) {
-        if (!mntList.isNullOrEmpty()) {
-            val mntInfo = mntList[position]
-
-            binding.infoPageTvMountainName.text = mntInfo.mntName
-            binding.infoPageTvMountainAddress.text = mntInfo.mntAddress
-            convertAddressToLatLng(mntInfo.mntName)
-            binding.infoPageTvMountainHeight.text = mntInfo.mntHgt + "m"
-            if (mntInfo.mntMainInfo.isNotEmpty()) {
-                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntMainInfo)
-            } else {
-                binding.infoPageTvMountainIntro.text = removeSpecialCharacters(mntInfo.mntSubInfo)
-            }
-//            Toast.makeText(this, "${mntInfo.mntCode}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -149,30 +148,38 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        // 파란 마커 위치
-        val mountainLocation = LatLng(latitude, longitude)
-//        val mntList: List<MntModel>? =
-//        val mntList = List
-//        var mountainName = mntList.mntName
+
+        val mountainLocation = LatLng(latitude, longitude)  // 파란(산위치) 마커 위치
+
         mGoogleMap = p0
-        mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL // default 노말 생략 가능
-        mGoogleMap.apply {
+        mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+
+        if (mountainName != null) {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
-//            markerOptions.title("${mountainName}")
-//            markerOptions.snippet("")
-            addMarker(markerOptions)
+            markerOptions.title(mountainName)   // 마커 클릭시 산 이름 표시
+            if (mountainHeight != null) {
+                markerOptions.snippet("높이: $mountainHeight m")
+            }
+
+            mGoogleMap.addMarker(markerOptions) // 마커 추가
+
+            val cameraPosition =
+                CameraPosition.Builder().target(mountainLocation).zoom(10.0f).build()
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))   // 산 위치 기반의 카메라 위치 조정
+            mGoogleMap.uiSettings.isZoomControlsEnabled = true  // 확대/축소 버튼을 활성화
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         updateLocation()
     }
 
+    //현위치잡기
     fun updateLocation() {
         val locationRequest = LocationRequest.create().apply {
-            interval = 1000
-            fastestInterval = 500
+            interval = 10000
+            fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         locationCallBack = object : LocationCallback() {
@@ -201,14 +208,14 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         )
     }
 
-    // 카메라 위치 조정
+
     fun setInitialUserLocation(lastLocation: Location) {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
             val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(5.0f).build()
+//            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(10.0f).build()
+//            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))    // 현위치 기반의 카메라 위치 조정
             mGoogleMap.addMarker(makerOptions)
-            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
             userLocationSet = true // 사용자 위치를 설정했음을 표시
         }
     }

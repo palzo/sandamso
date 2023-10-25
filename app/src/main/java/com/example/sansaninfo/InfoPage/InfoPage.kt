@@ -70,6 +70,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             startActivity(intent)
         }
 
+        // 맵 위젯 연결
         locationPermission = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { result ->
@@ -169,7 +170,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             markerOptions.position(mountainLocation)
             markerOptions.title(mountainName)   // 마커 클릭시 산 이름 표시
             if (mountainHeight != null) {
-                markerOptions.snippet("높이: $mountainHeight")
+                markerOptions.snippet("높이: $mountainHeight m")
             }
 
             mGoogleMap.addMarker(markerOptions) // 마커 추가
@@ -177,17 +178,18 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             val cameraPosition =
                 CameraPosition.Builder().target(mountainLocation).zoom(10.0f).build()
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))   // 산 위치 기반의 카메라 위치 조정
-
+            mGoogleMap.uiSettings.isZoomControlsEnabled = true  // 확대/축소 버튼을 활성화
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         updateLocation()
     }
 
+    //현위치잡기
     fun updateLocation() {
         val locationRequest = LocationRequest.create().apply {
-            interval = 1000
-            fastestInterval = 500
+            interval = 10000
+            fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         locationCallBack = object : LocationCallback() {

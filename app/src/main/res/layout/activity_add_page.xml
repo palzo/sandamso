@@ -24,12 +24,12 @@
 
     <TextView
         android:id="@+id/add_page_tv_titlename"
+        style="@style/PageTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:text="메아리 모임 게시물 올리기"
-        android:textSize="26sp"
         app:layout_constraintStart_toEndOf="@+id/add_page_iv_backbutton"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,11 +45,11 @@
 
     <EditText
         android:id="@+id/add_page_tv_title"
+        style="@style/HintText"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:background="@null"
         android:hint="제목을 입력해주세요. (필수)"
-        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="@+id/view2"
         app:layout_constraintStart_toStartOf="@+id/view2"
@@ -57,21 +57,21 @@
 
     <TextView
         android:id="@+id/add_page_tv_title_limit_max"
+        style="@style/SmallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="/ 30"
-        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/view2"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <TextView
         android:id="@+id/add_page_tv_title_limit"
+        style="@style/SmallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0 "
         android:textColor="@color/mint"
-        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/add_page_tv_title_limit_max"
         app:layout_constraintEnd_toStartOf="@+id/add_page_tv_title_limit_max"
         app:layout_constraintTop_toTopOf="@+id/add_page_tv_title_limit_max" />
@@ -81,13 +81,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:maxWidth="380dp"
-        android:maxHeight="150dp"
+        android:maxWidth="150dp"
+        android:maxHeight="100dp"
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_page_tv_title_limit_max"
-        app:srcCompat="@drawable/ic_add_photo" />
+        app:srcCompat="@drawable/add_photo" />
 
     <Spinner
         android:id="@+id/add_page_spn_spinner"
@@ -100,7 +100,7 @@
     <View
         android:id="@+id/view4"
         android:layout_width="350dp"
-        android:layout_height="280dp"
+        android:layout_height="120dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/add_page_stroke_round_rec"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,51 +109,54 @@
 
     <EditText
         android:id="@+id/textView7"
+        style="@style/HintText"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@null"
         android:hint="본문 내용 작성 (필수) \n- 최소 2자 ~ 5000자 이내를 작성할 수 있어요. \n- 다른 회원들을 위한 이쁜 언어로 작성해주는 센스 ~  \n- 우리 모두 깨끗한 등산 일지 작성해봐요 !"
-        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@+id/view4"
         app:layout_constraintStart_toStartOf="@+id/view4"
         app:layout_constraintTop_toTopOf="@+id/view4" />
 
     <TextView
         android:id="@+id/textView8"
+        style="@style/SmallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0 "
         android:textColor="@color/mint"
-        android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView9"
         app:layout_constraintEnd_toStartOf="@+id/textView9"
         app:layout_constraintTop_toTopOf="@+id/textView9" />
 
     <TextView
         android:id="@+id/textView9"
+        style="@style/SmallText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="/ 5000"
-        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/view4"
         app:layout_constraintTop_toBottomOf="@+id/view4" />
 
     <TextView
         android:id="@+id/textView10"
+        style="@style/HintText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:text="카카오톡 오픈채팅 만들러가기"
-        app:layout_constraintStart_toStartOf="@+id/view4"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        android:textColor="@color/dark_grey"
+        app:layout_constraintStart_toStartOf="@+id/view3"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
 
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/textView10"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="@+id/textView10"
@@ -161,12 +164,15 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        style="@style/BtnText"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/add_page_mint_button"
-        android:text="올리기"
+        android:text="게시하기"
+        android:textColor="@color/grey_800"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
     <LinearLayout
@@ -188,10 +194,33 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
             android:text="Loading..."
             android:textColor="@color/dark_grey"
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/add_page_stroke_round_rec"
+        app:layout_constraintEnd_toEndOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <EditText
+        android:id="@+id/add_page_tv_openkakao"
+        style="@style/HintText"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="카카오톡 오픈 채팅방 링크 남기기 (필수)"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="@+id/view3"
+        app:layout_constraintTop_toTopOf="@+id/view3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

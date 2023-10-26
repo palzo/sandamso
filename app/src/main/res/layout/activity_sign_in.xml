@@ -26,7 +26,6 @@
         android:layout_marginTop="28dp"
         android:background="@drawable/signin_roundbox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signin_title">
 
@@ -34,7 +33,7 @@
         <TextView
             android:id="@+id/signin_tv_login"
             style="@style/PageTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="30dp"

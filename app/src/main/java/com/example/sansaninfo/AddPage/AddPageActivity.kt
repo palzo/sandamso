@@ -16,7 +16,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import com.example.sansaninfo.Data.FBRef
 import com.example.sansaninfo.Data.PostModel
-import com.example.sansaninfo.DetailPage.DetailPage
+import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivityAddPageBinding
 import com.google.firebase.auth.ktx.auth
@@ -31,7 +31,7 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.concurrent.thread
 
-class AddPage : AppCompatActivity() {
+class AddPageActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
 
@@ -89,7 +89,7 @@ class AddPage : AppCompatActivity() {
                     showProgress(true)
                     goneData()
                     data()
-                    Toast.makeText(this@AddPage, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AddPageActivity, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
                     thread(start = true) {
                         Thread.sleep(2500)
                         runOnUiThread {
@@ -140,7 +140,7 @@ class AddPage : AppCompatActivity() {
                 if (it != null) {
 
                     // 날짜 데이터 저장
-                    val data = getData()
+                    val date = getData()
 
                     // 파이어 베이스에 데이터 추가하기
                     var user = PostModel(
@@ -148,7 +148,7 @@ class AddPage : AppCompatActivity() {
                         maintext = maintext,
                         image = it,
                         kakao = kakao,
-                        date = data,
+                        date = date,
                         writer = Firebase.auth.currentUser?.uid
                     )
 
@@ -157,12 +157,12 @@ class AddPage : AppCompatActivity() {
                         user = user.copy(nickname = nickname)
                         addItem(user)
 
-                        val intent = Intent(this@AddPage, DetailPage::class.java)
+                        val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
                         intent.putExtra("dataFromAddPageTitle", title)
                         intent.putExtra("dataFromAddPageMaintext", maintext)
                         intent.putExtra("dataFromAddPageimage", it)
                         intent.putExtra("dataFromAddPagekakao", kakao)
-                        intent.putExtra("dataFromAddPagedate", data)
+                        intent.putExtra("dataFromAddPagedate", date)
                         intent.putExtra("dataFromAddPagenickname", nickname)
                         startActivity(intent)
                         finish()
@@ -209,7 +209,7 @@ class AddPage : AppCompatActivity() {
         if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {
                 100 -> {
-                    Toast.makeText(this@AddPage, "갤러리 불러오기 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AddPageActivity, "갤러리 불러오기 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show()
                     galleryLauncher.launch("image/*")
                 }
             }

@@ -7,10 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.AddPage.AddPage
+import com.example.sansaninfo.AddPage.AddPageActivity
 import com.example.sansaninfo.Data.PostModel
+import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -42,7 +42,7 @@ class CommunityPageFragment : Fragment() {
         binding = FragmentCommunityPageBinding.inflate(inflater, container, false)
 
         binding.communityPageFab.setOnClickListener {
-            val intent = Intent(requireContext(), AddPage::class.java)
+            val intent = Intent(requireContext(), AddPageActivity::class.java)
             startActivity(intent)
         }
 
@@ -57,7 +57,11 @@ class CommunityPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.communityPageRecyclerview.layoutManager = LinearLayoutManager(context)
+        // 업로드한 게시물이 위로 가게 설정
+        binding.communityPageRecyclerview.layoutManager = LinearLayoutManager(context).apply {
+            reverseLayout = true
+            stackFromEnd = true
+        }
         binding.communityPageRecyclerview.adapter = communityPageAdapter
 
         communityPageAdapter.addItem(communityList)
@@ -69,9 +73,18 @@ class CommunityPageFragment : Fragment() {
 
     // 아이템 클릭 처리
     private fun clickItem() {
-        communityPageAdapter.setOnClickListener(object : CommunityPageAdapter.ItemClick{
+        communityPageAdapter.setOnClickListener(object : CommunityPageAdapter.ItemClick {
             override fun onClick(view: View, position: Int, model: PostModel) {
-                Toast.makeText(context,"$position", Toast.LENGTH_SHORT).show()
+                val intent = Intent(activity, DetailPageActivity::class.java)
+                with(model) {
+                    intent.putExtra("dataFromAddPageTitle", title)
+                    intent.putExtra("dataFromAddPageMaintext", maintext)
+                    intent.putExtra("dataFromAddPageimage", image)
+                    intent.putExtra("dataFromAddPagekakao", kakao)
+                    intent.putExtra("dataFromAddPagedate", date)
+                    intent.putExtra("dataFromAddPagenickname", nickname)
+                }
+                startActivity(intent)
             }
         })
     }

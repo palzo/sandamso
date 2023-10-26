@@ -21,7 +21,8 @@
             android:id="@+id/search_page_iv_mnt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/iv_example" />
+            android:background="@drawable/iv_example"
+            android:scaleType="fitCenter"/>
 
         <View
             android:id="@+id/view5"

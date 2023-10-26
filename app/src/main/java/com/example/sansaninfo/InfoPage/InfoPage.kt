@@ -95,12 +95,13 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         val receivedBundle = intent.extras
 
         receivedBundle?.let {
-            val receivedList : MntModel? = it.getParcelable("mntList")
+            val receivedList: MntModel? = it.getParcelable("mntList")
 
             receivedList?.let {
                 mountainAddress = it.mntAddress
                 mountainHeight = it.mntHgt
                 convertAddressToLatLng(it.mntAddress)
+
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"

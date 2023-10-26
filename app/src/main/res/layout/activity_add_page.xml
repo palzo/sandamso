@@ -111,11 +111,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/add_page_stroke_round_rec"
                 android:hint="본문 내용 작성 (필수) \n- 최소 2자 ~ 5000자 이내를 작성할 수 있어요. \n- 다른 회원들을 위한 이쁜 언어로 작성해주는 센스 ~  \n- 우리 모두 깨끗한 등산 일지 작성해봐요 !"
                 android:padding="20dp"
-                app:layout_constraintBottom_toTopOf="@id/add_page_tv_kakao_open"
                 app:layout_constraintEnd_toEndOf="@id/add_page_tv_title"
                 app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
                 app:layout_constraintTop_toBottomOf="@+id/add_page_spn_spinner" />
@@ -137,14 +136,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
-                android:layout_marginTop="30dp"
                 android:background="@drawable/add_page_stroke_round_rec"
                 android:hint="  카카오톡 오픈 채팅방 링크 남기기 (필수)"
                 android:padding="10dp"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@id/add_page_tv_title"
                 app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
-                app:layout_constraintTop_toBottomOf="@id/add_page_et_text" />
+                app:layout_constraintTop_toBottomOf="@+id/add_page_tv_text_limit" />
 
             <TextView
                 android:id="@+id/textView10"

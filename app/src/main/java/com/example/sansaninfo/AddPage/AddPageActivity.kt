@@ -186,9 +186,6 @@ class AddPageActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 galleryLauncher.launch("image/*")
-            } else {
-                Toast.makeText(baseContext, "외부 저장소 읽기 권한을 승인해야 사용할 수 있습니다.", Toast.LENGTH_LONG)
-                    .show()
             }
         }
 

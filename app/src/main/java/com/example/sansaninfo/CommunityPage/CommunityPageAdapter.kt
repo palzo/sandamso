@@ -15,9 +15,6 @@ class CommunityPageAdapter :
 
     private val items = arrayListOf<PostModel>()
 
-    // 화면 터치를 제어할 변수
-    private var isBlockingTouch = false
-
     interface ItemClick {
         fun onClick(view: View, position: Int, model: PostModel)
     }
@@ -67,59 +64,16 @@ class CommunityPageAdapter :
             communityItemTvNickname.text =items.nickname
             communityItemTvDate.text = items.date
 
-            // 로딩 중 화면 터치 막기
-            if (isBlockingTouch) {
-                progressBar.visibility = View.VISIBLE
-            } else {
-                progressBar.visibility = View.GONE
-            }
-
             // 이미지 URI를 사용하여 이미지 표시하기
             val storage = FirebaseStorage.getInstance()
             val pathReference = storage.reference.child("images/${items.image}")
 
-//            // 로딩 중 화면 터치 막기
-//            blockLayoutTouch()
-
             pathReference.downloadUrl.addOnSuccessListener {
-                // 프로그래스 바 숨기기
-                if (!isBlockingTouch) {
-                    // 프로그래스 바 숨기기
-                    progressBar.visibility = View.GONE
-                }
-//                showProgress(false)
                 Log.d("Image Tag222", "$it")
                 communityItemIvImage.load(it)
-//                // 화면 터치 풀기
-//                clearBlockLayoutTouch()
             }.addOnFailureListener {
-                // 실패할 경우에도 프로그래스 바 숨기기
-                showProgress(false)
                 Log.d("Image Tag333", "$it")
-                clearBlockLayoutTouch()
             }
         }
-    }
-
-    fun showProgress(isShow: Boolean) {
-        if (isShow) {
-            isBlockingTouch = true
-            notifyDataSetChanged()
-        } else {
-            isBlockingTouch = false
-            notifyDataSetChanged()
-        }
-    }
-
-    // 화면 터치 막기
-    private fun blockLayoutTouch() {
-        isBlockingTouch = true
-        notifyDataSetChanged()
-    }
-
-    // 화면 터치 풀기
-    private fun clearBlockLayoutTouch() {
-        isBlockingTouch = false
-        notifyDataSetChanged()
     }
 }

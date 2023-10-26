@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlin.concurrent.thread
 
-class DetailPage : AppCompatActivity() {
+class DetailPageActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
@@ -37,7 +37,7 @@ class DetailPage : AppCompatActivity() {
         blockLayoutTouch()
         showProgress(true)
         thread(start = true) {
-            Thread.sleep(1500)
+            Thread.sleep(1000)
             runOnUiThread {
                 clearBlockLayoutTouch()
                 showProgress(false)

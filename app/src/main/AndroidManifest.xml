@@ -44,10 +44,10 @@
             android:name=".InfoPage.InfoPage"
             android:exported="false" />
         <activity
-            android:name=".DetailPage.DetailPage"
+            android:name=".DetailPage.DetailPageActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPage.AddPage"
+            android:name=".AddPage.AddPageActivity"
             android:exported="false" />
         <activity
             android:name=".SplashScreen"

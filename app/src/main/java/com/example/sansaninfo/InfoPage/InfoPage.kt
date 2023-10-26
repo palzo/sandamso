@@ -241,24 +241,24 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     "json",
                     "20",
                     "1",
-                    "20231024",
+                    "20231025",
                     baseTime,
                     region.regionX.toString(),
                     region.regionY.toString()
                 )
                 if(response.isSuccessful) {
+                Log.d("WeatherAPI Response", "is Successful")
                     if (response.body() != null) {
                         for (item in itemList) {
-                            val baseDate = item.baseDate
+                            //val baseDate = item.baseDate
                             val baseTime = item.baseTime
-                            val category = item.category
+                            /*val category = item.category
                             val nx = item.nx
-                            val ny = item.ny
+                            val ny = item.ny*/
                             // tmp로 가져올 값 수정하기
                             val weatherItemData =
-                                WeatherData(baseDate, baseTime, category, nx, ny, "tmp")
+                                WeatherData(baseTime, "tmp")
                             weatherData.add(weatherItemData)
-                            Log.d("WeatherData", "$weatherItemData")
                         }
                     }
                     handler.post {

@@ -25,7 +25,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 class SearchPageMountainFragment : Fragment() {
 
     private var _binding: FragmentSearchPageMountainBinding? = null
@@ -51,6 +50,7 @@ class SearchPageMountainFragment : Fragment() {
 
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -98,16 +98,16 @@ class SearchPageMountainFragment : Fragment() {
             clickMntItem()
         }
     }
+
     private fun initSpinner(city: String) = with(binding) {
 
         searchPageSpinnerGoo.setItems(GooData.getRegionList(city))
         searchPageSpinnerGoo.dismiss()
 
     }
-    private fun getMntInfo(position: Int, inputValue: String) {
 
-        val apiKey =
-            "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
+    // 산 이름, 산 지역을 검색할 경우 정보를 가져옴
+    private fun getMntInfo(position: Int, inputValue: String) {
 
         var mntName = ""
         var mntRegion = ""
@@ -120,7 +120,7 @@ class SearchPageMountainFragment : Fragment() {
         ApiClient.mntNetwork.getMountainInfo(
             mntName = mntName,
             mntRegion = mntRegion,
-            key = apiKey
+            key = BuildConfig.WEATHER_API_KEY
         )?.enqueue(object : Callback<XmlResponse?> {
             override fun onResponse(
                 call: Call<XmlResponse?>,
@@ -129,72 +129,71 @@ class SearchPageMountainFragment : Fragment() {
                 mntList.clear()
                 response.body().let { XmlResponse ->
                     XmlResponse?.body?.items?.item?.forEach { item ->
-//                        val testURL = findImgCode(item.mntName)
-                        mntList.add(
-                            MntModel(
-                                mntName = item.mntName,
-                                mntHgt = item.mntHeight,
-                                mntMainInfo = item.mntInfo,
-                                mntSubInfo = item.mntSubInfo,
-                                mntAddress = item.mntAddress,
-//                                 name, region 둘 다 들어와야 함 -> mntName x 왜 지역으로할때만 들어옴 ?
-                                mntImgCode = MountainMapping.getMountainCode(
-                                    item.mntName.trim()
+                        // 중복되는 산 이름 제거
+                        val isAlreadyAdded = mntList.any { it.mntName == item.mntName }
+                        if (!isAlreadyAdded) {
+                            mntList.add(
+                                MntModel(
+                                    mntName = item.mntName,
+                                    mntHgt = item.mntHeight,
+                                    mntMainInfo = item.mntInfo,
+                                    mntSubInfo = item.mntSubInfo,
+                                    mntAddress = item.mntAddress,
+                                    mntLastInfo = item.mntLastInfo,
+                                    mntImgCode = MountainMapping.getMountainCode(
+                                        item.mntName.trim()
+                                    ),
+                                    mntImgURL = "",
                                 )
                             )
-                        )
+                        }
                     }
                 }
+                findImgURL()
                 if (isAdded) {
                     requireActivity().runOnUiThread {
                         searchPageAdapter.addItems(mntList)
                     }
                 }
             }
-
             override fun onFailure(call: Call<XmlResponse?>, t: Throwable) {
-                Log.e("#jblee", "onFailure: ${t.message}")
-                Toast.makeText(requireContext(), "정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                Log.e("test", "getMntInfo onFailure: ${t.message}")
             }
         })
     }
-//    private fun findImgCode(mntName: String): String {
-//        val mntCode = MountainMapping.getMountainCode(mntName.trim())
-//        Log.d("test", "mntCode : $mntCode")
-//        var URL = ""
-//        if (mntCode != null) {
-//            MntImgClient.mntNetwork.getMntImgCode(
-//                // MountainMapping에서 산 이름과 매칭되는 산 코드를 가져와야함
-//                mntCodeNum = mntCode.toInt(),
-//                key = BuildConfig.WEATHER_API_KEY
-////                key = "4bpUeSQaXnUDSalDsumQ5dkxA+bJXWN4dhwsYexJp6wAJnadjR+UoIVo1Dhac/spEq1HRVngbbHuY8QLzUwVBg=="
-//            )?.enqueue(object : Callback<ImgResponse?> {
-//                override fun onResponse(
-//                    call: Call<ImgResponse?>,
-//                    response: Response<ImgResponse?>
-//                ) {
-//                    response.body().let {
-//                        it?.body?.items?.item?.forEach { item ->
-//                            if(item.imgURL != null){
-////                            Log.d("test", "imgURL : ${item.imgURL}")
-//                                URL = item.imgURL
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<ImgResponse?>, t: Throwable) {
-//                    Log.e("test", "onFailure: ${t.message}")
-//                    Toast.makeText(requireContext(), "정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-//                }
-//            })
-//            Log.d("test", "return URL : $URL")
-//            return URL
-//        } else {
-//            Log.d("test", "산 못찾음.")
-//            return "0"
-//        }
-//    }
+
+    // 산 코드를 이용하여 이미지 URL을 받아오는 부분
+    private fun findImgURL() {
+        mntList.forEach { item ->
+            if (item.mntImgCode != 0) {
+                item.mntImgCode?.let { mntImgCode ->
+                    MntImgClient.mntNetwork.getMntImgCode(
+
+                        mntCodeNum = mntImgCode,
+                        key = BuildConfig.WEATHER_API_KEY,
+
+                        ).enqueue(object : Callback<ImgResponse?> {
+                        override fun onResponse(
+                            call: Call<ImgResponse?>,
+                            response: Response<ImgResponse?>
+                        ) {
+                            response.body().let {
+                                it?.body?.items?.item?.forEach {
+                                    if(it.imgURL != ""){
+                                        item.mntImgURL = it.imgURL
+                                    }
+                                }
+                            }
+                        }
+                        override fun onFailure(call: Call<ImgResponse?>, t: Throwable) {
+                            Log.e("test", "findImgURL onFailure: ${t.message}")
+                        }
+                    })
+                }
+            }
+        }
+    }
+
     private fun clickMntItem() {
         searchPageAdapter.setOnClickListener(object : SearchPageAdapter.ItemClick {
             override fun onClick(view: View, position: Int, model: MntModel) {
@@ -202,6 +201,7 @@ class SearchPageMountainFragment : Fragment() {
             }
         })
     }
+
     private fun navigateToInfoPage(position: Int) {
         val intent = Intent(activity, InfoPage::class.java)
         // InfoPage로 이동 시 Bundle을 함께 전달
@@ -210,6 +210,7 @@ class SearchPageMountainFragment : Fragment() {
         intent.putExtras(bundle)
         startActivity(intent)
     }
+
     private fun searchSwitch(position: Int) = with(binding) {
 
         val clickBtn = R.drawable.search_page_click_button_background
@@ -242,11 +243,13 @@ class SearchPageMountainFragment : Fragment() {
 
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 }
+
 @Parcelize
 data class MntModel(
     val mntName: String,
@@ -254,5 +257,7 @@ data class MntModel(
     val mntAddress: String,
     val mntMainInfo: String,
     val mntSubInfo: String,
-    val mntImgCode: Int?,
+    val mntLastInfo: String,
+    var mntImgCode: Int?,
+    var mntImgURL: String
 ) : Parcelable

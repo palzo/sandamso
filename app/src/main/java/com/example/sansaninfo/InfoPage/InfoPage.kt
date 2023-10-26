@@ -19,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import coil.load
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.MntModel
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.coroutineScope
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -98,19 +100,32 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         val receivedBundle = intent.extras
 
         receivedBundle?.let {
-            val receivedList : MntModel? = it.getParcelable("mntList")
+            val receivedList: MntModel? = it.getParcelable("mntList")
 
             receivedList?.let {
-                mountainName = mntInfo.mntName
-                mountainHeight = mntInfo.mntHgt
+                mountainName = it.mntName
+                mountainHeight = it.mntHgt
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
                 convertAddressToLatLng(it.mntName)
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
-                if (it.mntMainInfo.isNotEmpty()) {
+                if (removeSpecialCharacters(it.mntMainInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntMainInfo)
-                } else {
+                    Log.d("test", "mntMainInfo : ${removeSpecialCharacters(it.mntMainInfo)}")
+                } else if(removeSpecialCharacters(it.mntSubInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntSubInfo)
+                    Log.d("test", "mntSubInfo : ${removeSpecialCharacters(it.mntSubInfo)}")
+                } else{
+                    binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntLastInfo)
+                    Log.d("test", "mntLastInfo : ${removeSpecialCharacters(it.mntLastInfo)}")
+                }
+                if (it.mntImgURL == "") {
+                    it.mntImgCode?.let { it1 -> binding.infoPageIvMountain.setImageResource(it1) }
+                } else {
+                    val img = "https://www.forest.go.kr/images/data/down/mountain/" + it.mntImgURL
+                    binding.infoPageIvMountain.load(img){
+                        size(100, 100)
+                    }
                 }
             }
         }
@@ -121,8 +136,19 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun removeSpecialCharacters(inputText: String): String {
-        val pattern = Regex("&[^;]+;")
-        return pattern.replace(inputText, " ")
+        var result = inputText
+        result = result.replace("&amp;", "")
+        result = result.replace("amp;", "")
+        result = result.replace("nbsp;", "")
+        result = result.replace("lt;br / gt;", "")
+        result = result.replace("br", "")
+        result = result.replace("&lt;p&gt;", "")
+        result = result.replace("&lt;BR&gt;", "")
+        result = result.replace("&lt;&gt;", "")
+        result = result.replace("&lt;/p&gt;", "")
+        result = result.replace("&quot;", "")
+        result = result.replace("lt;", "")
+        return result
     }
 
     private fun convertAddressToLatLng(address: String): LatLng? {
@@ -177,7 +203,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     //현위치잡기
-    fun updateLocation() {
+    private fun updateLocation() {
+
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000

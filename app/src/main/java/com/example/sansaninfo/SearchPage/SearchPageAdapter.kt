@@ -63,52 +63,26 @@ class SearchPageAdapter : RecyclerView.Adapter<SearchPageAdapter.SearchViewHolde
 
         fun bind(model: MntModel) = with(binding) {
             searchPageTvMnt.text = model.mntName
-            Log.d("test", "mntName: ${model.mntName}, mntImgCode : ${model.mntImgCode}")
-            if (model.mntImgCode == 0) {
-                searchPageIvMnt.setImageResource(randomImage())
+            Log.d(
+                "test",
+                "mntName: ${model.mntName}, mntImgCode : ${model.mntImgCode}, mntImgURL : ${model.mntImgURL}"
+            )
+            if (model.mntImgURL == "") {
+                val randomImg = randomImage()
+                searchPageIvMnt.setImageResource(randomImg)
+                model.mntImgCode = randomImg
             } else {
-                model.mntImgCode?.let {
-                    MntImgClient.mntNetwork.getMntImgCode(
-                        key = BuildConfig.WEATHER_API_KEY,
-                        mntCodeNum = it
-                    ).enqueue(object : Callback<ImgResponse?> {
-                        override fun onResponse(
-                            call: Call<ImgResponse?>,
-                            response: Response<ImgResponse?>
-                        ) {
-                            response.body().let {
-                                it?.body?.items?.item?.forEach {
-                                    if (it.imgURL == "") {
-                                        searchPageIvMnt.setImageResource(randomImage())
-                                    } else {
-                                        val img =
-                                            "https://www.forest.go.kr/images/data/down/mountain/" + it.imgURL
-                                        searchPageIvMnt.load(img) {
-                                            size(180, 150)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        override fun onFailure(call: Call<ImgResponse?>, t: Throwable) {
-
-                        }
-                    })
+                val img = "https://www.forest.go.kr/images/data/down/mountain/" + model.mntImgURL
+                searchPageIvMnt.load(img){
+                    size(160, 130)
                 }
-//                val img = "https://www.forest.go.kr/images/data/down/mountain/" + model.mntImgCode
-//                searchPageIvMnt.load(img) {
-//                    size(180, 150)
-//                }
             }
         }
     }
-
     fun itemsClear() {
         list.clear()
         notifyDataSetChanged()
     }
-
     private fun randomImage(): Int {
         return when (Random.nextInt(26)) {
             1 -> R.drawable.ic_mnt1

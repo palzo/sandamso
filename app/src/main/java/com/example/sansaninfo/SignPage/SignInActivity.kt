@@ -1,5 +1,6 @@
 package com.example.sansaninfo.SignPage
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +20,8 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        
 
         // EditText 유효성 검사 기능 추가
         binding.signinEtEmail.addTextChangedListener(object : TextWatcher {

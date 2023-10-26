@@ -1,11 +1,6 @@
 package com.example.sansaninfo.InfoPage
 
-/*import com.example.sansaninfo.API.Model
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.API.Constrants.Constrant
-import com.example.sansaninfo.API.ModelData.RegionLocation
-import com.example.sansaninfo.API.ModelData.Root
-import com.example.sansaninfo.API.Retrofit.WeatherClient*/
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -19,6 +14,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import coil.load
+import androidx.lifecycle.lifecycleScope
+import com.example.sansaninfo.API.ModelData.Item
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sansaninfo.API.ModelData.RegionLocation
+import com.example.sansaninfo.API.ModelData.Root
+import com.example.sansaninfo.API.Retrofit.WeatherClient
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.MntModel
@@ -36,6 +38,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -47,17 +55,21 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
     private var latitude = 0.0
     private var longitude = 0.0
-    private var mountainName: String? = null
+    private var mountainAddress: String? = null
     private var mountainHeight: String? = null
 
-
-    /*    private val handler = Handler(Looper.getMainLooper())
-        private var weatherData = mutableListOf<WeatherData>()
-        private val itemList: List<Item> = mutableListOf()*/
+    //private val handler = Handler(Looper.getMainLooper())
+    private val itemList: List<Item> = mutableListOf()
+    private var weatherData = mutableListOf<WeatherData>()
+    private var weatherDataList = mutableListOf<WeatherData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        binding.infoPageRvWeather.adapter = InfoPageAdapter(weatherData)
+        binding.infoPageRvWeather.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        communicateWeather()
 
         binding.infoPageBtnBackArrow.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -98,19 +110,32 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         val receivedBundle = intent.extras
 
         receivedBundle?.let {
-            val receivedList : MntModel? = it.getParcelable("mntList")
+            val receivedList: MntModel? = it.getParcelable("mntList")
 
             receivedList?.let {
-                mountainName = mntInfo.mntName
-                mountainHeight = mntInfo.mntHgt
+                mountainAddress = it.mntAddress
+                mountainHeight = it.mntHgt
+                convertAddressToLatLng(it.mntAddress)
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
-                convertAddressToLatLng(it.mntName)
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
-                if (it.mntMainInfo.isNotEmpty()) {
+                if (removeSpecialCharacters(it.mntMainInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntMainInfo)
-                } else {
+                    Log.d("test", "mntMainInfo : ${removeSpecialCharacters(it.mntMainInfo)}")
+                } else if(removeSpecialCharacters(it.mntSubInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntSubInfo)
+                    Log.d("test", "mntSubInfo : ${removeSpecialCharacters(it.mntSubInfo)}")
+                } else{
+                    binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntLastInfo)
+                    Log.d("test", "mntLastInfo : ${removeSpecialCharacters(it.mntLastInfo)}")
+                }
+                if (it.mntImgURL == "") {
+                    it.mntImgCode?.let { it1 -> binding.infoPageIvMountain.setImageResource(it1) }
+                } else {
+                    val img = "https://www.forest.go.kr/images/data/down/mountain/" + it.mntImgURL
+                    binding.infoPageIvMountain.load(img){
+                        size(100, 100)
+                    }
                 }
             }
         }
@@ -121,8 +146,19 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun removeSpecialCharacters(inputText: String): String {
-        val pattern = Regex("&[^;]+;")
-        return pattern.replace(inputText, " ")
+        var result = inputText
+        result = result.replace("&amp;", "")
+        result = result.replace("amp;", "")
+        result = result.replace("nbsp;", "")
+        result = result.replace("lt;br / gt;", "")
+        result = result.replace("br", "")
+        result = result.replace("&lt;p&gt;", "")
+        result = result.replace("&lt;BR&gt;", "")
+        result = result.replace("&lt;&gt;", "")
+        result = result.replace("&lt;/p&gt;", "")
+        result = result.replace("&quot;", "")
+        result = result.replace("lt;", "")
+        return result
     }
 
     private fun convertAddressToLatLng(address: String): LatLng? {
@@ -147,7 +183,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         return null
     }
 
-
     override fun onMapReady(p0: GoogleMap) {
 
         val mountainLocation = LatLng(latitude, longitude)  // 파란(산위치) 마커 위치
@@ -155,11 +190,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-        if (mountainName != null) {
+        if (mountainAddress != null) {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
-            markerOptions.title(mountainName)   // 마커 클릭시 산 이름 표시
+            markerOptions.title(mountainAddress)   // 마커 클릭시 산 이름 표시
             if (mountainHeight != null) {
                 markerOptions.snippet("높이: $mountainHeight m")
             }
@@ -173,11 +208,14 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        updateLocation()
+        GlobalScope.launch(Dispatchers.Main) {
+            updateLocation()
+        }
+
     }
 
     //현위치잡기
-    fun updateLocation() {
+    private fun updateLocation() {
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
@@ -203,10 +241,13 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         ) {
             return
         }
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest, locationCallBack,
-            Looper.myLooper()!!
-        )
+        // 코루틴 내에서 위치 업데이트 요청을 비동기로 처리
+        GlobalScope.launch(Dispatchers.Main) {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest, locationCallBack,
+                Looper.myLooper()!!
+            )
+        }
     }
 
 
@@ -214,43 +255,44 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
             val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-//            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(10.0f).build()
-//            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))    // 현위치 기반의 카메라 위치 조정
             mGoogleMap.addMarker(makerOptions)
             userLocationSet = true // 사용자 위치를 설정했음을 표시
         }
     }
 
-    /* private suspend fun communicateWeather() {
-         val baseTime = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
-         for(region in RegionLocation().regionList) {
-             for (baseTime in baseTime) {
-                 val response : Reskseponse<Root> = WeatherClient.apiService.getWeatherInfo(
-                     Constrant.WEATHER_API_KEY, "1", "JSON", "20231023", baseTime, region.regionX.toString(),region.regionY.toString()
-                 )
-                 if(response.isSuccessful) {
-                     val body = response.body()
-                     if(body != null) {
-                         for(item in itemList) {
-                             val baseDate = item.baseDate
-                             val baseTime = item.baseTime
-                             val category = item.category
-                             val nx = item.nx
-                             val ny = item.ny
 
-                             // tmp로 가져올 값 수정하기
-                             val weatherItemData = WeatherData(baseDate, baseTime, category, nx,  ny, "tmp")
-                             weatherData.add(weatherItemData)
-                         }
-                     }
-                 }
-                 handler.post {
-                     binding.infoPageRvWeather.apply {
-                         adapter = InfoPageAdapter(weatherData)
-                         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                     }
-                 }
-             }
-         }
-     }*/
+    // 날씨 API 데이터 가져오기
+    @SuppressLint("SuspiciousIndentation", "NotifyDataSetChanged")
+    private fun communicateWeather() = lifecycleScope.launch {
+        val baseTime = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
+        for (region in RegionLocation().regionList) {
+            for (baseTime in baseTime) {
+                val response: Response<Root> = WeatherClient.apiService.getWeatherInfo(
+                    "JSON",
+                    "20",
+                    "1",
+                    "20231025",
+                    baseTime,
+                    region.regionX.toString(),
+                    region.regionY.toString()
+                )
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        for (item in itemList) {
+                            val baseTime = item.baseTime
+                            val tmp = item.fcstValue
+                            // tmp로 가져올 값 수정하기
+                            val weatherItemData =
+                                WeatherData(baseTime, tmp)
+                            Log.d("weatherItemData", "$weatherItemData")
+                            weatherDataList.add(weatherItemData)
+                            Log.d("weatherData", "$weatherData")
+                        }
+                    }
+                    weatherData.addAll(weatherDataList)
+                    binding.infoPageRvWeather.adapter?.notifyDataSetChanged()
+                }
+            }
+        }
+    }
 }

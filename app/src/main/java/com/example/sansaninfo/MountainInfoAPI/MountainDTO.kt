@@ -57,7 +57,7 @@ data class Item(
     @PropertyElement(name = "mntninfohght") // 산 높이
     var mntHeight: String= "",
     @PropertyElement(name = "mntninfodscrt")  // 산정보개관(개관)
-    var mntninfodscrt: String= "",
+    var mntLastInfo: String= "",
 
 )
 

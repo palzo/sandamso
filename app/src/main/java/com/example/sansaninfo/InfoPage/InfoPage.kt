@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import coil.load
 import androidx.lifecycle.lifecycleScope
 import com.example.sansaninfo.API.ModelData.Item
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -114,14 +116,26 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 mountainAddress = it.mntAddress
                 mountainHeight = it.mntHgt
                 convertAddressToLatLng(it.mntAddress)
-
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
-                if (it.mntMainInfo.isNotEmpty()) {
+                if (removeSpecialCharacters(it.mntMainInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntMainInfo)
-                } else {
+                    Log.d("test", "mntMainInfo : ${removeSpecialCharacters(it.mntMainInfo)}")
+                } else if(removeSpecialCharacters(it.mntSubInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntSubInfo)
+                    Log.d("test", "mntSubInfo : ${removeSpecialCharacters(it.mntSubInfo)}")
+                } else{
+                    binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntLastInfo)
+                    Log.d("test", "mntLastInfo : ${removeSpecialCharacters(it.mntLastInfo)}")
+                }
+                if (it.mntImgURL == "") {
+                    it.mntImgCode?.let { it1 -> binding.infoPageIvMountain.setImageResource(it1) }
+                } else {
+                    val img = "https://www.forest.go.kr/images/data/down/mountain/" + it.mntImgURL
+                    binding.infoPageIvMountain.load(img){
+                        size(100, 100)
+                    }
                 }
             }
         }
@@ -132,8 +146,19 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun removeSpecialCharacters(inputText: String): String {
-        val pattern = Regex("&[^;]+;")
-        return pattern.replace(inputText, " ")
+        var result = inputText
+        result = result.replace("&amp;", "")
+        result = result.replace("amp;", "")
+        result = result.replace("nbsp;", "")
+        result = result.replace("lt;br / gt;", "")
+        result = result.replace("br", "")
+        result = result.replace("&lt;p&gt;", "")
+        result = result.replace("&lt;BR&gt;", "")
+        result = result.replace("&lt;&gt;", "")
+        result = result.replace("&lt;/p&gt;", "")
+        result = result.replace("&quot;", "")
+        result = result.replace("lt;", "")
+        return result
     }
 
     private fun convertAddressToLatLng(address: String): LatLng? {

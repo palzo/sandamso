@@ -21,7 +21,8 @@
             android:id="@+id/search_page_iv_mnt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/iv_example" />
+            android:background="@drawable/iv_example"
+            android:scaleType="fitCenter"/>
 
         <View
             android:id="@+id/view5"
@@ -36,6 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="산 이름"
+            android:textAlignment="center"
+            android:textSize="22dp"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/card_view"
             app:layout_constraintEnd_toEndOf="@+id/card_view"

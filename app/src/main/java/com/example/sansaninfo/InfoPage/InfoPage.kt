@@ -1,11 +1,5 @@
 package com.example.sansaninfo.InfoPage
 
-/*import com.example.sansaninfo.API.Model
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.API.Constrants.Constrant
-import com.example.sansaninfo.API.ModelData.RegionLocation
-import com.example.sansaninfo.API.ModelData.Root
-import com.example.sansaninfo.API.Retrofit.WeatherClient*/
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -36,6 +30,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -47,7 +44,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
     private var latitude = 0.0
     private var longitude = 0.0
-    private var mountainName: String? = null
+    private var mountainAddress: String? = null
     private var mountainHeight: String? = null
 
 
@@ -101,11 +98,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             val receivedList : MntModel? = it.getParcelable("mntList")
 
             receivedList?.let {
-                mountainName = mntInfo.mntName
-                mountainHeight = mntInfo.mntHgt
+                mountainAddress = it.mntAddress
+                mountainHeight = it.mntHgt
+                convertAddressToLatLng(it.mntAddress)
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
-                convertAddressToLatLng(it.mntName)
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
                 if (it.mntMainInfo.isNotEmpty()) {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntMainInfo)
@@ -155,11 +152,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-        if (mountainName != null) {
+        if (mountainAddress != null) {
             val markerOptions = MarkerOptions()
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             markerOptions.position(mountainLocation)
-            markerOptions.title(mountainName)   // 마커 클릭시 산 이름 표시
+            markerOptions.title(mountainAddress)   // 마커 클릭시 산 이름 표시
             if (mountainHeight != null) {
                 markerOptions.snippet("높이: $mountainHeight m")
             }
@@ -173,11 +170,14 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        updateLocation()
+        GlobalScope.launch(Dispatchers.Main) {
+            updateLocation()
+        }
+
     }
 
     //현위치잡기
-    fun updateLocation() {
+    private fun updateLocation() {
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
@@ -203,10 +203,13 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         ) {
             return
         }
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest, locationCallBack,
-            Looper.myLooper()!!
-        )
+        // 코루틴 내에서 위치 업데이트 요청을 비동기로 처리
+        GlobalScope.launch(Dispatchers.Main) {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest, locationCallBack,
+                Looper.myLooper()!!
+            )
+        }
     }
 
 
@@ -214,8 +217,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
             val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-//            val cameraPosition = CameraPosition.Builder().target(LATLNG).zoom(10.0f).build()
-//            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))    // 현위치 기반의 카메라 위치 조정
             mGoogleMap.addMarker(makerOptions)
             userLocationSet = true // 사용자 위치를 설정했음을 표시
         }

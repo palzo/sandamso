@@ -34,7 +34,7 @@ data class Item(
     val category: String,
     //val fcstDate: String,
     //val fcstTime: String,
-    //val fcstValue: String,
+    val fcstValue: String,
     val nx: Long,
     val ny: Long,
 )

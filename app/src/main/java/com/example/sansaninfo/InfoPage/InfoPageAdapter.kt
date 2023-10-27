@@ -6,32 +6,33 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.WeatherItemBinding
 
-class InfoPageAdapter(private val weatherData : MutableList<WeatherData>) : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
+class InfoPageAdapter : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
+
+    private val list = arrayListOf<WeatherData>()
     override fun getItemCount(): Int {
-        return weatherData.size
+        return list.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InfoPageAdapter.WeatherHolder {
         val binding = WeatherItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return WeatherHolder(binding)
     }
 
-
     override fun onBindViewHolder(holder: WeatherHolder, position: Int) {
-        val data = weatherData[position]
-
-        holder.setItem(data)
+        holder.setItem(list[position])
     }
 
-    inner class WeatherHolder(val binding : WeatherItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun setItem(item : WeatherData) {
-            val timeTextView = binding.weatherItemTvHour
-            val tmpTextView = binding.weatherItemTvTemperature
-            val image = binding.weatherItemIv
+    fun addItem(item: MutableList<WeatherData>) {
+        list.clear()
+        list.addAll(item)
+        notifyDataSetChanged()
+    }
 
-            timeTextView.text = item.baseTime
-            tmpTextView.text = item.tmp
-            image.setImageResource(R.drawable.ic_cloud)
+    inner class WeatherHolder(private val binding : WeatherItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun setItem(item : WeatherData) = with(binding) {
+            binding.weatherItemTvHour.text = item.baseTime
+            binding.weatherItemTvTemperature.text = item.tmp
+            binding.weatherItemIv.setImageResource(R.drawable.ic_cloud)
         }
     }
 }

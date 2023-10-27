@@ -1,10 +1,7 @@
 package com.example.sansaninfo.API.ModelData
 
 data class regionList(val regionX : Long, val regionY : Long)
-
-data class Root(
-    val response: Response,
-)
+data class Weather(val response: Response)
 
 data class Response(
     val header: Header,
@@ -19,9 +16,9 @@ data class Header(
 data class Body(
     val dataType: String,
     val items: Items,
-    val pageNo: Long,
-    val numOfRows: Long,
-    val totalCount: Long,
+    val pageNo: Int,
+    val numOfRows: Int,
+    val totalCount: Int,
 )
 
 data class Items(
@@ -32,10 +29,10 @@ data class Item(
     val baseDate: String,
     val baseTime: String,
     val category: String,
-    //val fcstDate: String,
-    //val fcstTime: String,
+    val fcstTime: String,
+    val fcstDate: String,
     val fcstValue: String,
-    val nx: Long,
-    val ny: Long,
+    val nx: Int,
+    val ny: Int,
 )
 

@@ -1,6 +1,6 @@
 package com.example.sansaninfo.InfoPage
 
-import android.annotation.SuppressLint
+
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -15,12 +15,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import coil.load
-import androidx.lifecycle.lifecycleScope
 import com.example.sansaninfo.API.ModelData.Item
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.API.ModelData.RegionLocation
-import com.example.sansaninfo.API.ModelData.Root
+import com.example.sansaninfo.API.ModelData.Weather
 import com.example.sansaninfo.API.Retrofit.WeatherClient
+import com.example.sansaninfo.BuildConfig
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.MntModel
@@ -38,11 +37,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
@@ -58,18 +58,17 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var mountainAddress: String? = null
     private var mountainHeight: String? = null
 
+    private val infoPageAdapter by lazy {
+        InfoPageAdapter()
+    }
+
     //private val handler = Handler(Looper.getMainLooper())
     private val itemList: List<Item> = mutableListOf()
-    private var weatherData = mutableListOf<WeatherData>()
-    private var weatherDataList = mutableListOf<WeatherData>()
+    private val weatherDataList = mutableListOf<WeatherData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        binding.infoPageRvWeather.adapter = InfoPageAdapter(weatherData)
-        binding.infoPageRvWeather.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        communicateWeather()
 
         binding.infoPageBtnBackArrow.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -122,10 +121,10 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 if (removeSpecialCharacters(it.mntMainInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntMainInfo)
                     Log.d("test", "mntMainInfo : ${removeSpecialCharacters(it.mntMainInfo)}")
-                } else if(removeSpecialCharacters(it.mntSubInfo) != "") {
+                } else if (removeSpecialCharacters(it.mntSubInfo) != "") {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntSubInfo)
                     Log.d("test", "mntSubInfo : ${removeSpecialCharacters(it.mntSubInfo)}")
-                } else{
+                } else {
                     binding.infoPageTvMountainIntro.text = removeSpecialCharacters(it.mntLastInfo)
                     Log.d("test", "mntLastInfo : ${removeSpecialCharacters(it.mntLastInfo)}")
                 }
@@ -133,7 +132,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     it.mntImgCode?.let { it1 -> binding.infoPageIvMountain.setImageResource(it1) }
                 } else {
                     val img = "https://www.forest.go.kr/images/data/down/mountain/" + it.mntImgURL
-                    binding.infoPageIvMountain.load(img){
+                    binding.infoPageIvMountain.load(img) {
                         size(100, 100)
                     }
                 }
@@ -143,8 +142,56 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         binding.infoPageBtnBackArrow.setOnClickListener {
             finish()
         }
-    }
+        binding.infoPageRvWeather.adapter = infoPageAdapter
+        binding.infoPageRvWeather.layoutManager =
+            LinearLayoutManager(this@InfoPage, LinearLayoutManager.HORIZONTAL, false)
 
+        /**
+        * 아이템 추가 참고용
+         */
+//        val testList = mutableListOf<WeatherData>()
+//        for(i in 0..6){
+//            testList.add(
+//                WeatherData(
+//                baseTime = "base: $i",
+//                tmp = "11"
+//            )
+//            )
+//        }
+//        infoPageAdapter.addItem(testList)
+        /**
+         * 날씨 API
+         */
+        CoroutineScope(Dispatchers.IO).launch {
+            WeatherClient.weatherNetwork.getWeatherInfo(
+                serviceKey = BuildConfig.WEATHER_API_KEY,
+                pageNo = 1,
+                numOfRows = 10,
+                dataType = "JSON",
+                baseDate = 20231026,
+                baseTime = "0500",
+                nx = 21,
+                ny = 132,
+                ).enqueue(object: Callback<Weather?>{
+                override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
+                    response.body().let {
+                        it?.response?.body?.items?.item?.forEach {item ->
+//                            weatherDataList.add(WeatherData(
+//
+//                            ))
+                            Log.d("text", "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}")
+                            Log.d("text", "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}")
+                            Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
+                        }
+                    }
+
+                }
+                override fun onFailure(call: Call<Weather?>, t: Throwable) {
+                    Log.e("error", "${t.message}")
+                }
+            })
+        }
+    }
     private fun removeSpecialCharacters(inputText: String): String {
         var result = inputText
         result = result.replace("&amp;", "")
@@ -160,7 +207,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         result = result.replace("lt;", "")
         return result
     }
-
     private fun convertAddressToLatLng(address: String): LatLng? {
         val geocoder = Geocoder(this)
         try {
@@ -182,11 +228,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
         return null
     }
-
     override fun onMapReady(p0: GoogleMap) {
 
         val mountainLocation = LatLng(latitude, longitude)  // 파란(산위치) 마커 위치
-
         mGoogleMap = p0
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
@@ -206,14 +250,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))   // 산 위치 기반의 카메라 위치 조정
             mGoogleMap.uiSettings.isZoomControlsEnabled = true  // 확대/축소 버튼을 활성화
         }
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         GlobalScope.launch(Dispatchers.Main) {
             updateLocation()
         }
-
     }
-
     //현위치잡기
     private fun updateLocation() {
         val locationRequest = LocationRequest.create().apply {
@@ -249,50 +290,12 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             )
         }
     }
-
-
     fun setInitialUserLocation(lastLocation: Location) {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
             val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
             mGoogleMap.addMarker(makerOptions)
             userLocationSet = true // 사용자 위치를 설정했음을 표시
-        }
-    }
-
-
-    // 날씨 API 데이터 가져오기
-    @SuppressLint("SuspiciousIndentation", "NotifyDataSetChanged")
-    private fun communicateWeather() = lifecycleScope.launch {
-        val baseTime = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
-        for (region in RegionLocation().regionList) {
-            for (baseTime in baseTime) {
-                val response: Response<Root> = WeatherClient.apiService.getWeatherInfo(
-                    "JSON",
-                    "20",
-                    "1",
-                    "20231025",
-                    baseTime,
-                    region.regionX.toString(),
-                    region.regionY.toString()
-                )
-                if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        for (item in itemList) {
-                            val baseTime = item.baseTime
-                            val tmp = item.fcstValue
-                            // tmp로 가져올 값 수정하기
-                            val weatherItemData =
-                                WeatherData(baseTime, tmp)
-                            Log.d("weatherItemData", "$weatherItemData")
-                            weatherDataList.add(weatherItemData)
-                            Log.d("weatherData", "$weatherData")
-                        }
-                    }
-                    weatherData.addAll(weatherDataList)
-                    binding.infoPageRvWeather.adapter?.notifyDataSetChanged()
-                }
-            }
         }
     }
 }

@@ -124,7 +124,7 @@ class SearchPageMountainFragment : Fragment() {
         )?.enqueue(object : Callback<XmlResponse?> {
             override fun onResponse(
                 call: Call<XmlResponse?>,
-                response: retrofit2.Response<XmlResponse?>
+                response: Response<XmlResponse?>
             ) {
                 mntList.clear()
                 response.body().let { XmlResponse ->

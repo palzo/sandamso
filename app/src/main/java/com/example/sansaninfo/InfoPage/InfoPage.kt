@@ -188,17 +188,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
                         response.body().let {
                             it?.response?.body?.items?.item?.forEach { item ->
-                                /*if(item.category == "TMX") {
+                                if(item.category == "TMP") {
                                     val tmpValue = item.fcstValue
                                     weatherDataList.add(WeatherData(baseTime, tmpValue))
-                                }*/
-                                if (item.category == "TMP") {
-                                    weatherDataList.add(
-                                        WeatherData(
-                                            baseTime = "${item.fcstValue}",
-                                            tmp = "11"
-                                        )
-                                    )
                                 }
                                 Log.d(
                                     "text",

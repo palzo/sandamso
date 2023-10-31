@@ -1,5 +1,6 @@
 package com.example.sansaninfo.MyPage
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.kakao.sdk.user.UserApiClient
 
 
 class MyPageFragment : Fragment() {
@@ -99,11 +101,25 @@ class MyPageFragment : Fragment() {
     //로그아웃
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
+        UserApiClient.instance.logout { error ->
+            if (error != null) {
+//                Toast.makeText(requireContext(), "로그아웃 실패 $error", Toast.LENGTH_SHORT).show()
+            } else {
+//                Toast.makeText(requireContext(), "로그아웃 성공", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     //회원탈퇴
     private fun revokeAccess() {
         auth.currentUser?.delete()
+        UserApiClient.instance.unlink { error ->
+            if (error != null) {
+//                Toast.makeText(requireContext(), "회원 탈퇴 실패 $error", Toast.LENGTH_SHORT).show()
+            }else {
+//                Toast.makeText(requireContext(), "회원 탈퇴 성공", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 

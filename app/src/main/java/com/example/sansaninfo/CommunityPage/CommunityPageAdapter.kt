@@ -9,6 +9,9 @@ import coil.load
 import com.example.sansaninfo.Data.PostModel
 import com.example.sansaninfo.databinding.CommunityPageItemBinding
 import com.google.firebase.storage.FirebaseStorage
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CommunityPageAdapter :
     RecyclerView.Adapter<CommunityPageAdapter.ViewHolder>() {
@@ -61,8 +64,9 @@ class CommunityPageAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bindItems(items: PostModel) = with(binding) {
             communityItemTvTitle.text = items.title
-            communityItemTvNickname.text =items.nickname
+            communityItemTvNickname.text = items.nickname
             communityItemTvDate.text = items.date
+            communityItemTvDday.text = calculateDday(items)
 
             // 이미지 URI를 사용하여 이미지 표시하기
             val storage = FirebaseStorage.getInstance()
@@ -74,6 +78,35 @@ class CommunityPageAdapter :
             }.addOnFailureListener {
                 Log.d("Image Tag333", "$it")
             }
+        }
+    }
+
+    // 디데이 계산하기
+    fun calculateDday(items: PostModel): String {
+        val dateData = items.deadlinedate
+
+        if (dateData.isEmpty()) {
+            return "날짜 없음"
+        }
+
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
+        val currentDate = Date()
+        val targetDate = dateFormat.parse(dateData)
+
+        if (targetDate != null) {
+            val timeDiff = targetDate.time - currentDate.time
+            val dday = timeDiff / (1000 * 60 * 60 * 24)
+
+            if (dday.toInt() == 0) {
+                return "D-Day"
+            } else if (dday > 0) {
+                return "D-${dday}"
+            } else {
+                val outday = -dday
+                return "D+${outday}"
+            }
+        } else {
+            return "유효하지 않은 날짜"
         }
     }
 }

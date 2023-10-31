@@ -28,12 +28,12 @@
     <TextView
         android:id="@+id/detail_page_tv_title"
         style="@style/PageTitle"
-        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
         android:text="설악산 한 번 정복하실 분??"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detail_page_tv_top_title" />
 
@@ -186,15 +186,14 @@
 
             </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/detail_page_ll_deadline"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="15dp"
                 android:background="@drawable/detail_page_background"
-                android:gravity="center"
-                android:padding="6dp"
+                android:padding="5dp"
                 app:layout_constraintBottom_toTopOf="@id/detail_page_tv_memo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -205,21 +204,28 @@
                     style="@style/RegularText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
                     android:text="2023.xx.xx까지 모집"
                     android:textColor="#606060"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/detail_page_tv_dday"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="100dp"
+                    android:layout_marginEnd="35dp"
                     android:text="D-7"
                     android:textColor="#4C4C4C"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/detail_page_tv_memo"

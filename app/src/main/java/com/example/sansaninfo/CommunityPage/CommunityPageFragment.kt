@@ -83,6 +83,7 @@ class CommunityPageFragment : Fragment() {
                     intent.putExtra("dataFromAddPagekakao", kakao)
                     intent.putExtra("dataFromAddPagedate", date)
                     intent.putExtra("dataFromAddPagenickname", nickname)
+                    intent.putExtra("dataFromAddPagedday", deadlinedate)
                 }
                 startActivity(intent)
             }

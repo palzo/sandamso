@@ -30,9 +30,15 @@ class InfoPageAdapter : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
 
     inner class WeatherHolder(private val binding : WeatherItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun setItem(item : WeatherData) = with(binding) {
-            binding.weatherItemTvHour.text = item.baseTime
+            binding.weatherItemTvHour.text = formatBaseTime(item.baseTime)
             binding.weatherItemTvTemperature.text = item.tmp
             binding.weatherItemIv.setImageResource(R.drawable.ic_cloud)
         }
+    }
+
+    // 0200, 0500 등을 02시, 05시로 변경
+    private fun formatBaseTime(baseTime : String) : String {
+        val formatTime = baseTime.removeSuffix("00")
+        return "${formatTime}시"
     }
 }

@@ -171,9 +171,17 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         /**
          * 날씨 API
          */
-        val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
+        val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300").sortedBy { it.toInt() }
 
-        for(baseTime in baseTimes) {
+        fun fetchWeather(index: Int) {
+            if(index >= baseTimes.size) {
+                return runOnUiThread {
+                    infoPageAdapter.addItem(weatherDataList)
+                }
+            }
+
+        val baseTime = baseTimes[index]
+        //for(baseTime in baseTimes) {
             CoroutineScope(Dispatchers.IO).launch {
                 WeatherClient.weatherNetwork.getWeatherInfo(
                     serviceKey = BuildConfig.WEATHER_API_KEY,
@@ -188,7 +196,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
                         response.body().let {
                             it?.response?.body?.items?.item?.forEach { item ->
-                                if(item.category == "TMP") {
+                                if (item.category == "TMP") {
                                     val tmpValue = item.fcstValue
                                     weatherDataList.add(WeatherData(baseTime, tmpValue))
                                 }
@@ -203,17 +211,22 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                 Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
                             }
                         }
-                        runOnUiThread {
+                        /*runOnUiThread {
                             infoPageAdapter.addItem(weatherDataList)
-                        }
+                        }*/
+                        fetchWeather(index + 1)
                     }
+
                     override fun onFailure(call: Call<Weather?>, t: Throwable) {
                         Log.e("error", "${t.message}")
                     }
                 })
             }
+        //}
         }
+        fetchWeather(0)
     }
+
     private fun removeSpecialCharacters(inputText: String): String {
         var result = inputText
         result = result.replace("&amp;", "")

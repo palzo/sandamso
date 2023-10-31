@@ -156,22 +156,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             LinearLayoutManager(this@InfoPage, LinearLayoutManager.HORIZONTAL, false)
 
         /**
-        * 아이템 추가 참고용
-         */
-/*        val testList = mutableListOf<WeatherData>()
-        for(i in 0..6){
-            testList.add(
-                WeatherData(
-                baseTime = "base: $i",
-                tmp = "11"
-            )
-            )
-        }
-        infoPageAdapter.addItem(testList)*/
-        /**
          * 날씨 API
          */
-        val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300").sortedBy { it.toInt() }
+        val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
 
         fun fetchWeather(index: Int) {
             if(index >= baseTimes.size) {
@@ -181,7 +168,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             }
 
         val baseTime = baseTimes[index]
-        //for(baseTime in baseTimes) {
             CoroutineScope(Dispatchers.IO).launch {
                 WeatherClient.weatherNetwork.getWeatherInfo(
                     serviceKey = BuildConfig.WEATHER_API_KEY,
@@ -211,9 +197,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                 Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
                             }
                         }
-                        /*runOnUiThread {
-                            infoPageAdapter.addItem(weatherDataList)
-                        }*/
                         fetchWeather(index + 1)
                     }
 
@@ -222,7 +205,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     }
                 })
             }
-        //}
         }
         fetchWeather(0)
     }

@@ -1,5 +1,6 @@
 package com.example.sansaninfo.InfoPage
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@ class InfoPageAdapter : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
     inner class WeatherHolder(private val binding : WeatherItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun setItem(item : WeatherData) = with(binding) {
             binding.weatherItemTvHour.text = formatBaseTime(item.baseTime)
-            binding.weatherItemTvTemperature.text = item.tmp
+            binding.weatherItemTvTemperature.text = formatTmp(item.tmp)
             binding.weatherItemIv.setImageResource(R.drawable.ic_cloud)
         }
     }
@@ -40,5 +41,10 @@ class InfoPageAdapter : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
     private fun formatBaseTime(baseTime : String) : String {
         val formatTime = baseTime.removeSuffix("00")
         return "${formatTime}시"
+    }
+
+    // 온도 뒤에 ºC 추가
+    private fun formatTmp(tmp : String) : String {
+        return "${tmp}ºC"
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sansaninfo.InfoPage
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -44,6 +45,8 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -58,6 +61,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var mountainAddress: String? = null
     private var mountainHeight: String? = null
 
+    val currentDate = Date()
+
+    @SuppressLint("SimpleDateFormat")
+    val dateFormat = SimpleDateFormat("yyyyMMdd")
+    val today = dateFormat.format(currentDate)
     private val infoPageAdapter by lazy {
         InfoPageAdapter()
     }
@@ -147,7 +155,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             LinearLayoutManager(this@InfoPage, LinearLayoutManager.HORIZONTAL, false)
 
         /**
-        * 아이템 추가 참고용
+         * 아이템 추가 참고용
          */
 //        val testList = mutableListOf<WeatherData>()
 //        for(i in 0..6){
@@ -162,36 +170,54 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         /**
          * 날씨 API
          */
-        CoroutineScope(Dispatchers.IO).launch {
-            WeatherClient.weatherNetwork.getWeatherInfo(
-                serviceKey = BuildConfig.WEATHER_API_KEY,
-                pageNo = 1,
-                numOfRows = 10,
-                dataType = "JSON",
-                baseDate = 20231026,
-                baseTime = "0500",
-                nx = 21,
-                ny = 132,
-                ).enqueue(object: Callback<Weather?>{
-                override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
-                    response.body().let {
-                        it?.response?.body?.items?.item?.forEach {item ->
-//                            weatherDataList.add(WeatherData(
-//
-//                            ))
-                            Log.d("text", "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}")
-                            Log.d("text", "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}")
-                            Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
+        val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
+        for (baseTime in baseTimes) {
+            CoroutineScope(Dispatchers.IO).launch {
+                WeatherClient.weatherNetwork.getWeatherInfo(
+                    serviceKey = BuildConfig.WEATHER_API_KEY,
+                    pageNo = 1,
+                    numOfRows = 10,
+                    dataType = "JSON",
+                    baseDate = today.toInt(),
+                    baseTime = baseTime,
+                    nx = 21,
+                    ny = 132,
+                ).enqueue(object : Callback<Weather?> {
+                    override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
+                        response.body().let {
+                            it?.response?.body?.items?.item?.forEach { item ->
+                                if (item.category == "TMP") {
+                                    weatherDataList.add(
+                                        WeatherData(
+                                            baseTime = "${item.fcstValue}",
+                                            tmp = "11"
+                                        )
+                                    )
+                                }
+                                Log.d(
+                                    "text",
+                                    "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}"
+                                )
+                                Log.d(
+                                    "text",
+                                    "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}"
+                                )
+                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
+
+                            }
+                        }
+                        runOnUiThread {
+                            infoPageAdapter.addItem(weatherDataList)
                         }
                     }
-
-                }
-                override fun onFailure(call: Call<Weather?>, t: Throwable) {
-                    Log.e("error", "${t.message}")
-                }
-            })
+                    override fun onFailure(call: Call<Weather?>, t: Throwable) {
+                        Log.e("error", "${t.message}")
+                    }
+                })
+            }
         }
     }
+
     private fun removeSpecialCharacters(inputText: String): String {
         var result = inputText
         result = result.replace("&amp;", "")
@@ -207,6 +233,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         result = result.replace("lt;", "")
         return result
     }
+
     private fun convertAddressToLatLng(address: String): LatLng? {
         val geocoder = Geocoder(this)
         try {
@@ -228,6 +255,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
         return null
     }
+
     override fun onMapReady(p0: GoogleMap) {
 
         val mountainLocation = LatLng(latitude, longitude)  // 파란(산위치) 마커 위치
@@ -255,6 +283,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             updateLocation()
         }
     }
+
     //현위치잡기
     private fun updateLocation() {
         val locationRequest = LocationRequest.create().apply {
@@ -290,6 +319,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             )
         }
     }
+
     fun setInitialUserLocation(lastLocation: Location) {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)

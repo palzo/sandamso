@@ -101,6 +101,8 @@ class MyPageFragment : Fragment() {
     //로그아웃
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
+
+        // 카카오
         UserApiClient.instance.logout { error ->
             if (error != null) {
 //                Toast.makeText(requireContext(), "로그아웃 실패 $error", Toast.LENGTH_SHORT).show()
@@ -108,11 +110,25 @@ class MyPageFragment : Fragment() {
 //                Toast.makeText(requireContext(), "로그아웃 성공", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // 자동로그인 설정되어있는 경우 해제
+        val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
+        val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
+        autoLogin?.edit()?.apply{
+            putString("login", "0")
+            apply()
+        }
+        saveEmail?.edit()?.apply {
+            putString("pw", "0")
+            apply()
+        }
     }
 
     //회원탈퇴
     private fun revokeAccess() {
         auth.currentUser?.delete()
+
+        // 카카오
         UserApiClient.instance.unlink { error ->
             if (error != null) {
 //                Toast.makeText(requireContext(), "회원 탈퇴 실패 $error", Toast.LENGTH_SHORT).show()
@@ -120,8 +136,20 @@ class MyPageFragment : Fragment() {
 //                Toast.makeText(requireContext(), "회원 탈퇴 성공", Toast.LENGTH_SHORT).show()
             }
         }
-    }
 
+        val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
+        val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
+        autoLogin?.edit()?.apply{
+            putString("login", "0")
+            putString("pw", "")
+            apply()
+        }
+        saveEmail?.edit()?.apply {
+            putString("check", "0")
+            putString("email", "")
+            apply()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

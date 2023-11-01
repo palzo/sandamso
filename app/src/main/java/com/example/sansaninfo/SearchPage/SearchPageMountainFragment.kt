@@ -80,7 +80,6 @@ class SearchPageMountainFragment : Fragment() {
 
             getMntInfo(0, binding.searchPageEtSearchText.text.trim().toString())
 
-
         }
 
         // 지역명으로 검색 시 spinner 1
@@ -90,6 +89,7 @@ class SearchPageMountainFragment : Fragment() {
 
             // spinner 2 초기화 (첫 번째 spinner에 알맞은 구, 군을 가져옴)
             initSpinner(sido)
+
         }
 
         // 산으로 검색 버튼 클릭 시 UI 초기화

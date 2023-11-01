@@ -104,6 +104,7 @@ class SignInActivity : AppCompatActivity() {
             } else {
                 toastMessage("로그인 정보를 입력해 주세요.")
             }
+            saveData()
         }
 
         // 테스트로만 사용 후 삭제
@@ -155,9 +156,13 @@ class SignInActivity : AppCompatActivity() {
                 }
             } else if (token != null) {
                 UserApiClient.instance.me { user, error ->
-                    Toast.makeText(this, "${user?.kakaoAccount?.profile?.nickname.toString()} 님 로그인 성공", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "${user?.kakaoAccount?.profile?.nickname.toString()} 님 로그인 성공",
+                        Toast.LENGTH_SHORT
+                    ).show()
+//                    user?.kakaoAccount?.email
                 }
-//
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
                 finish()
@@ -180,6 +185,60 @@ class SignInActivity : AppCompatActivity() {
             } else {
                 UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
             }
+        }
+        loadData()
+    }
+
+    private fun saveData() = with(binding) {
+        val autoLogin = getSharedPreferences("prefLogin", 0)
+        val saveEmail = getSharedPreferences("prefEmail", 0)
+        val autoLoginEdit = autoLogin.edit()
+        val saveEmailEdit = saveEmail.edit()
+        // 데이터 저장
+        if (signinSwitchAutoLogin.isChecked) {
+            autoLoginEdit.putString("login", "1")
+            autoLoginEdit.putString("pw", signinEtPw.text.toString())
+            autoLoginEdit.apply()
+        } else {
+            saveEmailEdit.putString("login", "0")
+            autoLoginEdit.putString("pw", "0")
+            saveEmailEdit.apply()
+            autoLoginEdit.apply()
+        }
+        if (signinSwitchSaveMail.isChecked) {
+            saveEmailEdit.putString("check", "1")
+            saveEmailEdit.putString("email", signinEtEmail.text.toString())
+            saveEmailEdit.apply()
+        } else {
+            saveEmailEdit.putString("check", "0")
+            saveEmailEdit.apply()
+        }
+    }
+
+    private fun loadData() = with(binding) {
+        val autoLogin = getSharedPreferences("prefLogin", 0)
+        val saveEmail = getSharedPreferences("prefEmail", 0)
+        val email = saveEmail.getString("email", "")
+        // 저장된 데이터 불러오기
+        if (autoLogin.getString("login", "") == "1") {
+            // 자동 로그인
+            val pw = autoLogin.getString("pw", "")
+            if(email != null && pw != null){
+                auth.signInWithEmailAndPassword(email, pw)
+                    .addOnCompleteListener {
+                        val user = auth.currentUser
+                        if(user != null && user.isEmailVerified){
+                            val intent = Intent(this@SignInActivity,MainActivity::class.java)
+                            Toast.makeText(this@SignInActivity, "응 자동로그인~", Toast.LENGTH_SHORT).show()
+                            startActivity(intent)
+                        }
+                    }
+            }
+        }
+        if (saveEmail.getString("check", "") == "1") {
+            // 이메일 불러오기
+            signinSwitchSaveMail.isChecked = true
+            signinEtEmail.setText(saveEmail.getString("email", ""))
         }
     }
 

@@ -145,6 +145,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.infoPageBtnBackArrow.setOnClickListener {
+            Log.d("location Data", "$mountainAddress")
             finish()
         }
         binding.infoPageRvWeather.adapter = infoPageAdapter

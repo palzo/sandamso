@@ -22,6 +22,8 @@
     <string name="search_page_spinner_sido">도시 선택</string>
     <string name="search_page_spinner_goo">지역 선택</string>
     <string name="search_page_item_tv">산이름</string>
+    <string name="signin_tv_auto_login">자동로그인</string>
+    <string name="signin_tv_save_mail">이메일저장</string>
     <string-array name="sido">
         <item>서울</item>
         <item>대전</item>

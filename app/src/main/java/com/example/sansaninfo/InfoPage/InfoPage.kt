@@ -221,6 +221,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         result = result.replace("lt;", "")
         return result
     }
+
     private fun convertAddressToLatLng(address: String): LatLng? {
         val geocoder = Geocoder(this)
         try {
@@ -242,6 +243,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
         return null
     }
+
     override fun onMapReady(p0: GoogleMap) {
 
         val mountainLocation = LatLng(latitude, longitude)  // 파란(산위치) 마커 위치
@@ -269,6 +271,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             updateLocation()
         }
     }
+
     //현위치잡기
     private fun updateLocation() {
         val locationRequest = LocationRequest.create().apply {
@@ -304,6 +307,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             )
         }
     }
+
     fun setInitialUserLocation(lastLocation: Location) {
         if (!userLocationSet) {
             val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)

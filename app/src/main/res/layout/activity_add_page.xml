@@ -54,7 +54,7 @@
                 android:id="@+id/add_page_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="button,add_page_tv_title,add_page_tv_title_limit,add_page_tv_text_limit,add_page_iv_add,add_page_spn_spinner,add_page_et_text,add_page_tv_kakao_open,textView10,imageView6" />
+                app:constraint_referenced_ids="button,add_page_tv_title,add_page_tv_title_limit,add_page_tv_text_limit,add_page_iv_add,add_page_cl_dday,add_page_et_text,add_page_tv_kakao_open,textView10,imageView6" />
 
             <EditText
                 android:id="@+id/add_page_tv_title"
@@ -68,7 +68,7 @@
                 android:padding="13dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/add_page_tv_title_limit"
@@ -95,15 +95,38 @@
                 app:layout_constraintTop_toBottomOf="@id/add_page_tv_title"
                 app:srcCompat="@drawable/add_photo" />
 
-            <Spinner
-                android:id="@+id/add_page_spn_spinner"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_page_cl_dday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/add_page_stroke_round_rec"
-                android:padding="8dp"
+                android:padding="10dp"
                 app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
-                app:layout_constraintTop_toBottomOf="@id/add_page_iv_add" />
+                app:layout_constraintTop_toBottomOf="@id/add_page_iv_add">
+
+                <TextView
+                    android:id="@+id/add_page_tv_dday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:hint="모임 마감일 설정하기"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="3dp"
+                    android:src="@drawable/calendar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/add_page_tv_dday"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <EditText
                 android:id="@+id/add_page_et_text"
@@ -117,7 +140,7 @@
                 android:padding="20dp"
                 app:layout_constraintEnd_toEndOf="@id/add_page_tv_title"
                 app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
-                app:layout_constraintTop_toBottomOf="@+id/add_page_spn_spinner" />
+                app:layout_constraintTop_toBottomOf="@id/add_page_cl_dday" />
 
             <TextView
                 android:id="@+id/add_page_tv_text_limit"
@@ -203,8 +226,8 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_width="wrap_content"
             style="@style/RegularText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading..."
             android:textColor="@color/dark_grey"

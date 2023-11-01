@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -28,12 +29,15 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import kotlin.concurrent.thread
 
 class AddPageActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
+
+    private var addImage = false
 
     val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
 
@@ -54,7 +58,6 @@ class AddPageActivity : AppCompatActivity() {
 
         titleCount()
         textCount()
-
         init()
 
         with(binding) {
@@ -63,8 +66,8 @@ class AddPageActivity : AppCompatActivity() {
                 // 값을 모두 입력할 수 있도록 이벤트 설정해주기
                 val title = addPageTvTitle.text.toString()
                 val maintext = addPageEtText.text.toString()
+                val dday = addPageTvDday.text.toString()
                 val kakao = addPageTvKakaoOpen.text.toString()
-                val imageuri = addPageIvAdd.tag?.toString()
 
                 if (title.isEmpty()) {
                     toastMessage("제목을 입력해주세요.")
@@ -72,12 +75,14 @@ class AddPageActivity : AppCompatActivity() {
                 } else if (title.length >= 30) {
                     toastMessage("제목은 30글자 이하로 입력해주세요.")
 
-                } else if (imageuri == null || imageuri.isEmpty()) {
-                    toastMessage("이미지를 첨부해 주세요.")
+                } else if (!addImage) {
+                        toastMessage("이미지를 첨부해 주세요.")
+
+                } else if (dday == null || dday.isEmpty()) {
+                    toastMessage("모임 마감일을 설정해주세요.")
 
                 } else if (maintext.isEmpty()) {
                     toastMessage("본문 내용을 입력해주세요.")
-
 
                 } else if (maintext.length >= 5000) {
                     toastMessage("본문은 5000글자까지만 입력이 가능합니다.")
@@ -100,6 +105,12 @@ class AddPageActivity : AppCompatActivity() {
             }
         }
 
+
+        // 날짜 다이얼로그
+        binding.addPageClDday.setOnClickListener {
+            dateDialogue()
+        }
+
         binding.addPageIvAdd.setOnClickListener {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -119,7 +130,6 @@ class AddPageActivity : AppCompatActivity() {
             }
 
             permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-
         }
 
         //뒤로가기
@@ -135,6 +145,7 @@ class AddPageActivity : AppCompatActivity() {
             val title = addPageTvTitle.text.toString()
             val maintext = addPageEtText.text.toString()
             val kakao = addPageTvKakaoOpen.text.toString()
+            val dday = addPageTvDday.text.toString()
             val uri = Uri.parse(addPageIvAdd.tag.toString())
             uploadImage(uri) {
                 if (it != null) {
@@ -149,13 +160,14 @@ class AddPageActivity : AppCompatActivity() {
                         image = it,
                         kakao = kakao,
                         date = date,
+                        deadlinedate = dday,
                         writer = Firebase.auth.currentUser?.uid
                     )
 
                     // 닉네임도 넣어주기
                     setNickname { nickname ->
                         user = user.copy(nickname = nickname)
-                        addItem(user)
+                        val postId = addItem(user)
 
                         val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
                         intent.putExtra("dataFromAddPageTitle", title)
@@ -164,13 +176,14 @@ class AddPageActivity : AppCompatActivity() {
                         intent.putExtra("dataFromAddPagekakao", kakao)
                         intent.putExtra("dataFromAddPagedate", date)
                         intent.putExtra("dataFromAddPagenickname", nickname)
+                        intent.putExtra("dataFromAddPagedday", dday)
+                        intent.putExtra("dataFromAddPageId", postId)
                         startActivity(intent)
                         finish()
                     }
                 }
             }
         }
-
     }
 
     // firebase database 키 생성하기
@@ -192,6 +205,7 @@ class AddPageActivity : AppCompatActivity() {
     //이미지 갤러리 불러오기
     val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            addImage = !(uri == null || uri.toString().isEmpty())
             binding.addPageIvAdd.setImageURI(uri)
             binding.addPageIvAdd.tag = uri.toString()
         }
@@ -206,7 +220,11 @@ class AddPageActivity : AppCompatActivity() {
         if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {
                 100 -> {
-                    Toast.makeText(this@AddPageActivity, "갤러리 불러오기 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@AddPageActivity,
+                        "갤러리 불러오기 권한이 허용되었습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     galleryLauncher.launch("image/*")
                 }
             }
@@ -335,7 +353,7 @@ class AddPageActivity : AppCompatActivity() {
     // 날짜 데이터 표시
     fun getData(): String {
         val currentDateTime = Calendar.getInstance().time
-        return SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(currentDateTime)
+        return SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.KOREA).format(currentDateTime)
     }
 
     // Firebase에서 닉네임 가져오기
@@ -359,6 +377,34 @@ class AddPageActivity : AppCompatActivity() {
                     Log.d("Nickname", "error = $error")
                 }
             })
+    }
+
+    // 날짜 다이얼로그
+    fun dateDialogue() {
+
+        // 마감 일자 등록하기
+        // 현재 날짜를 currentDate로 설정
+        val currentDate = Calendar.getInstance()
+        currentDate.time = Date()
+
+        //minDate를 currentDate 이전으로 설정
+        val minDate = Calendar.getInstance()
+        minDate.time = currentDate.time
+        minDate.add(Calendar.DAY_OF_MONTH, 0) // 현재 날짜 이전으로 설정
+
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val listener = DatePickerDialog.OnDateSetListener { datePicker, i, i2, i3 ->
+            binding.addPageTvDday.text = "${i}년 ${i2 + 1}월 ${i3}일"
+        }
+
+        var picker = DatePickerDialog(this, listener, year, month, day)
+        // minDate를 설정하여 현재 날짜 이전의 날짜를 선택할 수 없음.
+        picker.datePicker.minDate = minDate.timeInMillis
+        picker.show()
     }
 
     private fun toastMessage(message: String) {

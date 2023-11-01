@@ -1,4 +1,6 @@
-package com.example.sansaninfo.API.ModelData
+package com.example.sansaninfo.InfoPage
+
+import com.example.sansaninfo.API.ModelData.regionList
 
 // 날씨의 nx, ny 데이터 리스트
 class RegionLocation {

@@ -1,6 +1,5 @@
 package com.example.sansaninfo.InfoPage
 
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,7 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import coil.load
-import com.example.sansaninfo.API.ModelData.Item
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.API.ModelData.Weather
 import com.example.sansaninfo.API.Retrofit.WeatherClient
@@ -66,13 +64,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
     // 현재 날씨 상수
-    val currentDate = Date()
+    private val currentDate = Date()
     @SuppressLint("SimpleDateFormat")
-    val dateFormat = SimpleDateFormat("yyyyMMdd")
-    val today = dateFormat.format(currentDate)
+    private val dateFormat = SimpleDateFormat("yyyyMMdd")
+    private val today = dateFormat.format(currentDate)
 
-    //private val handler = Handler(Looper.getMainLooper())
-    private val itemList: List<Item> = mutableListOf()
     private val weatherDataList = mutableListOf<WeatherData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,13 +157,13 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
 
         fun fetchWeather(index: Int) {
-            if(index >= baseTimes.size) {
+            if (index >= baseTimes.size) {
                 return runOnUiThread {
                     infoPageAdapter.addItem(weatherDataList)
                 }
             }
 
-        val baseTime = baseTimes[index]
+            val baseTime = baseTimes[index]
             CoroutineScope(Dispatchers.IO).launch {
                 WeatherClient.weatherNetwork.getWeatherInfo(
                     serviceKey = BuildConfig.WEATHER_API_KEY,
@@ -176,8 +172,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     dataType = "JSON",
                     baseDate = today.toInt(),
                     baseTime = baseTime,
-                    nx = 21,
-                    ny = 132,
+                    nx = 68,
+                    ny = 121,
                 ).enqueue(object : Callback<Weather?> {
                     override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
                         response.body().let {

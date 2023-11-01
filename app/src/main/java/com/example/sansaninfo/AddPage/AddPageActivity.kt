@@ -167,7 +167,7 @@ class AddPageActivity : AppCompatActivity() {
                     // 닉네임도 넣어주기
                     setNickname { nickname ->
                         user = user.copy(nickname = nickname)
-                        addItem(user)
+                        val postId = addItem(user)
 
                         val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
                         intent.putExtra("dataFromAddPageTitle", title)
@@ -177,13 +177,13 @@ class AddPageActivity : AppCompatActivity() {
                         intent.putExtra("dataFromAddPagedate", date)
                         intent.putExtra("dataFromAddPagenickname", nickname)
                         intent.putExtra("dataFromAddPagedday", dday)
+                        intent.putExtra("dataFromAddPageId", postId)
                         startActivity(intent)
                         finish()
                     }
                 }
             }
         }
-
     }
 
     // firebase database 키 생성하기

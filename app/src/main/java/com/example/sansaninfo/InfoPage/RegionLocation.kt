@@ -1,6 +1,6 @@
 package com.example.sansaninfo.InfoPage
 
-data class RegionList(val region : String, val regionX : Long, val regionY : Long)
+data class RegionList(val region : String, val regionX : Int, val regionY : Int)
 
 // 날씨의 nx, ny 데이터 리스트
 /*class RegionLocation {

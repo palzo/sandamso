@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import coil.load
+import com.example.sansaninfo.API.ModelData.Item
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.API.ModelData.Weather
 import com.example.sansaninfo.API.Retrofit.WeatherClient
@@ -155,6 +156,11 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         /**
          * 날씨 API
          */
+        fun setRegionLocation(address: String?): RegionList? {
+            val regionList = RegionLocation().regionList
+            return regionList.find { mountainAddress?.contains(it.region) ?: false }
+        }
+
         val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
 
         fun fetchWeather(index: Int) {
@@ -165,6 +171,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             }
 
             val baseTime = baseTimes[index]
+            val nx = setRegionLocation(mountainAddress)?.regionX
+            val ny = setRegionLocation(mountainAddress)?.regionY
+
             CoroutineScope(Dispatchers.IO).launch {
                 WeatherClient.weatherNetwork.getWeatherInfo(
                     serviceKey = BuildConfig.WEATHER_API_KEY,
@@ -173,8 +182,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     dataType = "JSON",
                     baseDate = today.toInt(),
                     baseTime = baseTime,
-                    nx = 68,
-                    ny = 121,
+                    nx = nx!!,
+                    ny = ny!!,
+
                 ).enqueue(object : Callback<Weather?> {
                     override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
                         response.body().let {

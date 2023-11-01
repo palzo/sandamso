@@ -37,6 +37,8 @@ class AddPageActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
 
+    private var addImage = false
+
     val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
 
     // 높은 API 버전에도 권한 요청하기
@@ -66,7 +68,6 @@ class AddPageActivity : AppCompatActivity() {
                 val maintext = addPageEtText.text.toString()
                 val dday = addPageTvDday.text.toString()
                 val kakao = addPageTvKakaoOpen.text.toString()
-                val imageuri = addPageIvAdd.tag?.toString()
 
                 if (title.isEmpty()) {
                     toastMessage("제목을 입력해주세요.")
@@ -74,8 +75,8 @@ class AddPageActivity : AppCompatActivity() {
                 } else if (title.length >= 30) {
                     toastMessage("제목은 30글자 이하로 입력해주세요.")
 
-                } else if (imageuri == null || imageuri.isEmpty()) {
-                    toastMessage("이미지를 첨부해 주세요.")
+                } else if (!addImage) {
+                        toastMessage("이미지를 첨부해 주세요.")
 
                 } else if (dday == null || dday.isEmpty()) {
                     toastMessage("모임 마감일을 설정해주세요.")
@@ -103,7 +104,6 @@ class AddPageActivity : AppCompatActivity() {
                 }
             }
         }
-
 
 
         // 날짜 다이얼로그
@@ -176,7 +176,7 @@ class AddPageActivity : AppCompatActivity() {
                         intent.putExtra("dataFromAddPagekakao", kakao)
                         intent.putExtra("dataFromAddPagedate", date)
                         intent.putExtra("dataFromAddPagenickname", nickname)
-                        intent.putExtra("dataFromAddPagedday",dday)
+                        intent.putExtra("dataFromAddPagedday", dday)
                         startActivity(intent)
                         finish()
                     }
@@ -205,6 +205,7 @@ class AddPageActivity : AppCompatActivity() {
     //이미지 갤러리 불러오기
     val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            addImage = !(uri == null || uri.toString().isEmpty())
             binding.addPageIvAdd.setImageURI(uri)
             binding.addPageIvAdd.tag = uri.toString()
         }
@@ -379,7 +380,7 @@ class AddPageActivity : AppCompatActivity() {
     }
 
     // 날짜 다이얼로그
-    fun dateDialogue(){
+    fun dateDialogue() {
 
         // 마감 일자 등록하기
         // 현재 날짜를 currentDate로 설정

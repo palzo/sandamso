@@ -59,6 +59,10 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private val dateFormat = SimpleDateFormat("yyyyMMdd")
     private val today = dateFormat.format(currentDate)
 
+    // 날씨 강수 형태 상수
+    private var sky = ""
+    private val skyDataList = mutableListOf<SkyData>()
+
     private val weatherDataList = mutableListOf<WeatherData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -229,7 +233,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         fun fetchWeather(index: Int) {
             if (index >= baseTimes.size) {
                 return runOnUiThread {
-                    infoPageAdapter.addItem(weatherDataList)
+                    infoPageAdapter.addItem(weatherDataList, skyDataList)
                 }
             }
 
@@ -256,7 +260,48 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     val tmpValue = item.fcstValue
                                     weatherDataList.add(WeatherData(baseTime, tmpValue))
                                 }
-                                Log.d(
+                                if(item.category == "SKY") {
+                                    sky = item.fcstValue
+                                }
+                                if(item.category == "PTY") {
+                                    val ptyValue = item.fcstValue
+                                    when(ptyValue) {
+                                        "0" -> skyDataList.add(SkyData("0", sky))
+                                        "1" -> skyDataList.add(SkyData("1", "0"))
+                                        "2" -> skyDataList.add(SkyData("2", "0"))
+                                        "3" -> skyDataList.add(SkyData("3", "0"))
+                                        "4" -> skyDataList.add(SkyData("4", "0"))
+                                        else -> skyDataList.add(SkyData("4", "0"))
+                                    }
+                                }
+                               /* when(item.category) {
+                                    "PTY" -> {
+                                        when("PTY") {
+                                            "0" -> {
+                                               when("SKY") {
+                                                   "1" -> skyDataList.add(SkyData("0", "1"))
+                                                   "3" -> skyDataList.add(SkyData("0", "3"))
+                                                   else -> {
+                                                       skyDataList.add(SkyData("0", "4"))
+                                                   }
+                                               }
+                                            }
+                                            "1" -> {
+                                                skyDataList.add(SkyData("1", "0"))
+                                            }
+                                            "2" -> {
+                                                skyDataList.add(SkyData("2", "0"))
+                                            }
+                                            "3" -> {
+                                                skyDataList.add(SkyData("3", "0"))
+                                            }
+                                            else -> {
+                                                skyDataList.add(SkyData("4", "0"))
+                                            }
+                                        }
+                                    }
+                                 }*/
+                                /*Log.d(
                                     "text",
                                     "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}"
                                 )
@@ -264,7 +309,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     "text",
                                     "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}"
                                 )
-                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
+                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")*/
                             }
                         }
                         fetchWeather(index + 1)

@@ -252,14 +252,14 @@ data class RegionList(val region : String, val regionX : Int, val regionY : Int)
 }*/
 
 class RegionLocation {
-    val regionList = listOf<RegionList>(
+    val regionList = listOf(
         // 서울
         RegionList("서울특별시 강서구", 57, 127),
         RegionList("서울특별시 관악구", 59, 125),
         RegionList("서울특별시 서초구", 60, 125),
         RegionList("서울특별시 강남구", 61, 125),
         RegionList("서울특별시 도봉구", 61, 129),
-        RegionList("서울특별시 중량구", 62, 128),
+        RegionList("서울특별시 중랑구", 62, 128),
         RegionList("서울특별시 은평구", 59, 127),
         RegionList("서울특별시 서대문구", 59, 127),
         RegionList("서울특별시 종로구", 60, 127),
@@ -272,6 +272,7 @@ class RegionLocation {
         RegionList("대전광역시 서구", 67, 100),
         RegionList("대전광역시 중구", 68, 100),
         RegionList("대전광역시 동구", 68, 100),
+        RegionList("대전광역시 유성", 66, 101),
         RegionList("대전광역시 유성구", 66, 101),
 
         // 대구
@@ -279,6 +280,7 @@ class RegionLocation {
         RegionList("대구광역시 달서구", 88, 90),
         RegionList("대구광역시 수성구", 89, 90),
         RegionList("대구광역시 동구", 90, 91),
+        RegionList("대구광역시 유성구", 67, 101),
 
         // 부산
         RegionList("부산광역시 기장군", 100, 79),

@@ -25,13 +25,9 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="true" />
-
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyA-cMsoqqcmM-rrFHWL3W1H1szJD31K9o0" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="dh21bw2cew" />
 
         <activity
             android:name=".MyPage.ChangeNicknameActivity"

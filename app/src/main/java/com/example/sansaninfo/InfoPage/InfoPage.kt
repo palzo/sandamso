@@ -2,21 +2,16 @@ package com.example.sansaninfo.InfoPage
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Geocoder
-import android.location.Location
-import android.net.Uri
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.sansaninfo.API.ModelData.Item
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.API.ModelData.Weather
 import com.example.sansaninfo.API.Retrofit.WeatherClient
 import com.example.sansaninfo.BuildConfig
@@ -24,22 +19,17 @@ import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.MntModel
 import com.example.sansaninfo.databinding.ActivityInfoPageBinding
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,15 +40,14 @@ import java.util.Date
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     private val binding by lazy { ActivityInfoPageBinding.inflate(layoutInflater) }
-    private lateinit var mGoogleMap: GoogleMap
-    lateinit var fusedLocationClient: FusedLocationProviderClient //gps를 이용해 위치 확인
-    lateinit var locationCallBack: LocationCallback // 위치 값 요청에 대한 갱신 정보를 받는 변수
-    lateinit var locationPermission: ActivityResultLauncher<Array<String>>
-    private var userLocationSet = false // 사용자 위치를 한 번 설정했는지 여부를 추적하기 위한 변수
+
     private var latitude = 0.0
     private var longitude = 0.0
     private var mountainAddress: String? = null
     private var mountainHeight: String? = null
+    private lateinit var mapView: MapView // 네이버 지도
+    private lateinit var naverMap: NaverMap
+    private val LOCATION_PERMISSION_REQUEST_CODE: Int = 1000
 
     private val infoPageAdapter by lazy {
         InfoPageAdapter()
@@ -80,21 +69,13 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-        binding.infoPageTvFake.setOnClickListener {
-            //검색하고싶은 위도,경도 순으로 입력하기 현재서울시청
-            val uri = Uri.parse("http://www.google.com/maps?q=37.5667, 126.9784")
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            startActivity(intent)
-        }
 
         // 맵 위젯 연결
-        locationPermission = registerForActivityResult(
+        val locationPermission = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { result ->
             if (result.all { it.value }) {
-                (supportFragmentManager.findFragmentById(R.id.info_page_iv_map) as SupportMapFragment)!!.getMapAsync(
-                    this
-                )
+                initializeNaverMap()//네이버맵초기화
             } else {//문제시 예외처리
                 Toast.makeText(this, "권한 승인이 필요합니다.", Toast.LENGTH_SHORT).show()
             }
@@ -107,8 +88,90 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             )
         )
+        initializeNaverMap()
         initView()
     }
+
+    private fun initializeNaverMap() {
+        mapView = findViewById(R.id.info_page_iv_map) as MapView
+//        mapView.getMapAsync(this)
+        // 용석님 요기 좀 해결해주세요
+        // 비동기처리랑 마커 옵션같은게 오류 생겨요 ㅠ
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
+    override fun onMapReady(map: NaverMap) {
+        naverMap = map
+        naverMap.maxZoom = 18.0
+        naverMap.minZoom = 10.0
+
+        // 지도 옵션 설정
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BUILDING, true)
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRAFFIC, true)
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)
+
+        // 초기 위치 설정
+        val cameraUpdate =
+            CameraUpdate.scrollTo(com.naver.maps.geometry.LatLng(37.4979921, 127.028046))
+                .animate(CameraAnimation.Easing)
+        naverMap.moveCamera(cameraUpdate)
+
+        // 현재 위치 설정
+        val uiSettings = naverMap.uiSettings
+        uiSettings.isLocationButtonEnabled = false
+
+        // 사용자 위치 추적 모드 설정
+        naverMap.locationTrackingMode = LocationTrackingMode.Face
+
+        // 현재 위치 설정
+        val locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        naverMap.locationSource = locationSource
+
+        // Marker 추가
+        val marker = Marker()
+        marker.position = com.naver.maps.geometry.LatLng(37.521492, 127.259870)
+        marker.map = naverMap
+        marker.icon = MarkerIcons.BLACK
+        marker.iconTintColor = Color.RED
+    }
+
 
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
@@ -120,7 +183,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             receivedList?.let {
                 mountainAddress = it.mntAddress
                 mountainHeight = it.mntHgt
-                convertAddressToLatLng(it.mntAddress)
+//                convertAddressToLatLng(it.mntAddress)
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
@@ -232,98 +295,24 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         return result
     }
 
-    private fun convertAddressToLatLng(address: String): LatLng? {
-        val geocoder = Geocoder(this)
-        try {
-            val addresses = geocoder.getFromLocationName(address, 1)
-            if (addresses != null) {
-                if (addresses.isNotEmpty()) {
-                    val location = addresses[0]
-                    latitude = location.latitude
-                    longitude = location.longitude
-                    val locationLatLng = LatLng(latitude, longitude)
-//                    onMapReady(locationLatLng, latitude, longitude)
-                    return locationLatLng
-                } else {
-                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("주소 변환 오류", e.message.toString())
-        }
-        return null
-    }
 
-    override fun onMapReady(p0: GoogleMap) {
-
-        val mountainLocation = LatLng(latitude, longitude)  // 파란(산위치) 마커 위치
-        mGoogleMap = p0
-        mGoogleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-
-        if (mountainAddress != null) {
-            val markerOptions = MarkerOptions()
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-            markerOptions.position(mountainLocation)
-            markerOptions.title(mountainAddress)   // 마커 클릭시 산 이름 표시
-            if (mountainHeight != null) {
-                markerOptions.snippet("높이: $mountainHeight m")
-            }
-
-            mGoogleMap.addMarker(markerOptions) // 마커 추가
-
-            val cameraPosition =
-                CameraPosition.Builder().target(mountainLocation).zoom(10.0f).build()
-            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))   // 산 위치 기반의 카메라 위치 조정
-            mGoogleMap.uiSettings.isZoomControlsEnabled = true  // 확대/축소 버튼을 활성화
-        }
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        GlobalScope.launch(Dispatchers.Main) {
-            updateLocation()
-        }
-    }
-
-    //현위치잡기
-    private fun updateLocation() {
-        val locationRequest = LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-        locationCallBack = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult?.let {
-                    for (location in it.locations) {
-                        Log.d("위치정보", "위도:${location.latitude} 경도: ${location.longitude}")
-                        setInitialUserLocation(location)
-                    }
-                }
-            }
-        }
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        // 코루틴 내에서 위치 업데이트 요청을 비동기로 처리
-        GlobalScope.launch(Dispatchers.Main) {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest, locationCallBack,
-                Looper.myLooper()!!
-            )
-        }
-    }
-
-    fun setInitialUserLocation(lastLocation: Location) {
-        if (!userLocationSet) {
-            val LATLNG = LatLng(lastLocation.latitude, lastLocation.longitude)
-            val makerOptions = MarkerOptions().position(LATLNG).title("현재 위치입니다.")
-            mGoogleMap.addMarker(makerOptions)
-            userLocationSet = true // 사용자 위치를 설정했음을 표시
-        }
-    }
+//    private fun convertAddressToLatLng(address: String) {
+//        val geocoder = Geocoder(this)
+//        try {
+//            val addresses = geocoder.getFromLocationName(address, 1)
+//            if (addresses != null) {
+//                if (addresses.isNotEmpty()) {
+//                    val location = addresses[0]
+//                    latitude = location.latitude
+//                    longitude = location.longitude
+//                    // 추가 작업: 위치를 활용한 특정 기능 수행
+//                } else {
+//                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        } catch (e: Exception) {
+//            Log.e("주소 변환 오류", e.message.toString())
+//        }
+//    }
 }
+

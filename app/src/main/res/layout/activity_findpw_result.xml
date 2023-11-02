@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_400"
+    android:background="@drawable/iv_background"
     tools:context=".SignPage.FindpwResultActivity">
 
     <ImageButton
@@ -14,7 +14,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:background="@color/transparency"
-        android:src="@drawable/ic_back_arrow"
+        android:src="@drawable/ic_back_arrow_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,8 +23,9 @@
         style="@style/PointText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:text="Find\nthe Route!"
-        android:textColor="@color/mint"
+        android:textColor="@color/white"
         android:textSize="40sp"
         app:layout_constraintStart_toEndOf="@+id/findpwresult_btn_back"
         app:layout_constraintTop_toBottomOf="@+id/findpwresult_btn_back" />
@@ -32,22 +33,29 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/findpw_box"
+        android:background="@drawable/signin_roundbox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv">
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/grey_400"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_title" />
 
         <TextView
             android:id="@+id/findpwresult_tv_title"
             style="@style/PageTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:text="비밀번호 찾기"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,16 +99,21 @@
         <Button
             android:id="@+id/findpwresult_btn"
             style="@style/BtnText"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="60dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="50dp"
-            android:background="@drawable/signin_btn_border"
+            android:background="@drawable/btn_desert_borderless"
             android:text="로그인하러 가기"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_info2" />
+            app:layout_constraintTop_toBottomOf="@+id/findpwresult_tv_info2"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

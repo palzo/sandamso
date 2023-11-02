@@ -278,33 +278,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                         else -> skyDataList.add(SkyData("4", "0"))
                                     }
                                 }
-                               /* when(item.category) {
-                                    "PTY" -> {
-                                        when("PTY") {
-                                            "0" -> {
-                                               when("SKY") {
-                                                   "1" -> skyDataList.add(SkyData("0", "1"))
-                                                   "3" -> skyDataList.add(SkyData("0", "3"))
-                                                   else -> {
-                                                       skyDataList.add(SkyData("0", "4"))
-                                                   }
-                                               }
-                                            }
-                                            "1" -> {
-                                                skyDataList.add(SkyData("1", "0"))
-                                            }
-                                            "2" -> {
-                                                skyDataList.add(SkyData("2", "0"))
-                                            }
-                                            "3" -> {
-                                                skyDataList.add(SkyData("3", "0"))
-                                            }
-                                            else -> {
-                                                skyDataList.add(SkyData("4", "0"))
-                                            }
-                                        }
-                                    }
-                                 }*/
                                 /*Log.d(
                                     "text",
                                     "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}"

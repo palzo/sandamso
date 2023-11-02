@@ -46,7 +46,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var longitude = 0.0
     private var mountainAddress: String? = null
     private var mountainHeight: String? = null
-    private lateinit var mapView: MapView // 네이버 지도 Fragment
+    private lateinit var mapView: MapView // 네이버 지도
     private lateinit var naverMap: NaverMap
     private val LOCATION_PERMISSION_REQUEST_CODE: Int = 1000
 

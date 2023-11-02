@@ -68,7 +68,8 @@
                 android:id="@+id/add_page_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="button,add_page_tv_title,add_page_tv_title_limit,add_page_tv_text_limit,add_page_iv_add,add_page_cl_dday,add_page_et_text,add_page_tv_kakao_open,textView10,imageView6,view9" />
+                app:constraint_referenced_ids="button,add_page_tv_title,add_page_tv_title_limit,add_page_tv_text_limit,add_page_iv_add,add_page_cl_dday,add_page_et_text,add_page_tv_kakao_open,textView10,imageView6,view9"
+                tools:ignore="NotSibling" />
 
             <EditText
                 android:id="@+id/add_page_tv_title"

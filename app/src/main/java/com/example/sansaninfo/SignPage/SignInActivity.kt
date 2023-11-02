@@ -103,7 +103,7 @@ class SignInActivity : AppCompatActivity() {
                         }
                     }
             } else {
-                toastMessage("로그인 정보를 입력해 주세요.")
+                toastMessage("로그인 정보를 확인해 주세요.")
             }
 
         }
@@ -221,20 +221,20 @@ class SignInActivity : AppCompatActivity() {
         val saveEmail = getSharedPreferences("prefEmail", 0)
         val email = saveEmail.getString("email", "")
         // 저장된 데이터 불러오기
-        if (autoLogin.getString("login", "") == "1") {
-            // 자동 로그인
-            val pw = autoLogin.getString("pw", "")
-            if(email != null && pw != null){
-                auth.signInWithEmailAndPassword(email, pw)
-                    .addOnCompleteListener {
-                        val user = auth.currentUser
-                        if(user != null && user.isEmailVerified){
-                            val intent = Intent(this@SignInActivity,MainActivity::class.java)
-                            startActivity(intent)
-                        }
-                    }
-            }
-        }
+//        if (autoLogin.getString("login", "") == "1") {
+//            // 자동 로그인
+//            val pw = autoLogin.getString("pw", "")
+//            if(email != null && pw != null){
+//                auth.signInWithEmailAndPassword(email, pw)
+//                    .addOnCompleteListener {
+//                        val user = auth.currentUser
+//                        if(user != null && user.isEmailVerified){
+//                            val intent = Intent(this@SignInActivity,MainActivity::class.java)
+//                            startActivity(intent)
+//                        }
+//                    }
+//            }
+//        }
         if (saveEmail.getString("check", "") == "1") {
             // 이메일 불러오기
             signinSwitchSaveMail.isChecked = true

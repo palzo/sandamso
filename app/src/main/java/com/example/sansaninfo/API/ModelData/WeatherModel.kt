@@ -1,6 +1,5 @@
 package com.example.sansaninfo.API.ModelData
 
-data class regionList(val regionX : Long, val regionY : Long)
 data class Weather(val response: Response)
 
 data class Response(

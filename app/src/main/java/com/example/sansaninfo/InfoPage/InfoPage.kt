@@ -1,6 +1,5 @@
 package com.example.sansaninfo.InfoPage
 
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -61,17 +60,16 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var mountainAddress: String? = null
     private var mountainHeight: String? = null
 
-    val currentDate = Date()
-
-    @SuppressLint("SimpleDateFormat")
-    val dateFormat = SimpleDateFormat("yyyyMMdd")
-    val today = dateFormat.format(currentDate)
     private val infoPageAdapter by lazy {
         InfoPageAdapter()
     }
 
-    //private val handler = Handler(Looper.getMainLooper())
-    private val itemList: List<Item> = mutableListOf()
+    // 현재 날씨 상수
+    private val currentDate = Date()
+    @SuppressLint("SimpleDateFormat")
+    private val dateFormat = SimpleDateFormat("yyyyMMdd")
+    private val today = dateFormat.format(currentDate)
+
     private val weatherDataList = mutableListOf<WeatherData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,6 +146,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.infoPageBtnBackArrow.setOnClickListener {
+            Log.d("location Data", "$mountainAddress")
             finish()
         }
         binding.infoPageRvWeather.adapter = infoPageAdapter
@@ -155,23 +154,26 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             LinearLayoutManager(this@InfoPage, LinearLayoutManager.HORIZONTAL, false)
 
         /**
-         * 아이템 추가 참고용
-         */
-//        val testList = mutableListOf<WeatherData>()
-//        for(i in 0..6){
-//            testList.add(
-//                WeatherData(
-//                baseTime = "base: $i",
-//                tmp = "11"
-//            )
-//            )
-//        }
-//        infoPageAdapter.addItem(testList)
-        /**
          * 날씨 API
          */
+        fun setRegionLocation(address: String?): RegionList? {
+            val regionList = RegionLocation().regionList
+            return regionList.find { mountainAddress?.contains(it.region) ?: false }
+        }
+
         val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
-        for (baseTime in baseTimes) {
+
+        fun fetchWeather(index: Int) {
+            if (index >= baseTimes.size) {
+                return runOnUiThread {
+                    infoPageAdapter.addItem(weatherDataList)
+                }
+            }
+
+            val baseTime = baseTimes[index]
+            val nx = setRegionLocation(mountainAddress)?.regionX
+            val ny = setRegionLocation(mountainAddress)?.regionY
+
             CoroutineScope(Dispatchers.IO).launch {
                 WeatherClient.weatherNetwork.getWeatherInfo(
                     serviceKey = BuildConfig.WEATHER_API_KEY,
@@ -180,19 +182,16 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     dataType = "JSON",
                     baseDate = today.toInt(),
                     baseTime = baseTime,
-                    nx = 21,
-                    ny = 132,
+                    nx = nx!!,
+                    ny = ny!!,
+
                 ).enqueue(object : Callback<Weather?> {
                     override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
                         response.body().let {
                             it?.response?.body?.items?.item?.forEach { item ->
                                 if (item.category == "TMP") {
-                                    weatherDataList.add(
-                                        WeatherData(
-                                            baseTime = "${item.fcstValue}",
-                                            tmp = "11"
-                                        )
-                                    )
+                                    val tmpValue = item.fcstValue
+                                    weatherDataList.add(WeatherData(baseTime, tmpValue))
                                 }
                                 Log.d(
                                     "text",
@@ -203,19 +202,18 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}"
                                 )
                                 Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
-
                             }
                         }
-                        runOnUiThread {
-                            infoPageAdapter.addItem(weatherDataList)
-                        }
+                        fetchWeather(index + 1)
                     }
+
                     override fun onFailure(call: Call<Weather?>, t: Throwable) {
                         Log.e("error", "${t.message}")
                     }
                 })
             }
         }
+        fetchWeather(0)
     }
 
     private fun removeSpecialCharacters(inputText: String): String {

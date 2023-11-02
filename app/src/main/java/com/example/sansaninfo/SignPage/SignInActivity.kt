@@ -1,21 +1,16 @@
 package com.example.sansaninfo.SignPage
 
-import android.animation.ObjectAnimator
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.model.AuthErrorCause
-import com.kakao.sdk.common.util.Utility
-import com.kakao.sdk.user.UserApi
 import com.kakao.sdk.user.UserApiClient
 
 class SignInActivity : AppCompatActivity() {
@@ -107,11 +102,6 @@ class SignInActivity : AppCompatActivity() {
             saveData()
         }
 
-        // 테스트로만 사용 후 삭제
-        binding.textView5.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
 
         // 회원가입 버튼 누를 경우 회원가입 페이지로 이동
         binding.btnSignup.setOnClickListener {
@@ -223,13 +213,14 @@ class SignInActivity : AppCompatActivity() {
         if (autoLogin.getString("login", "") == "1") {
             // 자동 로그인
             val pw = autoLogin.getString("pw", "")
-            if(email != null && pw != null){
+            if (email != null && pw != null) {
                 auth.signInWithEmailAndPassword(email, pw)
                     .addOnCompleteListener {
                         val user = auth.currentUser
-                        if(user != null && user.isEmailVerified){
-                            val intent = Intent(this@SignInActivity,MainActivity::class.java)
-                            Toast.makeText(this@SignInActivity, "응 자동로그인~", Toast.LENGTH_SHORT).show()
+                        if (user != null && user.isEmailVerified) {
+                            val intent = Intent(this@SignInActivity, MainActivity::class.java)
+                            Toast.makeText(this@SignInActivity, "응 자동로그인~", Toast.LENGTH_SHORT)
+                                .show()
                             startActivity(intent)
                         }
                     }

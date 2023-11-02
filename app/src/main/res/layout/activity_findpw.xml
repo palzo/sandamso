@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_400"
+    android:background="@drawable/iv_background"
     tools:context=".SignPage.FindpwActivity">
 
     <ImageButton
@@ -14,7 +14,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:background="@color/transparency"
-        android:src="@drawable/ic_back_arrow"
+        android:src="@drawable/ic_back_arrow_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,23 +23,21 @@
         style="@style/PointText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:text="Find\nthe Route!"
-        android:textColor="@color/mint"
+        android:textColor="@color/white"
         android:textSize="40sp"
         app:layout_constraintStart_toEndOf="@+id/findpw_btn_back"
         app:layout_constraintTop_toBottomOf="@+id/findpw_btn_back" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="150dp"
-        android:background="@drawable/findpw_box"
+        android:background="@drawable/signin_roundbox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/findpw_tv_title"
@@ -67,7 +65,7 @@
             android:id="@+id/findpw_et_email"
             style="@style/HintText"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/signup_et_border"
@@ -82,13 +80,13 @@
         <Button
             android:id="@+id/findpw_btn_find"
             style="@style/BtnText"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="70dp"
-            android:layout_marginBottom="50dp"
-            android:background="@drawable/signin_btn_border"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_desert_borderless"
             android:text="비밀번호 찾기"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/findpw_et_email" />

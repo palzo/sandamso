@@ -37,6 +37,10 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 
+/*
+<a href="https://www.flaticon.com/kr/free-icons/" title="날씨 아이콘">눈비 아이콘  제작자: Ubaid El-Ahyar Alyafizi - Flaticon</a>
+* */
+
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     private val binding by lazy { ActivityInfoPageBinding.inflate(layoutInflater) }

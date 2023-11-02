@@ -63,22 +63,22 @@ class InfoPageAdapter : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
             // 비
             "1" -> {
                 Log.d("weatherIcon", "rainy")
-                return R.drawable.ic_snow
+                return R.drawable.ic_weather_rainy
             }
             // 비/눈
             "2" -> {
                 Log.d("weatherIcon", "snow & rainy")
-                return R.drawable.ic_snow
+                return R.drawable.ic_weather_rainysnow
             }
             // 눈
             "3" -> {
                 Log.d("weatherIcon", "snow")
-                return R.drawable.ic_snow
+                return R.drawable.ic_weather_snow
             }
             // 소나기
             "4" -> {
                 Log.d("weatherIcon", "shower")
-                return R.drawable.ic_snow
+                return R.drawable.ic_weather_shower
             }
             else -> {
                 Log.d("SKY ERROR", "SKY DATA ERROR")
@@ -91,17 +91,17 @@ class InfoPageAdapter : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
             // 맑음
             "1" -> {
                 Log.d("weatherIcon", "sunny")
-                return R.drawable.ic_snow
+                return R.drawable.ic_weather_sunny
             }
             // 구름많음
             "3" -> {
                 Log.d("weatherIcon", "lots of clouds")
-                return R.drawable.ic_snow
+                return R.drawable.ic_weather_lotsclouds
             }
             // 흐림
             "4" -> {
                 Log.d("weatherIcon", "cloudy")
-                return R.drawable.ic_snow
+                return R.drawable.ic_weather_cloudy
             }
             else ->{
                 Log.d("SKY ERROR", "SKY DATA ERROR")

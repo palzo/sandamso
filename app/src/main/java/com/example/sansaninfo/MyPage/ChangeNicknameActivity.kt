@@ -1,3 +1,14 @@
+/*Copyright (c) 2023 PersesTitan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.*/
 package com.example.sansaninfo.MyPage
 
 import android.os.Bundle
@@ -5,14 +16,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sansaninfo.databinding.ActivityChangeNicknameBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.vane.badwordfiltering.BadWordFiltering
 
 class ChangeNicknameActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivityChangeNicknameBinding.inflate(layoutInflater) }
     private lateinit var database: DatabaseReference
+    private val badWordFiltering = BadWordFiltering()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +45,41 @@ class ChangeNicknameActivity : AppCompatActivity() {
             finish()
         }
         binding.nicknameBtnOkay.setOnClickListener {
+            val userReference = FirebaseDatabase.getInstance().getReference("users")
             val newNickname = binding.nicknameEtNickname.text.toString()
             if (newNickname.isNotEmpty()) {
                 val userId = auth.currentUser?.uid
                 if (userId != null) {
-                    writeNewUser(userId, newNickname)
-                    // 수정할 닉네임을 입력했는지 토스트 띄워서 알려주기.
-                    Toast.makeText(this, "닉네임 수정이 완료되었습니다.\n잠시 기다려주세요.", Toast.LENGTH_SHORT).show()
-                    finish()
+                    userReference.orderByChild("nickname").equalTo(newNickname)
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (snapshot.exists()) {
+                                    Toast.makeText(
+                                        this@ChangeNicknameActivity,
+                                        "이미 존재하는 닉네임 입니다.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else if (badWordFiltering.check(newNickname)) {
+                                    Toast.makeText(
+                                        this@ChangeNicknameActivity,
+                                        "사용할 수 없는 닉네임 입니다.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    writeNewUser(userId, newNickname)
+                                    // 수정할 닉네임을 입력했는지 토스트 띄워서 알려주기.
+                                    Toast.makeText(
+                                        this@ChangeNicknameActivity,
+                                        "닉네임 수정이 완료되었습니다.\n잠시 기다려주세요.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    finish()
+                                }
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+
+                            }
+                        })
                 } else {
                     Toast.makeText(this, "사용자 인증을 할 수 없습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -44,7 +87,6 @@ class ChangeNicknameActivity : AppCompatActivity() {
                 Toast.makeText(this, "수정할 닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     private fun writeNewUser(userId: String, newNickname: String) {

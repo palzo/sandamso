@@ -1,3 +1,14 @@
+/*Copyright (c) 2023 PersesTitan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.*/
 package com.example.sansaninfo.SignPage
 
 import android.content.Intent
@@ -13,6 +24,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.vane.badwordfiltering.BadWordFiltering
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -25,6 +37,7 @@ class SignUpActivity : AppCompatActivity() {
     private var pwCheck = false         // 비밀번호
     private var pwSameCheck = false     // 비밀번호 확인
 
+    private val badWordFiltering = BadWordFiltering()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -194,6 +207,10 @@ class SignUpActivity : AppCompatActivity() {
                     if (snapshot.exists()) {
                         nickCheck = false
                         binding.signupEtNickname.error = "이미 존재하는 닉네임 입니다."
+                    } else if (badWordFiltering.check(nick)){
+                        // 닉네임에 욕설이 포함되어 있는 경우
+                        nickCheck = false
+                        binding.signupEtNickname.error = "사용할 수 없는 닉네임 입니다."
                     } else {
                         nickCheck = true
                         toastMessage("사용가능한 닉네임 입니다.")
@@ -204,7 +221,6 @@ class SignUpActivity : AppCompatActivity() {
                     nickCheck = false
                     toastMessage("닉네임 중복 확인 중 에러 발생")
                 }
-
             })
     }
 

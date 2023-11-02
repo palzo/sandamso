@@ -230,7 +230,6 @@ class SignInActivity : AppCompatActivity() {
                         val user = auth.currentUser
                         if(user != null && user.isEmailVerified){
                             val intent = Intent(this@SignInActivity,MainActivity::class.java)
-                            Toast.makeText(this@SignInActivity, "응 자동로그인~", Toast.LENGTH_SHORT).show()
                             startActivity(intent)
                         }
                     }

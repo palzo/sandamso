@@ -34,6 +34,10 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 
+/*
+<a href="https://www.flaticon.com/kr/free-icons/" title="날씨 아이콘">눈비 아이콘  제작자: Ubaid El-Ahyar Alyafizi - Flaticon</a>
+* */
+
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     private val binding by lazy { ActivityInfoPageBinding.inflate(layoutInflater) }
@@ -54,6 +58,10 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     @SuppressLint("SimpleDateFormat")
     private val dateFormat = SimpleDateFormat("yyyyMMdd")
     private val today = dateFormat.format(currentDate)
+
+    // 날씨 강수 형태 상수
+    private var sky = ""
+    private val skyDataList = mutableListOf<SkyData>()
 
     private val weatherDataList = mutableListOf<WeatherData>()
 
@@ -185,7 +193,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         fun fetchWeather(index: Int) {
             if (index >= baseTimes.size) {
                 return runOnUiThread {
-                    infoPageAdapter.addItem(weatherDataList)
+                    infoPageAdapter.addItem(weatherDataList, skyDataList)
                 }
             }
 
@@ -212,7 +220,21 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     val tmpValue = item.fcstValue
                                     weatherDataList.add(WeatherData(baseTime, tmpValue))
                                 }
-                                Log.d(
+                                if(item.category == "SKY") {
+                                    sky = item.fcstValue
+                                }
+                                if(item.category == "PTY") {
+                                    val ptyValue = item.fcstValue
+                                    when(ptyValue) {
+                                        "0" -> skyDataList.add(SkyData("0", sky))
+                                        "1" -> skyDataList.add(SkyData("1", "0"))
+                                        "2" -> skyDataList.add(SkyData("2", "0"))
+                                        "3" -> skyDataList.add(SkyData("3", "0"))
+                                        "4" -> skyDataList.add(SkyData("4", "0"))
+                                        else -> skyDataList.add(SkyData("4", "0"))
+                                    }
+                                }
+                                /*Log.d(
                                     "text",
                                     "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}"
                                 )
@@ -220,7 +242,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     "text",
                                     "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}"
                                 )
-                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
+                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")*/
                             }
                         }
                         fetchWeather(index + 1)

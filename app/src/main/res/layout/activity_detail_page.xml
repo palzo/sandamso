@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".DetailPage.DetailPageActivity">
 
+    <View
+        android:id="@+id/view8"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_400"
+        app:layout_constraintTop_toBottomOf="@+id/detail_page_iv_back"
+        tools:layout_editor_absoluteX="0dp" />
+
     <ImageView
         android:id="@+id/detail_page_iv_back"
         android:layout_width="wrap_content"
@@ -31,11 +39,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="설악산 한 번 정복하실 분??"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_page_tv_top_title" />
+        app:layout_constraintTop_toBottomOf="@+id/view8" />
 
     <TextView
         android:id="@+id/detail_page_tv_name"
@@ -118,7 +126,9 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toTopOf="@id/detail_page_iv_ad"
-        app:layout_constraintTop_toBottomOf="@id/detail_page_ll_delete">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_page_ll_delete">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/scrollview_cl"
@@ -206,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
                     android:text="2023.xx.xx까지 모집"
-                    android:textColor="#606060"
+                    android:textColor="@color/white"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -219,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="35dp"
                     android:text="D-7"
-                    android:textColor="#4C4C4C"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -242,8 +252,9 @@
 
             <LinearLayout
                 android:id="@+id/detail_page_ll_kakao_chat"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/detail_page_talk_background"
                 android:gravity="center"

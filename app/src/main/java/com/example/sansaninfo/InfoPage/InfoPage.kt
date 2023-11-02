@@ -340,6 +340,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         result = result.replace("160", "")
         result = result.replace(" , ", "")
         result = result.replace("  ", "")
+        result = result.replace("다.", "다.\n ")
         return result
     }
 }

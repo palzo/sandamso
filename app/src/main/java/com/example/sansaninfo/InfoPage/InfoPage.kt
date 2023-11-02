@@ -7,11 +7,9 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.example.sansaninfo.API.ModelData.Item
 import com.example.sansaninfo.API.ModelData.Weather
 import com.example.sansaninfo.API.Retrofit.WeatherClient
 import com.example.sansaninfo.BuildConfig
@@ -19,15 +17,14 @@ import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.MntModel
 import com.example.sansaninfo.databinding.ActivityInfoPageBinding
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapFragment
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.util.FusedLocationSource
-import com.naver.maps.map.util.MarkerIcons
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +33,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
+
+/*
+<a href="https://www.flaticon.com/kr/free-icons/" title="날씨 아이콘">눈비 아이콘  제작자: Ubaid El-Ahyar Alyafizi - Flaticon</a>
+* */
 
 class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
@@ -47,17 +48,20 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var mountainHeight: String? = null
     private lateinit var mapView: MapView // 네이버 지도
     private lateinit var naverMap: NaverMap
-    private val LOCATION_PERMISSION_REQUEST_CODE: Int = 1000
+    private lateinit var address : LatLng
 
     private val infoPageAdapter by lazy {
         InfoPageAdapter()
     }
-
     // 현재 날씨 상수
     private val currentDate = Date()
     @SuppressLint("SimpleDateFormat")
     private val dateFormat = SimpleDateFormat("yyyyMMdd")
     private val today = dateFormat.format(currentDate)
+
+    // 날씨 강수 형태 상수
+    private var sky = ""
+    private val skyDataList = mutableListOf<SkyData>()
 
     private val weatherDataList = mutableListOf<WeatherData>()
 
@@ -70,35 +74,17 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             startActivity(intent)
         }
 
-        // 맵 위젯 연결
-        val locationPermission = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { result ->
-            if (result.all { it.value }) {
-                initializeNaverMap()//네이버맵초기화
-            } else {//문제시 예외처리
-                Toast.makeText(this, "권한 승인이 필요합니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        //맵 권한 요청
-        locationPermission.launch(
-            arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        )
-        initializeNaverMap()
         initView()
-    }
+        mapView = binding.infoPageIvMap
+        mapView.onCreate(savedInstanceState)
 
-    private fun initializeNaverMap() {
-        mapView = findViewById(R.id.info_page_iv_map) as MapView
-//        mapView.getMapAsync(this)
-        // 용석님 요기 좀 해결해주세요
-        // 비동기처리랑 마커 옵션같은게 오류 생겨요 ㅠ
+        val fm = supportFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.info_page_iv_map) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.info_page_iv_map, it).commit()
+            }
+        mapFragment.getMapAsync(this)
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -138,41 +124,19 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(map: NaverMap) {
         naverMap = map
         naverMap.maxZoom = 18.0
-        naverMap.minZoom = 10.0
-
-        // 지도 옵션 설정
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BUILDING, true)
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRAFFIC, true)
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)
-        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)
-
         // 초기 위치 설정
+        val initialPosition = address
         val cameraUpdate =
-            CameraUpdate.scrollTo(com.naver.maps.geometry.LatLng(37.4979921, 127.028046))
-                .animate(CameraAnimation.Easing)
+            CameraUpdate.scrollTo(initialPosition).animate(CameraAnimation.Easing)
         naverMap.moveCamera(cameraUpdate)
-
-        // 현재 위치 설정
-        val uiSettings = naverMap.uiSettings
-        uiSettings.isLocationButtonEnabled = false
-
-        // 사용자 위치 추적 모드 설정
-        naverMap.locationTrackingMode = LocationTrackingMode.Face
-
-        // 현재 위치 설정
-        val locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        naverMap.locationSource = locationSource
-
-        // Marker 추가
         val marker = Marker()
-        marker.position = com.naver.maps.geometry.LatLng(37.521492, 127.259870)
+        marker.position = initialPosition
+        marker.width = 50
+        marker.height = 70
+        marker.iconTintColor = Color.GREEN
         marker.map = naverMap
-        marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = Color.RED
+
     }
-
-
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
@@ -183,7 +147,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             receivedList?.let {
                 mountainAddress = it.mntAddress
                 mountainHeight = it.mntHgt
-//                convertAddressToLatLng(it.mntAddress)
+                address = convertAddressToLatLng(it.mntAddress)
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
@@ -229,7 +193,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         fun fetchWeather(index: Int) {
             if (index >= baseTimes.size) {
                 return runOnUiThread {
-                    infoPageAdapter.addItem(weatherDataList)
+                    infoPageAdapter.addItem(weatherDataList, skyDataList)
                 }
             }
 
@@ -256,7 +220,21 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     val tmpValue = item.fcstValue
                                     weatherDataList.add(WeatherData(baseTime, tmpValue))
                                 }
-                                Log.d(
+                                if(item.category == "SKY") {
+                                    sky = item.fcstValue
+                                }
+                                if(item.category == "PTY") {
+                                    val ptyValue = item.fcstValue
+                                    when(ptyValue) {
+                                        "0" -> skyDataList.add(SkyData("0", sky))
+                                        "1" -> skyDataList.add(SkyData("1", "0"))
+                                        "2" -> skyDataList.add(SkyData("2", "0"))
+                                        "3" -> skyDataList.add(SkyData("3", "0"))
+                                        "4" -> skyDataList.add(SkyData("4", "0"))
+                                        else -> skyDataList.add(SkyData("4", "0"))
+                                    }
+                                }
+                                /*Log.d(
                                     "text",
                                     "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}"
                                 )
@@ -264,7 +242,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     "text",
                                     "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}"
                                 )
-                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")
+                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")*/
                             }
                         }
                         fetchWeather(index + 1)
@@ -278,41 +256,91 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
         fetchWeather(0)
     }
+    private fun convertAddressToLatLng(address: String): LatLng {
+        val geocoder = Geocoder(this)
+        try {
+            val addresses = geocoder.getFromLocationName(address, 1)
+            if (addresses != null) {
+                if (addresses.isNotEmpty()) {
+                    val location = addresses[0]
+                    latitude = location.latitude
+                    longitude = location.longitude
 
+                    // 추가 작업: 위치를 활용한 특정 기능 수행
+                } else {
+                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("주소 변환 오류", e.message.toString())
+        }
+        return LatLng(latitude, longitude)
+    }
     private fun removeSpecialCharacters(inputText: String): String {
         var result = inputText
-        result = result.replace("&amp;", "")
-        result = result.replace("amp;", "")
-        result = result.replace("nbsp;", "")
-        result = result.replace("lt;br / gt;", "")
+        result = result.replace(";", "")
+        result = result.replace("-", "")
+        result = result.replace("=", "")
+        result = result.replace("&", "")
+        result = result.replace("#", "")
+        result = result.replace("/", "")
+        result = result.replace(":", "")
+        result = result.replace("amp", "")
+        result = result.replace("nbsp", "")
+        result = result.replace("ltbr  gt", "")
         result = result.replace("br", "")
-        result = result.replace("&lt;p&gt;", "")
-        result = result.replace("&lt;BR&gt;", "")
-        result = result.replace("&lt;&gt;", "")
-        result = result.replace("&lt;/p&gt;", "")
-        result = result.replace("&quot;", "")
-        result = result.replace("lt;", "")
+        result = result.replace("ltpgt", "")
+        result = result.replace("ltBRgt", "")
+        result = result.replace("ltgt", "")
+        result = result.replace("lt/pgt", "")
+        result = result.replace("quot", "")
+        result = result.replace("lt", "")
+        result = result.replace("160;", "")
+        result = result.replace("xD", "")
+        result = result.replace("gt", "")
+        result = result.replace("span", "")
+        result = result.replace("class", "")
+        result = result.replace("Apple", "")
+        result = result.replace("style", "")
+        result = result.replace("windows", "")
+        result = result.replace("widows", "")
+        result = result.replace("whitespace", "")
+        result = result.replace("wordspacing", "")
+        result = result.replace("texttransform", "")
+        result = result.replace("none", "")
+        result = result.replace("textindent", "")
+        result = result.replace("0px", "")
+        result = result.replace("bordercollapse", "")
+        result = result.replace("separate", "")
+        result = result.replace("font", "")
+        result = result.replace("medium", "")
+        result = result.replace("Gulim", "")
+        result = result.replace("normal", "")
+        result = result.replace("orphans", "")
+        result = result.replace("letterspacing", "")
+        result = result.replace("color", "")
+        result = result.replace("rgb(0,0,0)", "")
+        result = result.replace("rgb(102,102,102)", "")
+        result = result.replace("webkit", "")
+        result = result.replace(" 2 ", "")
+        result = result.replace("borderhorizontalspacing", "")
+        result = result.replace("borderverticalspacing", "")
+        result = result.replace("textdecorationsineffect", "")
+        result = result.replace("textsizeadjust", "")
+        result = result.replace("auto", "")
+        result = result.replace("textstrokewidth", "")
+        result = result.replace("textalign", "")
+        result = result.replace("justify", "")
+        result = result.replace("lineheightfamily", "")
+        result = result.replace("arial", "")
+        result = result.replace("dotum", "")
+        result = result.replace("sanserif", "")
+        result = result.replace("13px", "")
+        result = result.replace("size", "")
+        result = result.replace("160", "")
+        result = result.replace(" , ", "")
+        result = result.replace("  ", "")
         return result
     }
-
-
-//    private fun convertAddressToLatLng(address: String) {
-//        val geocoder = Geocoder(this)
-//        try {
-//            val addresses = geocoder.getFromLocationName(address, 1)
-//            if (addresses != null) {
-//                if (addresses.isNotEmpty()) {
-//                    val location = addresses[0]
-//                    latitude = location.latitude
-//                    longitude = location.longitude
-//                    // 추가 작업: 위치를 활용한 특정 기능 수행
-//                } else {
-//                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        } catch (e: Exception) {
-//            Log.e("주소 변환 오류", e.message.toString())
-//        }
-//    }
 }
 

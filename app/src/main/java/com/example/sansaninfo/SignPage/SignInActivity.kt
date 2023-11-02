@@ -90,6 +90,7 @@ class SignInActivity : AppCompatActivity() {
                             if (user != null && user.isEmailVerified) {
                                 val signInIntent = Intent(this, MainActivity::class.java)
                                 toastMessage("로그인 성공 !")
+                                saveData()
                                 startActivity(signInIntent)
                             }
                             // 이메일 인증 안했을 경우
@@ -104,7 +105,7 @@ class SignInActivity : AppCompatActivity() {
             } else {
                 toastMessage("로그인 정보를 입력해 주세요.")
             }
-            saveData()
+
         }
 
         // 테스트로만 사용 후 삭제

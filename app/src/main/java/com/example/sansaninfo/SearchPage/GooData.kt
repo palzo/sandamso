@@ -16,7 +16,7 @@ class GooData {
 
         // 대구
         val daeguList: ArrayList<String> = arrayListOf(
-            "달성군", "달서구", "수성구", "대구", "동구"
+            "달성군", "달서구", "수성구", "동구"
         )
 
         // 부산
@@ -26,7 +26,7 @@ class GooData {
 
         // 인천
         val incheonList: ArrayList<String> = arrayListOf(
-            "서구", "남동구", "강화군", "옹진군", "중구", "남구", "부평구"
+            "서구", "남동구", "강화군", "옹진군", "중구", "부평구"
         )
 
         // 광주
@@ -42,8 +42,8 @@ class GooData {
         // 경기
         val gyeonggiList: ArrayList<String> = arrayListOf(
             "가평군", "포천시", "김포시", "양평군", "양주시", "하남시", "파주시", "연천군", "여주군", "안양시",
-            "용인시", "가평시", "광주군", "이천시", "안성시", "평택시", "의정부시", "의왕시", "광주시", "남양주시",
-            "시흥시", "여주군", "성남시"
+            "용인시", "광주군", "이천시", "안성시", "평택시", "의정부시", "의왕시", "광주시", "남양주시",
+            "시흥시", "여주시", "성남시"
         )
 
         // 강원
@@ -54,41 +54,41 @@ class GooData {
 
         // 경남
         val gyeongnamList: ArrayList<String> = arrayListOf(
-            "거제시", "밀양시", "울산시", "김해시", "진주시", "진해시", "양산시", "마산시", "창원시", "통영시",
+            "거제시", "밀양시", "김해시", "진주시", "진해구", "양산시", "마산시", "창원시", "통영시",
             "사천시", "합천군", "산청군", "거창군", "고성군", "함양군", "창녕군", "남해군", "의령군", "구례군",
-            "함안군", "하동군", "울주군", "청도군"
+            "함안군", "하동군",
         )
 
         // 경북
         val gyeongbukList: ArrayList<String> = arrayListOf(
-            "문경시", "안동시", "상주시", "경산시", "경주시", "영주시", "구미시", "포항시", "김천시", "사천시",
-            "양산시", "칠곡군", "합천군", "청도군", "봉화군", "군위군", "영덕군", "예천군", "청송군", "고령군",
-            "의령군", "산청군", "울릉군", "울진군", "영양군"
+            "문경시", "안동시", "상주시", "경산시", "경주시", "영주시", "구미시", "포항시", "김천시",
+            "양산시", "칠곡군", "청도군", "봉화군", "군위군", "영덕군", "예천군", "청송군", "고령군",
+            "울릉군", "울진군", "영양군"
         )
 
         // 충남
         val chungnamList: ArrayList<String> = arrayListOf(
             "공주시", "서산시", "천안시", "논산시", "아산시", "보령시", "당진시", "계룡시",
-            "부여군", "홍성군", "예산군", "청양군", "금산군", "태안군", "연기군", "서천군", "영동군"
+            "부여군", "홍성군", "예산군", "청양군", "금산군", "태안군", "서천군", "영동군"
         )
 
         // 충북
         val chungbukList: ArrayList<String> = arrayListOf(
-            "제천시", "충주시", "청주시", "상주시",
-            "괴산군", "영동군", "청원군", "보은군", "단양군", "옥천군", "진천군", "음성군", "증평군"
+            "제천시", "충주시", "청주시", "괴산군", "영동군", "청원군", "보은군", "단양군",
+            "옥천군", "진천군", "음성군", "증평군"
         )
 
         // 전남
         val jeonnamList: ArrayList<String> = arrayListOf(
             "나주시", "순천시", "광양시", "여수시", "목포시",
-            "장흥군", "해남군", "무안군", "순창군", "화순군", "구례군", "함평군", "장성군", "곡성군",
+            "장흥군", "해남군", "무안군", "화순군", "구례군", "함평군", "장성군", "곡성군",
             "담양군", "영광군", "영암군", "진도군", "강진군", "신안군", "고흥군", "보성군", "완도군", "여천군"
         )
 
         // 전북
         val jeonbukList: ArrayList<String> = arrayListOf(
             "남원시", "군산시", "김제시", "정읍시", "익산시", "전주시",
-            "순창군", "고창군", "임실군", "부안군", "영광군", "장수군", "진안군", "무주군", "완주군"
+            "순창군", "고창군", "임실군", "부안군", "장수군", "진안군", "무주군", "완주군"
         )
 
         // 제주
@@ -98,22 +98,22 @@ class GooData {
 
         fun getRegionList(city: String): ArrayList<String> {
             return when (city) {
-                "서울" -> seoulList
-                "대전" -> daejeonList
-                "대구" -> daeguList
-                "부산" -> busanList
-                "인천" -> incheonList
-                "광주" -> gwangjuList
-                "울산" -> ulsanList
-                "경기" -> gyeonggiList
-                "강원" -> gangwonList
-                "경남" -> gyeongnamList
-                "경북" -> gyeongbukList
-                "충남" -> chungnamList
-                "충북" -> chungbukList
-                "전남" -> jeonnamList
-                "전북" -> jeonbukList
-                "제주" -> jejuList
+                "서울특별시" -> seoulList
+                "대전광역시" -> daejeonList
+                "대구광역시" -> daeguList
+                "부산광역시" -> busanList
+                "인천광역시" -> incheonList
+                "광주광역시" -> gwangjuList
+                "울산광역시" -> ulsanList
+                "경기도" -> gyeonggiList
+                "강원도" -> gangwonList
+                "경상남도" -> gyeongnamList
+                "경상북도" -> gyeongbukList
+                "충청남도" -> chungnamList
+                "충청북도" -> chungbukList
+                "전라남도" -> jeonnamList
+                "전라북도" -> jeonbukList
+                "제주도" -> jejuList
                 else -> arrayListOf() // 기본값은 빈 리스트 또는 다른 처리
             }
         }

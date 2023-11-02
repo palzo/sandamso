@@ -95,6 +95,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private fun initializeNaverMap() {
         mapView = findViewById(R.id.info_page_iv_map) as MapView
 //        mapView.getMapAsync(this)
+        // 용석님 요기 좀 해결해주세요
+        // 비동기처리랑 마커 옵션같은게 오류 생겨요 ㅠ
     }
 
 
@@ -181,7 +183,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             receivedList?.let {
                 mountainAddress = it.mntAddress
                 mountainHeight = it.mntHgt
-                convertAddressToLatLng(it.mntAddress)
+//                convertAddressToLatLng(it.mntAddress)
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
@@ -294,23 +296,23 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    private fun convertAddressToLatLng(address: String) {
-        val geocoder = Geocoder(this)
-        try {
-            val addresses = geocoder.getFromLocationName(address, 1)
-            if (addresses != null) {
-                if (addresses.isNotEmpty()) {
-                    val location = addresses[0]
-                    latitude = location.latitude
-                    longitude = location.longitude
-                    // 추가 작업: 위치를 활용한 특정 기능 수행
-                } else {
-                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("주소 변환 오류", e.message.toString())
-        }
-    }
+//    private fun convertAddressToLatLng(address: String) {
+//        val geocoder = Geocoder(this)
+//        try {
+//            val addresses = geocoder.getFromLocationName(address, 1)
+//            if (addresses != null) {
+//                if (addresses.isNotEmpty()) {
+//                    val location = addresses[0]
+//                    latitude = location.latitude
+//                    longitude = location.longitude
+//                    // 추가 작업: 위치를 활용한 특정 기능 수행
+//                } else {
+//                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        } catch (e: Exception) {
+//            Log.e("주소 변환 오류", e.message.toString())
+//        }
+//    }
 }
 

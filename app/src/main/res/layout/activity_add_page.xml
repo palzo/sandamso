@@ -10,10 +10,12 @@
         android:id="@+id/add_page_constraint_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:paddingHorizontal="15dp"
+        android:paddingTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
 
         <ImageView
             android:id="@+id/add_page_iv_backbutton"
@@ -38,10 +40,22 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:id="@+id/view9"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/grey_400"
+        app:layout_constraintTop_toBottomOf="@+id/add_page_constraint_layout"
+        tools:layout_editor_absoluteX="0dp" />
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="60dp">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view9">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -54,7 +68,7 @@
                 android:id="@+id/add_page_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="button,add_page_tv_title,add_page_tv_title_limit,add_page_tv_text_limit,add_page_iv_add,add_page_cl_dday,add_page_et_text,add_page_tv_kakao_open,textView10,imageView6" />
+                app:constraint_referenced_ids="button,add_page_tv_title,add_page_tv_title_limit,add_page_tv_text_limit,add_page_iv_add,add_page_cl_dday,add_page_et_text,add_page_tv_kakao_open,textView10,imageView6,view9" />
 
             <EditText
                 android:id="@+id/add_page_tv_title"
@@ -62,11 +76,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/add_page_stroke_round_rec"
                 android:hint=" 제목을 입력해주세요. (필수)"
                 android:padding="13dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.6"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,11 +112,14 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/add_page_cl_dday"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/add_page_stroke_round_rec"
                 android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/add_page_tv_title"
                 app:layout_constraintTop_toBottomOf="@id/add_page_iv_add">
 
@@ -118,12 +136,10 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="3dp"
                     android:src="@drawable/calendar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/add_page_tv_dday"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -196,9 +212,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
                 android:layout_marginTop="50dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/signin_btn_border"
+                android:layout_marginBottom="100dp"
+                android:background="@drawable/btn_desert_borderless"
                 android:text="게시하기"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

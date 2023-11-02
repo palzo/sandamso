@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -15,10 +16,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import coil.load
 import com.example.sansaninfo.Data.FBRef
 import com.example.sansaninfo.Data.PostModel
 import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.Main.MainActivity
+import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.ActivityAddPageBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -26,6 +30,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -38,6 +43,8 @@ class AddPageActivity : AppCompatActivity() {
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
 
     private var addImage = false
+
+    private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
 
@@ -56,9 +63,10 @@ class AddPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        titleCount()
-        textCount()
-        init()
+            titleCount()
+            textCount()
+            init()
+            editData()
 
         with(binding) {
             button.setOnClickListener {
@@ -76,7 +84,7 @@ class AddPageActivity : AppCompatActivity() {
                     toastMessage("제목은 30글자 이하로 입력해주세요.")
 
                 } else if (!addImage) {
-                        toastMessage("이미지를 첨부해 주세요.")
+                    toastMessage("이미지를 첨부해 주세요.")
 
                 } else if (dday == null || dday.isEmpty()) {
                     toastMessage("모임 마감일을 설정해주세요.")
@@ -112,24 +120,7 @@ class AddPageActivity : AppCompatActivity() {
         }
 
         binding.addPageIvAdd.setOnClickListener {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED)
-                    requestPermissions(api33, 100)
-                else {
-                    galleryLauncher.launch("image/*")
-                }
-            } else {
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    requestPermissions(permission, 100)
-                } else {
-                    galleryLauncher.launch("image/*")
-                }
-            }
-
-            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            addImage()
         }
 
         //뒤로가기
@@ -194,6 +185,26 @@ class AddPageActivity : AppCompatActivity() {
         return id
     }
 
+    // 이미지 추가하기
+    fun addImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED)
+                requestPermissions(api33, 100)
+            else {
+                galleryLauncher.launch("image/*")
+            }
+        } else {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(permission, 100)
+            } else {
+                galleryLauncher.launch("image/*")
+            }
+        }
+        permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
     //권한 요청하기
     val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -231,6 +242,7 @@ class AddPageActivity : AppCompatActivity() {
         }
     }
 
+    // 스토리지에 이미지 저장하기(경로 찾기)
     fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
         val fullPath = makeFilePath("images", "temp", uri)
         val imageRef = storage.getReference(fullPath)
@@ -409,6 +421,132 @@ class AddPageActivity : AppCompatActivity() {
 
     private fun toastMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    // 수정하기
+    fun editData() {
+        val id = intent.getStringExtra("dataFromAddPageId")
+        Log.d("id test", "id = $id")
+
+        if (id != null) {
+            firebaseDatabase.child("POST").child(id).get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val userData =
+                        it.result.getValue(PostModel::class.java) ?: return@addOnCompleteListener
+                    val title = userData.title
+                    val image = userData.image
+                    val date = userData.deadlinedate
+                    val text = userData.maintext
+                    val kakao = userData.kakao
+
+                    with(binding) {
+                        addPageTvTitle.setText(title)
+                        addPageTvDday.text = date
+                        addPageEtText.setText(text)
+                        addPageTvKakaoOpen.setText(kakao)
+
+                        val storage = FirebaseStorage.getInstance()
+                        val reference = storage.reference.child("images/$image")
+                        reference.downloadUrl.addOnSuccessListener {
+                            binding.addPageIvAdd.load(it)
+                        }
+                    }
+                }
+            }
+        }
+
+        with(binding) {
+            addPageTvTitle.isEnabled = true
+            addPageTvDday.isEnabled = true
+            addPageEtText.isEnabled = true
+            addPageTvKakaoOpen.isEnabled = true
+            addPageIvAdd.setOnClickListener { addImage() }
+
+            button.visibility = View.GONE
+            completeButton.visibility = View.VISIBLE
+            cancelButton.visibility = View.VISIBLE
+        }
+
+        binding.completeButton.setOnClickListener {
+            saveEditeData()
+            val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.cancelButton.setOnClickListener {
+            exitEditMode()
+        }
+    }
+
+    private fun saveEditeData() {
+        val id = intent.getStringExtra("dataFromAddPageId")
+        if (id != null) {
+            firebaseDatabase.child("POST").child(id).get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val originalData = it.result.getValue(PostModel::class.java)
+                    if (originalData != null) {
+                        with(binding) {
+                            // 수정된 데이터로 업데이트 하기
+                            val editData = originalData.copy(
+                                title = addPageTvTitle.text.toString(),
+                                deadlinedate = addPageTvDday.text.toString(),
+                                maintext = addPageEtText.text.toString(),
+                                kakao = addPageTvKakaoOpen.text.toString()
+                            )
+                            
+                            // 이미지 수정 시, 업로드하고 URL 업데이트 하기
+                            imageSetData(editData)
+                            firebaseDatabase.child("POST").child(id).setValue(editData)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun imageSetData(editData: PostModel) {
+        val id = intent.getStringExtra("dataFromAddPageId")
+        val imageUri = Uri.parse(binding.addPageIvAdd.tag.toString())
+        if (imageUri != null) {
+            uploadImage(imageUri) {
+                if (it != null) {
+                    editData.image = imageUri.toString()
+                    if (id != null) {
+                        firebaseDatabase.child("POST").child(id).setValue(editData)
+                    }
+                }
+            }
+        } else {
+            // 이미지가 선택되지 않은 경우 원래 있는 데이터로 사용하기
+            if (id != null) {
+                firebaseDatabase.child("POST").child(id).setValue(editData)
+            }
+        }
+    }
+
+    private fun exitEditMode() {
+        binding.cancelButton.setOnClickListener {
+            var builder = AlertDialog.Builder(this)
+            builder.setTitle("수정 취소")
+            builder.setMessage("게시글 수정을 취소하고 이전 내용을 유지하시겠습니까?")
+            builder.setIcon(R.drawable.alert_triangle)
+
+            val listener = object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, p1: Int) {
+                    when (p1) {
+                        DialogInterface.BUTTON_POSITIVE -> {
+                            finish()
+                        }
+
+                        DialogInterface.BUTTON_NEGATIVE -> {
+                        }
+                    }
+                }
+            }
+            builder.setPositiveButton("확인", listener)
+            builder.setNegativeButton("취소", listener)
+            builder.show()
+        }
     }
 }
 

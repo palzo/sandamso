@@ -1,5 +1,6 @@
 package com.example.sansaninfo.CommunityPage
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,17 +8,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPageActivity
 import com.example.sansaninfo.Data.PostModel
 import com.example.sansaninfo.DetailPage.DetailPageActivity
+import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class CommunityPageFragment : Fragment() {
 
@@ -48,7 +53,82 @@ class CommunityPageFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.communityImageOption.setOnClickListener {
+            Log.d("Options", "버튼 눌렀냐?")
+            val menu = PopupMenu(context, it)
+            menu.menuInflater.inflate(R.menu.sort_option, menu.menu)
+            menu.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.menu_option_latest -> {
+                        sortPostLatest()
+                        true
+                    }
+                    R.id.menu_option_like -> {
+                        sortPostLike()
+                        true
+                    }
+                    R.id.menu_option_deadline -> {
+                        sortPostDeadline()
+                        true
+                    }
+                    R.id.menu_option_mine -> {
+                        sortPostMine()
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+            menu.show()
+        }
+
         return binding.root
+    }
+    // 최신순으로 정렬 -> 날짜 최신순대로 내림차순
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostLatest() {
+        Log.d("menu", "최신순으로 정렬")
+        communityList.sortByDescending { it.date }
+        communityPageAdapter.addItem(communityList)
+
+        communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 좋아요순으로 정렬 -> 날짜 최신순대로 오름차순
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostLike() {
+        Log.d("menu", "좋아요순으로 정렬")
+        communityList.sortBy { it.date }
+        communityPageAdapter.addItem(communityList)
+
+        communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 마감일순으로 정렬
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostDeadline() {
+        Log.d("menu", "마감일 순으로 정렬")
+        communityList.sortBy { communityPageAdapter.calculateDday(it) }
+        communityPageAdapter.addItem(communityList)
+
+        communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 내 글로 정렬
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostMine() {
+        Log.d("menu", "내 글로만 최신순으로 정렬")
+
+        val currentUser = auth.currentUser
+        if(currentUser != null) {
+            val myPost = communityList.filter { it.nickname == currentUser.uid }
+            myPost.sortedBy { it.date }
+            val myPostMutable = myPost.toMutableList()
+            communityPageAdapter.addItem(myPostMutable)
+        }
+
+        communityPageAdapter.notifyDataSetChanged()
     }
 
     override fun onResume() {

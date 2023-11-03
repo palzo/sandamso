@@ -47,44 +47,50 @@ class ChangeNicknameActivity : AppCompatActivity() {
         binding.nicknameBtnOkay.setOnClickListener {
             val userReference = FirebaseDatabase.getInstance().getReference("users")
             val newNickname = binding.nicknameEtNickname.text.toString()
-            if (newNickname.isNotEmpty()) {
-                val userId = auth.currentUser?.uid
-                if (userId != null) {
-                    userReference.orderByChild("nickname").equalTo(newNickname)
-                        .addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                if (snapshot.exists()) {
-                                    Toast.makeText(
-                                        this@ChangeNicknameActivity,
-                                        "이미 존재하는 닉네임 입니다.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else if (badWordFiltering.check(newNickname)) {
-                                    Toast.makeText(
-                                        this@ChangeNicknameActivity,
-                                        "사용할 수 없는 닉네임 입니다.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    writeNewUser(userId, newNickname)
-                                    // 수정할 닉네임을 입력했는지 토스트 띄워서 알려주기.
-                                    Toast.makeText(
-                                        this@ChangeNicknameActivity,
-                                        "닉네임 수정이 완료되었습니다.\n잠시 기다려주세요.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    finish()
-                                }
-                            }
-                            override fun onCancelled(error: DatabaseError) {
+            val regex = Regex("^[^!@#\$%^&*()\\-_=+<>?/|\\[\\]{};:'\",.~`]{1,7}\$")
 
-                            }
-                        })
+            if (regex.matches(binding.nicknameEtNickname.text)) {
+                if (newNickname.isNotEmpty()) {
+                    val userId = auth.currentUser?.uid
+                    if (userId != null) {
+                        userReference.orderByChild("nickname").equalTo(newNickname)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    if (snapshot.exists()) {
+                                        Toast.makeText(
+                                            this@ChangeNicknameActivity,
+                                            "이미 존재하는 닉네임 입니다.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else if (badWordFiltering.check(newNickname)) {
+                                        Toast.makeText(
+                                            this@ChangeNicknameActivity,
+                                            "사용할 수 없는 닉네임 입니다.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        writeNewUser(userId, newNickname)
+                                        // 수정할 닉네임을 입력했는지 토스트 띄워서 알려주기.
+                                        Toast.makeText(
+                                            this@ChangeNicknameActivity,
+                                            "닉네임 수정이 완료되었습니다.\n잠시 기다려주세요.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        finish()
+                                    }
+                                }
+                                override fun onCancelled(error: DatabaseError) {
+
+                                }
+                            })
+                    } else {
+                        Toast.makeText(this, "사용자 인증을 할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(this, "사용자 인증을 할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "수정할 닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "수정할 닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "7글자 이하로 입력해주세요. (특수문자 제외)", Toast.LENGTH_SHORT).show()
             }
         }
     }

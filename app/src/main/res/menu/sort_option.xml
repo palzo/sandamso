@@ -7,6 +7,11 @@
         android:layout_height="wrap_content"
         android:title="최신순" />
     <item
+        android:id="@+id/menu_option_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="좋아요순" />
+    <item
         android:id="@+id/menu_option_deadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

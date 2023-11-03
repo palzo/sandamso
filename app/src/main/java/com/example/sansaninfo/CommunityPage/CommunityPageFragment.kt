@@ -20,6 +20,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class CommunityPageFragment : Fragment() {
 
@@ -57,12 +59,19 @@ class CommunityPageFragment : Fragment() {
             menu.setOnMenuItemClickListener {
                 when(it.itemId) {
                     R.id.menu_option_latest -> {
+                        sortPostLatest()
+                        true
+                    }
+                    R.id.menu_option_like -> {
+                        sortPostLike()
                         true
                     }
                     R.id.menu_option_deadline -> {
+                        sortPostDeadline()
                         true
                     }
                     R.id.menu_option_mine -> {
+                        sortPostMine()
                         true
                     }
                     else -> {
@@ -70,9 +79,43 @@ class CommunityPageFragment : Fragment() {
                     }
                 }
             }
+            menu.show()
         }
 
         return binding.root
+    }
+    // 최신순으로 정렬
+    private fun sortPostLatest() {
+        Log.d("menu", "최신순으로 정렬")
+        communityList.sortByDescending { it.date }
+        communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 좋아요순으로 정렬
+    private fun sortPostLike() {
+        Log.d("menu", "좋아요순으로 정렬")
+        //communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 마감일순으로 정렬
+    private fun sortPostDeadline() {
+        Log.d("menu", "마감일 순으로 정렬")
+
+        Log.d("menu", "${ communityList }")
+        communityList.sortBy { communityPageAdapter.setCalculateDday(it) }
+        communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 내 글로 정렬
+    private fun sortPostMine() {
+        Log.d("menu", "내 글로만 최신순으로 정렬")
+        val currentUser = auth.currentUser
+        if(currentUser != null) {
+            val userNickname = currentUser.uid
+            val userPost = communityList.filter { it.id == userNickname}
+            communityPageAdapter.setItems(userPost)
+        }
+        communityPageAdapter.notifyDataSetChanged()
     }
 
     override fun onResume() {

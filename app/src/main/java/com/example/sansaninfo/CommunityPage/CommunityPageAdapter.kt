@@ -109,4 +109,31 @@ class CommunityPageAdapter :
             return "유효하지 않은 날짜"
         }
     }
+    fun setCalculateDday(items: PostModel): Int {
+        val dateData = items.deadlinedate
+
+        if (dateData.isEmpty()) {
+            return Int.MAX_VALUE // D-day가 없으면 아주 큰 값 반환
+        }
+
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
+        val currentDate = Date()
+        val targetDate = dateFormat.parse(dateData)
+
+        if (targetDate != null) {
+            val timeDiff = targetDate.time - currentDate.time
+            val dday = timeDiff / (1000 * 60 * 60 * 24)
+
+            return dday.toInt()
+        } else {
+            return Int.MAX_VALUE // 유효하지 않은 날짜이면 아주 큰 값 반환
+        }
+    }
+
+
+    fun setItems(item : List<PostModel>) {
+        items.clear()
+        items.addAll(item)
+        notifyDataSetChanged()
+    }
 }

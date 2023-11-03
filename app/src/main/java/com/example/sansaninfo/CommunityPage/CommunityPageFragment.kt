@@ -1,5 +1,6 @@
 package com.example.sansaninfo.CommunityPage
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -84,37 +85,49 @@ class CommunityPageFragment : Fragment() {
 
         return binding.root
     }
-    // 최신순으로 정렬
+    // 최신순으로 정렬 -> 날짜 최신순대로 내림차순
+    @SuppressLint("NotifyDataSetChanged")
     private fun sortPostLatest() {
         Log.d("menu", "최신순으로 정렬")
         communityList.sortByDescending { it.date }
+        communityPageAdapter.addItem(communityList)
+
         communityPageAdapter.notifyDataSetChanged()
     }
 
-    // 좋아요순으로 정렬
+    // 좋아요순으로 정렬 -> 날짜 최신순대로 오름차순
+    @SuppressLint("NotifyDataSetChanged")
     private fun sortPostLike() {
         Log.d("menu", "좋아요순으로 정렬")
-        //communityPageAdapter.notifyDataSetChanged()
+        communityList.sortBy { it.date }
+        communityPageAdapter.addItem(communityList)
+
+        communityPageAdapter.notifyDataSetChanged()
     }
 
     // 마감일순으로 정렬
+    @SuppressLint("NotifyDataSetChanged")
     private fun sortPostDeadline() {
         Log.d("menu", "마감일 순으로 정렬")
+        communityList.sortBy { communityPageAdapter.calculateDday(it) }
+        communityPageAdapter.addItem(communityList)
 
-        Log.d("menu", "${ communityList }")
-        communityList.sortBy { communityPageAdapter.setCalculateDday(it) }
         communityPageAdapter.notifyDataSetChanged()
     }
 
     // 내 글로 정렬
+    @SuppressLint("NotifyDataSetChanged")
     private fun sortPostMine() {
         Log.d("menu", "내 글로만 최신순으로 정렬")
+
         val currentUser = auth.currentUser
         if(currentUser != null) {
-            val userNickname = currentUser.uid
-            val userPost = communityList.filter { it.id == userNickname}
-            communityPageAdapter.setItems(userPost)
+            val myPost = communityList.filter { it.nickname == currentUser.uid }
+            myPost.sortedBy { it.date }
+            val myPostMutable = myPost.toMutableList()
+            communityPageAdapter.addItem(myPostMutable)
         }
+
         communityPageAdapter.notifyDataSetChanged()
     }
 

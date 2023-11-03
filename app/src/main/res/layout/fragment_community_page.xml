@@ -27,11 +27,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/community_spn_spinner"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/community_image_option"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_community_option"
         app:layout_constraintBottom_toBottomOf="@+id/community_tv_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/community_tv_title" />

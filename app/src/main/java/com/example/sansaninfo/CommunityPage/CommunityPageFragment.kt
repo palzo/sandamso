@@ -7,11 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPageActivity
 import com.example.sansaninfo.Data.PostModel
 import com.example.sansaninfo.DetailPage.DetailPageActivity
+import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -46,6 +48,28 @@ class CommunityPageFragment : Fragment() {
             val intent = Intent(requireContext(), AddPageActivity::class.java)
             intent.putExtra("switch", "add")
             startActivity(intent)
+        }
+
+        binding.communityImageOption.setOnClickListener {
+            Log.d("Options", "버튼 눌렀냐?")
+            val menu = PopupMenu(context, it)
+            menu.menuInflater.inflate(R.menu.sort_option, menu.menu)
+            menu.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.menu_option_latest -> {
+                        true
+                    }
+                    R.id.menu_option_deadline -> {
+                        true
+                    }
+                    R.id.menu_option_mine -> {
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
         }
 
         return binding.root

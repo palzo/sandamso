@@ -48,13 +48,15 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var mountainHeight: String? = null
     private lateinit var mapView: MapView // 네이버 지도
     private lateinit var naverMap: NaverMap
-    private lateinit var address : LatLng
+    private lateinit var address: LatLng
 
     private val infoPageAdapter by lazy {
         InfoPageAdapter()
     }
+
     // 현재 날씨 상수
     private val currentDate = Date()
+
     @SuppressLint("SimpleDateFormat")
     private val dateFormat = SimpleDateFormat("yyyyMMdd")
     private val today = dateFormat.format(currentDate)
@@ -137,6 +139,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         marker.map = naverMap
 
     }
+
     private fun initView() = with(binding) {
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
@@ -212,7 +215,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                     nx = nx!!,
                     ny = ny!!,
 
-                ).enqueue(object : Callback<Weather?> {
+                    ).enqueue(object : Callback<Weather?> {
                     override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
                         response.body().let {
                             it?.response?.body?.items?.item?.forEach { item ->
@@ -220,12 +223,12 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                     val tmpValue = item.fcstValue
                                     weatherDataList.add(WeatherData(baseTime, tmpValue))
                                 }
-                                if(item.category == "SKY") {
+                                if (item.category == "SKY") {
                                     sky = item.fcstValue
                                 }
-                                if(item.category == "PTY") {
+                                if (item.category == "PTY") {
                                     val ptyValue = item.fcstValue
-                                    when(ptyValue) {
+                                    when (ptyValue) {
                                         "0" -> skyDataList.add(SkyData("0", sky))
                                         "1" -> skyDataList.add(SkyData("1", "0"))
                                         "2" -> skyDataList.add(SkyData("2", "0"))
@@ -256,6 +259,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
         fetchWeather(0)
     }
+
     private fun convertAddressToLatLng(address: String): LatLng {
         val geocoder = Geocoder(this)
         try {
@@ -276,6 +280,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         }
         return LatLng(latitude, longitude)
     }
+
     private fun removeSpecialCharacters(inputText: String): String {
         var result = inputText
         result = result.replace(";", "")
@@ -338,7 +343,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         result = result.replace("13px", "")
         result = result.replace("size", "")
         result = result.replace("160", "")
-        result = result.replace(" , ", "")
+        result = result.replace(" ,", "")
         result = result.replace("  ", "")
         result = result.replace("다.", "다.\n ")
         return result

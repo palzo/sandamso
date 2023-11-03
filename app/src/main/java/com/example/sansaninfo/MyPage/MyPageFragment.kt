@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.SignPage.FindpwActivity
@@ -56,9 +57,8 @@ class MyPageFragment : Fragment() {
         //로그인페이지로 이동과 회원탈퇴
         binding.myPageTvSecession.setOnClickListener {
             revokeAccess()
-            Toast.makeText(activity, "회원탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show()
-            val intent = Intent(activity, SignInActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(activity, SignInActivity::class.java)
+//            startActivity(intent)
         }
 
         //수정 버튼
@@ -133,30 +133,48 @@ class MyPageFragment : Fragment() {
 
     //회원탈퇴
     private fun revokeAccess() {
-        auth.currentUser?.delete()
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("회원 탈퇴")
+        alertDialogBuilder.setMessage("정말 회원을 탈퇴하시겠습니까?")
 
-        // 카카오
-        UserApiClient.instance.unlink { error ->
-            if (error != null) {
+        alertDialogBuilder.setPositiveButton("확인") { _, _ ->
+            auth.currentUser?.delete()
+
+            // 카카오
+            UserApiClient.instance.unlink { error ->
+                if (error != null) {
 //                Toast.makeText(requireContext(), "회원 탈퇴 실패 $error", Toast.LENGTH_SHORT).show()
-            } else {
+                } else {
 //                Toast.makeText(requireContext(), "회원 탈퇴 성공", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
 
-        val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
-        val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
-        autoLogin?.edit()?.apply {
-            putString("login", "0")
-            putString("pw", "")
-            apply()
+            val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
+            val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
+            autoLogin?.edit()?.apply {
+                putString("login", "0")
+                putString("pw", "")
+                apply()
+            }
+            saveEmail?.edit()?.apply {
+                putString("check", "0")
+                putString("email", "")
+                apply()
+            }
+            val intent = Intent(activity, SignInActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+            Toast.makeText(activity, "회원탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show()
         }
-        saveEmail?.edit()?.apply {
-            putString("check", "0")
-            putString("email", "")
-            apply()
+        // 취소 버튼을 눌렀을 때
+        alertDialogBuilder.setNegativeButton("취소") { dialog, _ ->
+            // 다이얼로그 닫기
+            dialog.dismiss()
         }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -37,20 +37,35 @@ class DetailPageActivity : AppCompatActivity() {
 
     private lateinit var postId: String
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        auth = FirebaseAuth.getInstance()
         init()
         deleteData()
         editData()
+
+        // 작성자인지 확인하는 메소드
+        userCheck()
 
         binding.detailPageIvBack.setOnClickListener {
             finish()
         }
     }
-
+    private fun userCheck() {
+        with(binding){
+            if (auth.currentUser?.uid == intent.getStringExtra("dataFromAddPageWriter")) {
+                detailPageLlRevise.visibility = View.VISIBLE
+                detailPageLlDelete.visibility = View.VISIBLE
+                detailPageLlJoin.visibility = View.INVISIBLE
+            } else {
+                detailPageLlRevise.visibility = View.INVISIBLE
+                detailPageLlDelete.visibility = View.INVISIBLE
+                detailPageLlJoin.visibility = View.VISIBLE
+            }
+        }
+    }
     override fun onResume() {
         super.onResume()
         dataView()
@@ -58,7 +73,7 @@ class DetailPageActivity : AppCompatActivity() {
     }
 
     // 프로그래스 바
-    fun init() {
+    private fun init() {
         blockLayoutTouch()
         showProgress(true)
         thread(start = true) {
@@ -70,7 +85,7 @@ class DetailPageActivity : AppCompatActivity() {
         }
     }
 
-    fun showProgress(isShow: Boolean) {
+    private fun showProgress(isShow: Boolean) {
         if (isShow) binding.progressBar.visibility = View.VISIBLE
         else binding.progressBar.visibility = View.GONE
     }
@@ -86,8 +101,8 @@ class DetailPageActivity : AppCompatActivity() {
     }
 
     // Add Page에서 입력한 데이터 가져오기
-    fun dataView() {
-        auth = FirebaseAuth.getInstance()
+    private fun dataView() {
+//        auth = FirebaseAuth.getInstance()
 
         postId = intent.getStringExtra("dataFromAddPageId") ?: ""
         Log.d("postId", "$postId")
@@ -135,7 +150,7 @@ class DetailPageActivity : AppCompatActivity() {
     }
 
     // 디데이 계산하기
-    fun calculateDday() {
+    private fun calculateDday() {
         val dateData = intent.getStringExtra("dataFromAddPagedday")
         val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
         val currentDate = Date()
@@ -159,17 +174,18 @@ class DetailPageActivity : AppCompatActivity() {
     }
 
     // 수정하기
-    fun editData() {
+    private fun editData() {
         binding.detailPageLlRevise.setOnClickListener {
             val intent = Intent(this@DetailPageActivity, AddPageActivity::class.java)
             intent.putExtra("dataFromAddPageId", postId)
+            intent.putExtra("switch", "edit")
             Log.d("id test", "id = $postId")
             startActivity(intent)
         }
     }
 
     // 삭제하기 - 다이얼로그 구현하기
-    fun deleteData() {
+    private fun deleteData() {
         binding.detailPageLlDelete.setOnClickListener {
             var builder = AlertDialog.Builder(this)
             builder.setTitle("게시글을 삭제하시겠습니까?")

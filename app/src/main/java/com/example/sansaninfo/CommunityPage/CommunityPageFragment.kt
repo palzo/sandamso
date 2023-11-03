@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPageActivity
 import com.example.sansaninfo.Data.PostModel
@@ -43,6 +44,7 @@ class CommunityPageFragment : Fragment() {
 
         binding.communityPageFab.setOnClickListener {
             val intent = Intent(requireContext(), AddPageActivity::class.java)
+            intent.putExtra("switch", "add")
             startActivity(intent)
         }
 
@@ -76,10 +78,12 @@ class CommunityPageFragment : Fragment() {
         communityPageAdapter.setOnClickListener(object : CommunityPageAdapter.ItemClick {
             override fun onClick(view: View, position: Int, model: PostModel) {
                 val intent = Intent(activity, DetailPageActivity::class.java)
+
                 with(model) {
                     intent.putExtra("dataFromAddPageimage", image)
                     intent.putExtra("dataFromAddPagedday", deadlinedate)
                     intent.putExtra("dataFromAddPageId", id)
+                    intent.putExtra("dataFromAddPageWriter", writer)
                 }
                 startActivity(intent)
             }

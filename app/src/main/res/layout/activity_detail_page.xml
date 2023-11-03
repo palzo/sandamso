@@ -121,6 +121,34 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/detail_page_ll_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/detail_page_tv_date"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/detail_page_iv_join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_handshake" />
+
+        <TextView
+            android:id="@+id/detail_page_tv_join"
+            style="@style/SmallText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="참여하기"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"

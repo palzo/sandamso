@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -34,6 +35,8 @@ class DetailPageActivity : AppCompatActivity() {
 
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
+    private lateinit var postId: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +44,7 @@ class DetailPageActivity : AppCompatActivity() {
 
         init()
         deleteData()
-
-        binding.detailPageLlRevise.setOnClickListener {
-            val intent = Intent(this@DetailPageActivity, AddPageActivity::class.java)
-            startActivity(intent)
-        }
+        editData()
 
         binding.detailPageIvBack.setOnClickListener {
             finish()
@@ -90,7 +89,7 @@ class DetailPageActivity : AppCompatActivity() {
     fun dataView() {
         auth = FirebaseAuth.getInstance()
 
-        val postId = intent.getStringExtra("dataFromAddPageId") ?: ""
+        postId = intent.getStringExtra("dataFromAddPageId") ?: ""
         Log.d("postId", "$postId")
 
         firebaseDatabase.child("POST").child(postId).get().addOnCompleteListener {
@@ -159,6 +158,16 @@ class DetailPageActivity : AppCompatActivity() {
         }
     }
 
+    // 수정하기
+    fun editData() {
+        binding.detailPageLlRevise.setOnClickListener {
+            val intent = Intent(this@DetailPageActivity, AddPageActivity::class.java)
+            intent.putExtra("dataFromAddPageId", postId)
+            Log.d("id test", "id = $postId")
+            startActivity(intent)
+        }
+    }
+
     // 삭제하기 - 다이얼로그 구현하기
     fun deleteData() {
         binding.detailPageLlDelete.setOnClickListener {
@@ -188,6 +197,7 @@ class DetailPageActivity : AppCompatActivity() {
     // DB에 저장된 게시물 데이터 삭제하기
     fun deletePostData() {
         val postId = intent.getStringExtra("dataFromAddPageId")
+        Log.d("detailpage", "post# deletePostData postId = $postId")
         val database = FirebaseDatabase.getInstance()
         val postReference = postId?.let { database.getReference("POST").child(it) }
 
@@ -198,6 +208,7 @@ class DetailPageActivity : AppCompatActivity() {
                     postReference.removeValue().addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             deleteImage()
+
                         } else {
                             Toast.makeText(
                                 this@DetailPageActivity,
@@ -225,14 +236,23 @@ class DetailPageActivity : AppCompatActivity() {
     // Storage에 저장된 이미지 삭제하기
     fun deleteImage() {
         val imageData = intent.getStringExtra("dataFromAddPageimage")
+        Log.d("detailpage", "post# deleteImage imageData = $imageData")
         val storage = FirebaseStorage.getInstance()
         val imageReference = storage.reference.child("images/${imageData}")
 
         imageReference.delete().addOnSuccessListener {
+            // 객체가 성공적으로 삭제됐을 때 처리
             Toast.makeText(this, "게시글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
             finish()
-        }.addOnFailureListener {
-            Log.d("fail", "image delete")
+        }.addOnFailureListener { exception ->
+            if (exception is StorageException && exception.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                // 객체가 이미 존재하지 않을 때 처리
+                Toast.makeText(this, "삭제할 객체가 이미 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                // 다른 예외처리
+                Log.e("Firebase Storage", "객체 삭제 오류: ${exception.message}")
+                Toast.makeText(this, "객체 삭제 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

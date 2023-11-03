@@ -77,6 +77,7 @@ class CommunityPageFragment : Fragment() {
             override fun onClick(view: View, position: Int, model: PostModel) {
                 val intent = Intent(activity, DetailPageActivity::class.java)
                 with(model) {
+                    intent.putExtra("dataFromAddPageimage", image)
                     intent.putExtra("dataFromAddPagedday", deadlinedate)
                     intent.putExtra("dataFromAddPageId", id)
                 }

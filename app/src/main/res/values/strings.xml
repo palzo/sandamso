@@ -14,6 +14,7 @@
     <string name="my_page_tv_btn_logout">로그 아웃</string>
     <string name="my_page_tv_btn_secession">회원 탈퇴</string>
     <string name="echo">Echo</string>
+    <string name="chat">Chat</string>
     <string name="search">Search</string>
     <string name="my_page">MyPage</string>
     <string name="search_page_btn_mnt">산 이름으로 검색</string>

@@ -3,6 +3,7 @@ package com.example.sansaninfo.Main
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.sansaninfo.Chatting.ChattingListFragment
 import com.example.sansaninfo.CommunityPage.CommunityPageFragment
 import com.example.sansaninfo.MyPage.MyPageFragment
 import com.example.sansaninfo.R
@@ -16,17 +17,22 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     init {
         fragments.add(
             MainTab(
-                CommunityPageFragment.newInstance(),
+                CommunityPageFragment.newInstance()
             )
         )
         fragments.add(
             MainTab(
-                SearchPageMountainFragment.newInstance(),
+                ChattingListFragment.newInstance()
             )
         )
         fragments.add(
             MainTab(
-                MyPageFragment.newInstance(),
+                SearchPageMountainFragment.newInstance()
+            )
+        )
+        fragments.add(
+            MainTab(
+                MyPageFragment.newInstance()
             )
         )
     }

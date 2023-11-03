@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.sansaninfo.Data.UserData
+import com.example.sansaninfo.SignPage.FindpwActivity
 import com.example.sansaninfo.SignPage.SignInActivity
 import com.example.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -67,6 +68,12 @@ class MyPageFragment : Fragment() {
             startActivity(intent)
         }
 
+        //비밀번호 변경
+        binding.myPageTvChangePw.setOnClickListener {
+            val intent = Intent(activity, FindpwActivity::class.java)
+            startActivity(intent)
+        }
+
         newNickname()
 
         return binding.root
@@ -114,7 +121,7 @@ class MyPageFragment : Fragment() {
         // 자동로그인 설정되어있는 경우 해제
         val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
         val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
-        autoLogin?.edit()?.apply{
+        autoLogin?.edit()?.apply {
             putString("login", "0")
             apply()
         }
@@ -132,14 +139,14 @@ class MyPageFragment : Fragment() {
         UserApiClient.instance.unlink { error ->
             if (error != null) {
 //                Toast.makeText(requireContext(), "회원 탈퇴 실패 $error", Toast.LENGTH_SHORT).show()
-            }else {
+            } else {
 //                Toast.makeText(requireContext(), "회원 탈퇴 성공", Toast.LENGTH_SHORT).show()
             }
         }
 
         val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
         val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
-        autoLogin?.edit()?.apply{
+        autoLogin?.edit()?.apply {
             putString("login", "0")
             putString("pw", "")
             apply()

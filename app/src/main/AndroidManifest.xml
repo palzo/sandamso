@@ -22,7 +22,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Chatting.ChattingPage"
+            android:name=".Chatting.ChattingPageActivity"
             android:exported="false" />
 
         <uses-library

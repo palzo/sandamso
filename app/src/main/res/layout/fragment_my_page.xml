@@ -36,17 +36,16 @@
             style="@style/PageTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:paddingHorizontal="30dp"
-            android:text="산바람 님"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="40dp"
+            android:text="산바람"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view10" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -111,16 +110,21 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
+                        android:id="@+id/my_page_iv_nickname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="15dp"
                         android:layout_marginTop="15dp"
-                        android:orientation="horizontal">
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp">
 
                         <TextView
                             style="@style/RegularText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
                             android:layout_weight="1"
                             android:text="@string/my_page_tv_nickname_view" />
 
@@ -129,66 +133,30 @@
                             style="@style/Title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
+                            android:layout_weight="2"
                             android:background="@android:color/transparent"
                             android:paddingHorizontal="30dp"
-                            android:text="북한산날다람쥐요" />
-
-                        <ImageView
-                            android:id="@+id/my_page_iv_nickname"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:layout_weight="1"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:src="@drawable/ic_pen" />
+                            android:text="북한산날다람쥐"
+                            android:textAlignment="textEnd" />
 
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="1dp"
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginTop="15dp"
                         android:background="@color/light_grey" />
 
                     <LinearLayout
+                        android:id="@+id/my_page_tv_change_pw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="15dp"
                         android:layout_marginTop="15dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/RegularText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="15dp"
-                            android:layout_weight="2"
-                            android:text="@string/my_page_tv_social_view" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingHorizontal="30dp"
-                            android:src="@drawable/ic_kakao_logo" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginTop="15dp"
-                        android:background="@color/light_grey" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:orientation="horizontal">
 
                         <TextView
@@ -196,28 +164,41 @@
                             android:layout_width="26dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="15dp"
+                            android:layout_marginHorizontal="10dp"
                             android:layout_weight="2"
-                            android:text="@string/my_page_tv_theme_view" />
+                            android:text="비밀번호 변경하러 가기" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@color/light_grey" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="15dp"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp">
 
                         <TextView
+                            style="@style/RegularText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_weight="6"
-                            android:fontFamily="@font/pretendard_light"
-                            android:text="@string/my_page_tv_mode_view"
-                            android:textColor="@color/dark_grey"
-                            android:textSize="11sp" />
+                            android:layout_weight="2"
+                            android:text="@string/my_page_tv_social_view" />
 
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/my_page_switch_theme"
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingHorizontal="30dp" />
+                            android:layout_weight="0"
+                            android:paddingHorizontal="30dp"
+                            android:src="@drawable/ic_kakao_logo" />
 
                     </LinearLayout>
 
@@ -227,13 +208,23 @@
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="80dp"
                     android:src="@drawable/iv_green_logo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
+
+        <TextView
+            android:id="@+id/textView4"
+            style="@style/PageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 님"
+            app:layout_constraintBottom_toBottomOf="@+id/my_page_tv_name"
+            app:layout_constraintStart_toEndOf="@+id/my_page_tv_name"
+            app:layout_constraintTop_toTopOf="@+id/my_page_tv_name" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,17 +48,12 @@ class MyPageFragment : Fragment() {
 
         //로그인 페이지로 이동과 로그아웃
         binding.myPageTvLogout.setOnClickListener {
-            signOut()
-            Toast.makeText(activity, "로그아웃이 완료되었습니다.", Toast.LENGTH_SHORT).show()
-            val intent = Intent(activity, SignInActivity::class.java)
-            startActivity(intent)
+            showSignOutDialog()
         }
 
         //로그인페이지로 이동과 회원탈퇴
         binding.myPageTvSecession.setOnClickListener {
             revokeAccess()
-//            val intent = Intent(activity, SignInActivity::class.java)
-//            startActivity(intent)
         }
 
         //수정 버튼
@@ -103,6 +98,25 @@ class MyPageFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun showSignOutDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("로그아웃")
+        alertDialogBuilder.setMessage("정말로 로그아웃을 하시겠습니까?")
+
+        alertDialogBuilder.setPositiveButton("확인") { _, _ ->
+            signOut()
+            Toast.makeText(activity, "로그아웃이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(activity, SignInActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
+        alertDialogBuilder.setNegativeButton("취소") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     //로그아웃

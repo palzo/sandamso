@@ -46,7 +46,8 @@ class AddPageActivity : AppCompatActivity() {
 
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
-    val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
+    private val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
+
 
     // 높은 API 버전에도 권한 요청하기
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -63,39 +64,36 @@ class AddPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-            titleCount()
-            textCount()
-            init()
-            editData()
+        titleCount()
+        textCount()
+        init()
+        editData()
+        btnChange()
+
+
 
         with(binding) {
-            button.setOnClickListener {
+            postButton.setOnClickListener {
 
-                // 값을 모두 입력할 수 있도록 이벤트 설정해주기
-                val title = addPageTvTitle.text.toString()
-                val maintext = addPageEtText.text.toString()
-                val dday = addPageTvDday.text.toString()
-                val kakao = addPageTvKakaoOpen.text.toString()
-
-                if (title.isEmpty()) {
+                if (addPageTvTitle.text.toString().isEmpty()) {
                     toastMessage("제목을 입력해주세요.")
 
-                } else if (title.length >= 30) {
+                } else if (addPageTvTitle.text.toString().length >= 30) {
                     toastMessage("제목은 30글자 이하로 입력해주세요.")
 
                 } else if (!addImage) {
                     toastMessage("이미지를 첨부해 주세요.")
 
-                } else if (dday == null || dday.isEmpty()) {
+                } else if (addPageTvDday.text.toString().isEmpty()) {
                     toastMessage("모임 마감일을 설정해주세요.")
 
-                } else if (maintext.isEmpty()) {
+                } else if (addPageEtText.text.toString().isEmpty()) {
                     toastMessage("본문 내용을 입력해주세요.")
 
-                } else if (maintext.length >= 5000) {
+                } else if (addPageEtText.text.toString().length >= 5000) {
                     toastMessage("본문은 5000글자까지만 입력이 가능합니다.")
 
-                } else if (kakao.isEmpty()) {
+                } else if (addPageTvKakaoOpen.text.toString().isEmpty()) {
                     toastMessage("카카오 오픈채팅 링크를 입력해주세요.")
 
                 } else {
@@ -127,6 +125,29 @@ class AddPageActivity : AppCompatActivity() {
         binding.addPageIvBackbutton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun btnChange() {
+//        Toast.makeText(this, "${intent.getStringExtra("switch")}로 들어옴", Toast.LENGTH_SHORT).show()
+        with(binding) {
+            when (intent.getStringExtra("switch")) {
+                "add" -> {
+                    postButton.visibility = View.VISIBLE
+                    completeButton.visibility = View.INVISIBLE
+                    cancelButton.visibility = View.INVISIBLE
+                }
+
+                "edit" -> {
+                    postButton.visibility = View.INVISIBLE
+                    completeButton.visibility = View.VISIBLE
+                    cancelButton.visibility = View.VISIBLE
+                }
+
+                else -> {
+
+                }
+            }
         }
     }
 
@@ -178,7 +199,7 @@ class AddPageActivity : AppCompatActivity() {
     }
 
     // firebase database 키 생성하기
-    fun addItem(user: PostModel): String {
+    private fun addItem(user: PostModel): String {
         val id = FBRef.myRef.push().key!!
         user.id = id
         FBRef.myRef.child(id).setValue(user)
@@ -186,7 +207,7 @@ class AddPageActivity : AppCompatActivity() {
     }
 
     // 이미지 추가하기
-    fun addImage() {
+    private fun addImage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED)
                 requestPermissions(api33, 100)
@@ -206,7 +227,7 @@ class AddPageActivity : AppCompatActivity() {
     }
 
     //권한 요청하기
-    val permissionLauncher =
+    private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 galleryLauncher.launch("image/*")
@@ -214,7 +235,7 @@ class AddPageActivity : AppCompatActivity() {
         }
 
     //이미지 갤러리 불러오기
-    val galleryLauncher =
+    private val galleryLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             addImage = !(uri == null || uri.toString().isEmpty())
             binding.addPageIvAdd.setImageURI(uri)
@@ -243,7 +264,7 @@ class AddPageActivity : AppCompatActivity() {
     }
 
     // 스토리지에 이미지 저장하기(경로 찾기)
-    fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
+    private fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
         val fullPath = makeFilePath("images", "temp", uri)
         val imageRef = storage.getReference(fullPath)
         val uploadTask = imageRef.putFile(uri)
@@ -260,12 +281,11 @@ class AddPageActivity : AppCompatActivity() {
         }
     }
 
-    fun makeFilePath(path: String, userId: String, uri: Uri): String {
+    private fun makeFilePath(path: String, userId: String, uri: Uri): String {
         val mimeType = contentResolver.getType(uri) ?: "/none" // MIME 타입 ex) images/jpeg
         val ext = mimeType.split("/")[1] // 확장자 ex) jpeg
         val timeSuffix = System.currentTimeMillis() // 시간값 ex) 1235421532
-        val filename = "${path}/${userId}_${timeSuffix}.${ext}" // 완성!
-        return filename
+        return "${path}/${userId}_${timeSuffix}.${ext}"
     }
 
     // 프로그래스 바
@@ -273,12 +293,12 @@ class AddPageActivity : AppCompatActivity() {
         showProgress(false)
     }
 
-    fun showProgress(isShow: Boolean) {
+    private fun showProgress(isShow: Boolean) {
         if (isShow) binding.progressBar.visibility = View.VISIBLE
         else binding.progressBar.visibility = View.GONE
     }
 
-    fun goneData() {
+    private fun goneData() {
         with(binding) {
             addPageGroup.visibility = View.GONE
         }
@@ -300,12 +320,12 @@ class AddPageActivity : AppCompatActivity() {
 
                 // 작성 중
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    val userinput = addPageTvTitle.text.toString()
-                    val inputlength = userinput.length
-                    addPageTvTitleLimit.text = "$inputlength / 30"
+                    val userInput = addPageTvTitle.text.toString()
+                    val inputLength = userInput.length
+                    addPageTvTitleLimit.text = "$inputLength / 30"
 
                     // 30글자 이상 입력 방지
-                    if (inputlength > 30) {
+                    if (inputLength > 30) {
                         addPageTvTitle.error = "30글자를 초과하셨습니다."
                     } else {
                         // 30글자 이하이면 경고 메시지 제거하기
@@ -315,9 +335,9 @@ class AddPageActivity : AppCompatActivity() {
 
                 // 작성 후
                 override fun afterTextChanged(s: Editable?) {
-                    var userinput = addPageTvTitle.text.toString()
-                    val inputlength = userinput.length
-                    addPageTvTitleLimit.text = "$inputlength / 30"
+                    var userInput = addPageTvTitle.text.toString()
+                    val inputLength = userInput.length
+                    addPageTvTitleLimit.text = "$inputLength / 30"
                 }
             })
         }
@@ -339,12 +359,12 @@ class AddPageActivity : AppCompatActivity() {
 
                 // 작성 중
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    var userinput = addPageEtText.text.toString()
-                    val inputlength = userinput.length
-                    addPageTvTextLimit.text = "$inputlength / 5000"
+                    var userInput = addPageEtText.text.toString()
+                    val inputLength = userInput.length
+                    addPageTvTextLimit.text = "$inputLength / 5000"
 
                     // 5000글자 이상 입력 방지
-                    if (inputlength > 5000) {
+                    if (inputLength > 5000) {
                         addPageTvTitle.error = "5000글자를 초과하셨습니다."
                     } else {
                         // 5000글자 이하이면 경고 메시지 제거하기
@@ -354,22 +374,22 @@ class AddPageActivity : AppCompatActivity() {
 
                 // 작성 후
                 override fun afterTextChanged(s: Editable?) {
-                    var userinput = addPageEtText.text.toString()
-                    val inputlength = userinput.length
-                    addPageTvTextLimit.text = "$inputlength / 5000"
+                    var userInput = addPageEtText.text.toString()
+                    val inputLength = userInput.length
+                    addPageTvTextLimit.text = "$inputLength / 5000"
                 }
             })
         }
     }
 
     // 날짜 데이터 표시
-    fun getData(): String {
+    private fun getData(): String {
         val currentDateTime = Calendar.getInstance().time
         return SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.KOREA).format(currentDateTime)
     }
 
     // Firebase에서 닉네임 가져오기
-    fun setNickname(onNickNameFetched: (String) -> Unit) {
+    private fun setNickname(onNickNameFetched: (String) -> Unit) {
         val uid = Firebase.auth.currentUser?.uid ?: ""
         FirebaseDatabase.getInstance().reference.child("users").child(uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -392,7 +412,7 @@ class AddPageActivity : AppCompatActivity() {
     }
 
     // 날짜 다이얼로그
-    fun dateDialogue() {
+    private fun dateDialogue() {
 
         // 마감 일자 등록하기
         // 현재 날짜를 currentDate로 설정
@@ -424,7 +444,7 @@ class AddPageActivity : AppCompatActivity() {
     }
 
     // 수정하기
-    fun editData() {
+    private fun editData() {
         val id = intent.getStringExtra("dataFromAddPageId")
         Log.d("id test", "id = $id")
 
@@ -455,18 +475,6 @@ class AddPageActivity : AppCompatActivity() {
             }
         }
 
-        with(binding) {
-            addPageTvTitle.isEnabled = true
-            addPageTvDday.isEnabled = true
-            addPageEtText.isEnabled = true
-            addPageTvKakaoOpen.isEnabled = true
-            addPageIvAdd.setOnClickListener { addImage() }
-
-            button.visibility = View.GONE
-            completeButton.visibility = View.VISIBLE
-            cancelButton.visibility = View.VISIBLE
-        }
-
         binding.completeButton.setOnClickListener {
             saveEditeData()
             val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
@@ -493,7 +501,7 @@ class AddPageActivity : AppCompatActivity() {
                                 maintext = addPageEtText.text.toString(),
                                 kakao = addPageTvKakaoOpen.text.toString()
                             )
-                            
+
                             // 이미지 수정 시, 업로드하고 URL 업데이트 하기
                             imageSetData(editData)
                             firebaseDatabase.child("POST").child(id).setValue(editData)
@@ -531,15 +539,13 @@ class AddPageActivity : AppCompatActivity() {
             builder.setMessage("게시글 수정을 취소하고 이전 내용을 유지하시겠습니까?")
             builder.setIcon(R.drawable.alert_triangle)
 
-            val listener = object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, p1: Int) {
-                    when (p1) {
-                        DialogInterface.BUTTON_POSITIVE -> {
-                            finish()
-                        }
+            val listener = DialogInterface.OnClickListener { dialog, p1 ->
+                when (p1) {
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        finish()
+                    }
 
-                        DialogInterface.BUTTON_NEGATIVE -> {
-                        }
+                    DialogInterface.BUTTON_NEGATIVE -> {
                     }
                 }
             }

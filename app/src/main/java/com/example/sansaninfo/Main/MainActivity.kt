@@ -1,12 +1,12 @@
 package com.example.sansaninfo.Main
 
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.example.sansaninfo.R
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.example.sansaninfo.databinding.ActivityMainBinding
-import nl.joery.animatedbottombar.AnimatedBottomBar
+import com.example.spartube.main.MainViewModel
+import com.example.spartube.util.ConnectWatcher
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,12 +14,14 @@ class MainActivity : AppCompatActivity() {
     private val viewPagerAdapter by lazy {
         MainViewPagerAdapter(this@MainActivity)
     }
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initView()
+        initViewModel()
 
     }
 
@@ -33,5 +35,18 @@ class MainActivity : AppCompatActivity() {
 //        mainActivityBottomBar.onTabSelected = {
 //            Log.d("bottom_bar", "Selected tab: " + it.title)
 //        }
+    }
+
+    // 인터넷 미연결시 예외처리
+    private fun initViewModel() = with(binding) {
+        ConnectWatcher(this@MainActivity).observe(this@MainActivity) { connection ->
+            mainViewModel.setNetworkStatus(connection)
+        }
+        mainViewModel.networkStatus.observe(this@MainActivity) { isAvailable ->
+            mainActivityNetworkMessage.isVisible = !isAvailable
+            mainActivityNetworkProgressbar.isVisible = !isAvailable
+            activityMainViewpager.isVisible = isAvailable
+            mainActivityBottomBar.isEnabled = isAvailable
+        }
     }
 }

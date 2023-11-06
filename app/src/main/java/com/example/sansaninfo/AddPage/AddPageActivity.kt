@@ -18,8 +18,11 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import coil.load
+import com.example.sansaninfo.Chatting.RecyclerChatRoomsAdapter
 import com.example.sansaninfo.Data.FBRef
+import com.example.sansaninfo.Data.FBRoom
 import com.example.sansaninfo.Data.PostModel
+import com.example.sansaninfo.Data.RoomData
 import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
@@ -42,15 +45,16 @@ class AddPageActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
 
-    private val roomList = mutableListOf<RoomData>()
-
     private var addImage = false
 
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     private val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
 
-    private lateinit var recyclerChatRoomsAdapter: RecyclerChatRoomsAdapter
+//    private lateinit var recyclerChatRoomsAdapter: RecyclerChatRoomsAdapter
+//
+//    private val roomList = mutableListOf<RoomData>()
+
 
     // 높은 API 버전에도 권한 요청하기
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -178,8 +182,6 @@ class AddPageActivity : AppCompatActivity() {
                         kakao = addPageTvKakaoOpen.text.toString(),
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
-                        writer = Firebase.auth.currentUser?.uid
-                        deadlinedate = dday,
                         writer = userId,
                         roomId = roomId
                     )

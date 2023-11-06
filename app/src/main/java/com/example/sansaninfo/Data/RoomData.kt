@@ -1,7 +1,7 @@
 package com.example.sansaninfo.Data
 
+import java.io.Serializable
+
 data class RoomData (
-    var id: String = "",
-    var title: String = "",
-    val users: String = ""
-)
+    var title: String = ""
+) : Serializable

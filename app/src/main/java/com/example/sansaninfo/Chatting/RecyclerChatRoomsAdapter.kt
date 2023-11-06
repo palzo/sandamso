@@ -24,9 +24,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.TimeZone
 
-@RequiresApi(Build.VERSION_CODES.O)
-class RecyclerChatRoomsAdapter(val context: Context) :
-    RecyclerView.Adapter<RecyclerChatRoomsAdapter.ViewHolder>() {
+class RecyclerChatRoomsAdapter(private val context: Context) :
+    RecyclerView.Adapter<RecyclerChatRoomsAdapter.ChatViewHolder>() {
 
     var chatRooms: ArrayList<ChatRoom> = arrayListOf()   //채팅방 목록
     var chatRoomKeys: ArrayList<String> = arrayListOf()  //채팅방 키 목록
@@ -52,23 +51,24 @@ class RecyclerChatRoomsAdapter(val context: Context) :
             })
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.chatting_list_item, parent, false)
-        return ViewHolder(ChattingListItemBinding.bind(view))
+        return ChatViewHolder(ChattingListItemBinding.bind(view))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         var userIdList = chatRooms[position].users!!.keys    //채팅방에 포함된 사용자 키 목록
-        var opponent = userIdList.first { !it.equals(myUid) }  //상대방 사용자 키
-        FirebaseDatabase.getInstance().getReference("User").child("users").orderByChild("uid")   //상대방 사용자 키를 포함하는 채팅방 불러오기
+        var opponent = userIdList.first { it != myUid }  //상대방 사용자 키
+        FirebaseDatabase.getInstance().getReference("users").orderByChild("uid")   //상대방 사용자 키를 포함하는 채팅방 불러오기
             .equalTo(opponent)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {}
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (data in snapshot.children) {
-                        holder.chatRoomKey = data.key.toString()!!             //채팅방 키 초기화
+                        holder.chatRoomKey = data.key.toString()             //채팅방 키 초기화
                         holder.opponentUser = data.getValue<UserData>()!!         //상대방 정보 초기화
-                        holder.txt_name.text = data.getValue<UserData>()!!.nickname.toString()   //상대방 이름 초괴화
+                        holder.txt_name.text = data.getValue<UserData>()!!.nickname   //상대방 이름 초기화
                     }
                 }
             })
@@ -88,13 +88,14 @@ class RecyclerChatRoomsAdapter(val context: Context) :
             }
         }
 
-        if (chatRooms[position].messages!!.size > 0) {         //채팅방 메시지가 존재하는 경우
+        if (chatRooms[position].messages!!.isNotEmpty()) {         //채팅방 메시지가 존재하는 경우
             setupLastMessageAndDate(holder, position)        //마지막 메시지 및 시각 초기화
             setupMessageCount(holder, position)
         }
     }
 
-    fun setupLastMessageAndDate(holder: ViewHolder, position: Int) { //마지막 메시지 및 시각 초기화
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setupLastMessageAndDate(holder: ChatViewHolder, position: Int) { //마지막 메시지 및 시각 초기화
         try {
             var lastMessage =
                 chatRooms[position].messages!!.values.sortedWith(compareBy({ it.sended_date }))    //메시지 목록에서 시각을 비교하여 가장 마지막 메시지  가져오기
@@ -106,7 +107,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         }
     }
 
-    fun setupMessageCount(holder: ViewHolder, position: Int) {            //확인되지 않은 메시지 개수 표시
+    fun setupMessageCount(holder: ChatViewHolder, position: Int) {            //확인되지 않은 메시지 개수 표시
         try {
             var unconfirmedCount =
                 chatRooms[position].messages!!.filter {
@@ -125,6 +126,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getLastMessageTimeString(lastTimeString: String): String {           //마지막 메시지가 전송된 시각 구하기
         try {
             var currentTime = LocalDateTime.now().atZone(TimeZone.getDefault().toZoneId()) //현재 시각
@@ -175,7 +177,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         return chatRooms.size
     }
 
-    inner class ViewHolder(itemView: ChattingListItemBinding) :
+    inner class ChatViewHolder(itemView: ChattingListItemBinding) :
         RecyclerView.ViewHolder(itemView.root) {
         var opponentUser = UserData("", "","")
         var chatRoomKey = ""
@@ -185,5 +187,4 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         var txt_date = itemView.txtMessageDate
         var txt_chatCount = itemView.txtChatCount
     }
-
 }

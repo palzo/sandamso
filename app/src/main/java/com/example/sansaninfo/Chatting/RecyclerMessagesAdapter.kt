@@ -20,13 +20,13 @@ import com.google.firebase.database.ktx.getValue
 class RecyclerMessagesAdapter(
     val context: Context,
     var chatRoomKey: String?,
-    val opponentUid: String?
+    val opponentUid: String?,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var messages: ArrayList<Message> = arrayListOf()     //메시지 목록
     var messageKeys: ArrayList<String> = arrayListOf()   //메시지 키 목록
     val myUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
-    val recyclerView = (context as ChattingListFragment).requireView()   //목록이 표시될 리사이클러 뷰
+    val recyclerView = context as ChattingPageActivity  //목록이 표시될 리사이클러 뷰
 
     init {
         setupMessages()
@@ -48,7 +48,7 @@ class RecyclerMessagesAdapter(
                         messageKeys.add(data.key!!)                        //메시지 키 목록에 추가
                     }
                     notifyDataSetChanged()          //화면 업데이트
-                    recyclerView.scrollToPosition(messages.size - 1)    //스크롤 최 하단으로 내리기
+//                    recyclerView.scrollToPosition(messages.size - 1)    //스크롤 최 하단으로 내리기
                 }
             })
     }

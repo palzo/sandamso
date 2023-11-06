@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import kotlinx.android.parcel.Parcelize
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sansaninfo.BuildConfig
 import com.example.sansaninfo.InfoPage.InfoPage
@@ -36,6 +35,7 @@ import com.example.sansaninfo.MountainInfoAPI.ApiClient
 import com.example.sansaninfo.MountainInfoAPI.XmlResponse
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
+import kotlinx.android.parcel.Parcelize
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -87,6 +87,9 @@ class SearchPageMountainFragment : Fragment() {
 
             getMntInfo(1, sido)
 
+            binding.searchPageIvBackpackers.visibility = View.GONE
+            binding.searchPageTvBackpackers.visibility = View.GONE
+
             // spinner 2 초기화 (첫 번째 spinner에 알맞은 구, 군을 가져옴)
             initSpinner(sido)
 
@@ -95,10 +98,17 @@ class SearchPageMountainFragment : Fragment() {
         // 산으로 검색 버튼 클릭 시 UI 초기화
         binding.searchPageBtMountain.setOnClickListener {
             searchSwitch(1)
+
+            binding.searchPageIvBackpackers.visibility = View.VISIBLE
+            binding.searchPageTvBackpackers.visibility = View.VISIBLE
+
         }
         // 지역으로 검색 버튼 클릭 시 UI 초기화
         binding.searchPageBtRegion.setOnClickListener {
             searchSwitch(2)
+
+            binding.searchPageIvBackpackers.visibility = View.VISIBLE
+            binding.searchPageTvBackpackers.visibility = View.VISIBLE
         }
 
         // 지역명으로 검색 시 spinner 2
@@ -123,6 +133,10 @@ class SearchPageMountainFragment : Fragment() {
 
     // 산 이름, 산 지역을 검색할 경우 정보를 가져옴
     private fun getMntInfo(position: Int, inputValue: String) {
+
+        binding.searchPageIvBackpackers.visibility = View.GONE
+        binding.searchPageTvBackpackers.visibility = View.GONE
+
 
         var mntName = ""
         var mntRegion = ""
@@ -171,8 +185,13 @@ class SearchPageMountainFragment : Fragment() {
                     }
                 }
             }
+
             override fun onFailure(call: Call<XmlResponse?>, t: Throwable) {
                 Log.e("test", "getMntInfo onFailure: ${t.message}")
+
+                binding.searchPageIvBackpackers.visibility = View.VISIBLE
+                binding.searchPageTvBackpackers.visibility = View.VISIBLE
+                Toast.makeText(activity, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -194,12 +213,13 @@ class SearchPageMountainFragment : Fragment() {
                         ) {
                             response.body().let {
                                 it?.body?.items?.item?.forEach {
-                                    if(it.imgURL != ""){
+                                    if (it.imgURL != "") {
                                         item.mntImgURL = it.imgURL
                                     }
                                 }
                             }
                         }
+
                         override fun onFailure(call: Call<ImgResponse?>, t: Throwable) {
                             Log.e("test", "findImgURL onFailure: ${t.message}")
                         }

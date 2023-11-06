@@ -96,6 +96,8 @@ class CommunityPageAdapter :
         if (targetDate != null) {
             val timeDiff = targetDate.time - currentDate.time
             val dday = timeDiff / (1000 * 60 * 60 * 24)
+//            Log.d("test date", "timeDiff: $timeDiff")
+//            Log.d("test date", "dday: $dday")
 
             if (dday.toInt() == 0) {
                 return "D-Day"

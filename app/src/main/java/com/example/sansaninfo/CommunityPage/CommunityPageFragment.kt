@@ -173,6 +173,7 @@ class CommunityPageFragment : Fragment() {
                     intent.putExtra("dataFromAddPagedday", deadlinedate)
                     intent.putExtra("dataFromAddPageId", id)
                     intent.putExtra("dataFromAddPageWriter", writer)
+                    intent.putExtra("dataFromAddPagedday", deadlinedate)
                 }
                 startActivity(intent)
             }

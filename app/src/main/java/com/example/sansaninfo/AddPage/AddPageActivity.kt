@@ -18,8 +18,11 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import coil.load
+import com.example.sansaninfo.Chatting.RecyclerChatRoomsAdapter
 import com.example.sansaninfo.Data.FBRef
+import com.example.sansaninfo.Data.FBRoom
 import com.example.sansaninfo.Data.PostModel
+import com.example.sansaninfo.Data.RoomData
 import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
@@ -48,6 +51,10 @@ class AddPageActivity : AppCompatActivity() {
 
     private val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
 
+//    private lateinit var recyclerChatRoomsAdapter: RecyclerChatRoomsAdapter
+//
+//    private val roomList = mutableListOf<RoomData>()
+
 
     // 높은 API 버전에도 권한 요청하기
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -69,8 +76,6 @@ class AddPageActivity : AppCompatActivity() {
         init()
         editData()
         btnChange()
-
-
 
         with(binding) {
             postButton.setOnClickListener {
@@ -117,6 +122,7 @@ class AddPageActivity : AppCompatActivity() {
             dateDialogue()
         }
 
+        // 이미지 추가하기
         binding.addPageIvAdd.setOnClickListener {
             addImage()
         }
@@ -154,11 +160,14 @@ class AddPageActivity : AppCompatActivity() {
     // 데이터 입력한 값 넘겨주기
     fun data() {
         with(binding) {
-            val title = addPageTvTitle.text.toString()
-            val maintext = addPageEtText.text.toString()
-            val kakao = addPageTvKakaoOpen.text.toString()
-            val dday = addPageTvDday.text.toString()
             val uri = Uri.parse(addPageIvAdd.tag.toString())
+
+            // 게시글 작성자 UID 가져오기
+            val userId = Firebase.auth.currentUser?.uid
+            // 방 생성 및 방 ID 가져오기
+            val roomTitle = addPageTvTitle.text.toString()
+            val roomId = createRoom(roomTitle)
+
             uploadImage(uri) {
                 if (it != null) {
 
@@ -167,13 +176,14 @@ class AddPageActivity : AppCompatActivity() {
 
                     // 파이어 베이스에 데이터 추가하기
                     var user = PostModel(
-                        title = title,
-                        maintext = maintext,
+                        title = addPageTvTitle.text.toString(),
+                        maintext = addPageEtText.text.toString(),
                         image = it,
-                        kakao = kakao,
+                        kakao = addPageTvKakaoOpen.text.toString(),
                         date = date,
-                        deadlinedate = dday,
-                        writer = Firebase.auth.currentUser?.uid
+                        deadlinedate = addPageTvDday.text.toString(),
+                        writer = userId,
+                        roomId = roomId
                     )
 
                     // 닉네임도 넣어주기
@@ -182,14 +192,16 @@ class AddPageActivity : AppCompatActivity() {
                         val postId = addItem(user)
 
                         val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
-                        intent.putExtra("dataFromAddPageTitle", title)
-                        intent.putExtra("dataFromAddPageMaintext", maintext)
+                        intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
+                        intent.putExtra("dataFromAddPageMaintext", addPageEtText.text.toString())
+                        intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
+                        intent.putExtra("dataFromAddPagekakao", addPageTvKakaoOpen.text.toString())
                         intent.putExtra("dataFromAddPageimage", it)
-                        intent.putExtra("dataFromAddPagekakao", kakao)
                         intent.putExtra("dataFromAddPagedate", date)
                         intent.putExtra("dataFromAddPagenickname", nickname)
-                        intent.putExtra("dataFromAddPagedday", dday)
                         intent.putExtra("dataFromAddPageId", postId)
+                        intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
+
                         startActivity(intent)
                         finish()
                     }
@@ -262,12 +274,15 @@ class AddPageActivity : AppCompatActivity() {
             }
         }
     }
-
     // 스토리지에 이미지 저장하기(경로 찾기)
     private fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
         val fullPath = makeFilePath("images", "temp", uri)
+        Log.d("images", "uri : $uri")
+        Log.d("images", "fullPath : $fullPath")
         val imageRef = storage.getReference(fullPath)
         val uploadTask = imageRef.putFile(uri)
+        Log.d("images", "imageRef : $imageRef")
+        Log.d("images", "uploadTask : $uploadTask")
 
         // 업로드 실행 및 결과 확인
         uploadTask.addOnFailureListener {
@@ -280,7 +295,6 @@ class AddPageActivity : AppCompatActivity() {
             onSuccess(taskSnapshot.metadata?.name)
         }
     }
-
     private fun makeFilePath(path: String, userId: String, uri: Uri): String {
         val mimeType = contentResolver.getType(uri) ?: "/none" // MIME 타입 ex) images/jpeg
         val ext = mimeType.split("/")[1] // 확장자 ex) jpeg
@@ -404,7 +418,6 @@ class AddPageActivity : AppCompatActivity() {
                         }
                     }
                 }
-
                 override fun onCancelled(error: DatabaseError) {
                     Log.d("Nickname", "error = $error")
                 }
@@ -453,22 +466,20 @@ class AddPageActivity : AppCompatActivity() {
                 if (it.isSuccessful) {
                     val userData =
                         it.result.getValue(PostModel::class.java) ?: return@addOnCompleteListener
-                    val title = userData.title
-                    val image = userData.image
-                    val date = userData.deadlinedate
-                    val text = userData.maintext
-                    val kakao = userData.kakao
 
                     with(binding) {
-                        addPageTvTitle.setText(title)
-                        addPageTvDday.text = date
-                        addPageEtText.setText(text)
-                        addPageTvKakaoOpen.setText(kakao)
+                        addPageTvTitle.setText(userData.title)
+                        addPageTvDday.text = userData.deadlinedate
+                        addPageEtText.setText(userData.maintext)
+                        addPageTvKakaoOpen.setText(userData.kakao)
 
                         val storage = FirebaseStorage.getInstance()
-                        val reference = storage.reference.child("images/$image")
+                        val reference = storage.reference.child("images/${userData.image}")
                         reference.downloadUrl.addOnSuccessListener {
                             binding.addPageIvAdd.load(it)
+                            Log.d("Image Tag222", "AddPage image : $it")
+                        }.addOnFailureListener {
+                            Log.d("Image Tag222", "AddPage image : $it")
                         }
                     }
                 }
@@ -477,8 +488,6 @@ class AddPageActivity : AppCompatActivity() {
 
         binding.completeButton.setOnClickListener {
             saveEditeData()
-            val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
-            startActivity(intent)
         }
 
         binding.cancelButton.setOnClickListener {
@@ -493,18 +502,39 @@ class AddPageActivity : AppCompatActivity() {
                 if (it.isSuccessful) {
                     val originalData = it.result.getValue(PostModel::class.java)
                     if (originalData != null) {
+                        Toast.makeText(
+                            this,
+                            binding.addPageTvDday.text.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         with(binding) {
                             // 수정된 데이터로 업데이트 하기
                             val editData = originalData.copy(
                                 title = addPageTvTitle.text.toString(),
-                                deadlinedate = addPageTvDday.text.toString(),
                                 maintext = addPageEtText.text.toString(),
-                                kakao = addPageTvKakaoOpen.text.toString()
+                                deadlinedate = addPageTvDday.text.toString(),
+                                kakao = addPageTvKakaoOpen.text.toString(),
                             )
-
                             // 이미지 수정 시, 업로드하고 URL 업데이트 하기
                             imageSetData(editData)
                             firebaseDatabase.child("POST").child(id).setValue(editData)
+                            val intent =
+                                Intent(this@AddPageActivity, DetailPageActivity::class.java)
+                            intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
+                            intent.putExtra(
+                                "dataFromAddPageMaintext",
+                                addPageEtText.text.toString()
+                            )
+                            intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
+                            intent.putExtra(
+                                "dataFromAddPagekakao",
+                                addPageTvKakaoOpen.text.toString()
+                            )
+                            intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
+                            intent.putExtra("dataFromAddPageId", id)
+                            startActivity(intent)
+                            finish()
+
                         }
                     }
                 }
@@ -515,12 +545,15 @@ class AddPageActivity : AppCompatActivity() {
     private fun imageSetData(editData: PostModel) {
         val id = intent.getStringExtra("dataFromAddPageId")
         val imageUri = Uri.parse(binding.addPageIvAdd.tag.toString())
+        val uri = makeFilePath("", "temp", imageUri)
+        editData.image = uri.replace("/", "")
         if (imageUri != null) {
             uploadImage(imageUri) {
                 if (it != null) {
-                    editData.image = imageUri.toString()
                     if (id != null) {
                         firebaseDatabase.child("POST").child(id).setValue(editData)
+                        val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
+                        intent.putExtra("dataFromAddPageimage", editData.image)
                     }
                 }
             }
@@ -553,6 +586,27 @@ class AddPageActivity : AppCompatActivity() {
             builder.setNegativeButton("취소", listener)
             builder.show()
         }
+    }
+
+//    fun openCreteRoom() {
+//        val roomTitle = binding.addPageTvTitle.text.toString()
+//        if (roomTitle.isNotEmpty()) {
+//            val roomId = createRoom(roomTitle)
+//            val newRoom = RoomData()
+//            newRoom.title = roomTitle
+//            roomList.add(newRoom)
+//            recyclerChatRoomsAdapter.notifyDataSetChanged()
+//
+//            Toast.makeText(this, "채팅방이 생성되었습니다.", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//
+    private fun createRoom(roomTitle: String): String {
+        val roomId = FBRoom.roomRef.push().key!!
+        val roomData = RoomData()
+        roomData.title = roomTitle
+        FBRoom.roomRef.child(roomId).setValue(roomData)
+        return roomId
     }
 }
 

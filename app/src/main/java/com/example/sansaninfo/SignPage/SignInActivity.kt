@@ -149,7 +149,7 @@ class SignInActivity : AppCompatActivity() {
                 UserApiClient.instance.me { user, error ->
                     Toast.makeText(
                         this,
-                        "${user?.kakaoAccount?.profile?.nickname.toString()} 님 로그인 성공",
+                        "${user?.kakaoAccount?.email.toString()} 님 로그인 성공",
                         Toast.LENGTH_SHORT
                     ).show()
 //                    user?.kakaoAccount?.email

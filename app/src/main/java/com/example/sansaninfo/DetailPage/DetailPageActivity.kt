@@ -52,6 +52,12 @@ class DetailPageActivity : AppCompatActivity() {
         binding.detailPageIvBack.setOnClickListener {
             finish()
         }
+
+        // 넘어온 데이터 체크
+        Log.d("data check", "dataFromAddPageWriter : ${intent.getStringExtra("dataFromAddPageWriter")}")
+        Log.d("data check", "dataFromAddPageId : ${intent.getStringExtra("dataFromAddPageId")}")
+        Log.d("data check", "dataFromAddPagedday : ${intent.getStringExtra("dataFromAddPagedday")}")
+        Log.d("data check", "dataFromAddPageimage : ${intent.getStringExtra("dataFromAddPageimage")}")
     }
     private fun userCheck() {
         with(binding){
@@ -120,6 +126,7 @@ class DetailPageActivity : AppCompatActivity() {
                 val nicknameData = userData.nickname
                 val deadlineData = userData.deadlinedate
                 val imageData = userData.image
+                Log.d("images", "${userData.image}")
                 val kakaoData = userData.kakao
 
                 binding.detailPageTvTitle.text = titleData
@@ -152,24 +159,31 @@ class DetailPageActivity : AppCompatActivity() {
     // 디데이 계산하기
     private fun calculateDday() {
         val dateData = intent.getStringExtra("dataFromAddPagedday")
+
         val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
         val currentDate = Date()
-        val targetDate = dateFormat.parse(dateData)
 
-        if (targetDate != null) {
-            val timeDiff = targetDate.time - currentDate.time
-            val dday = timeDiff / (1000 * 60 * 60 * 24)
+        if (dateData != null) {
+            if(dateData.matches(Regex("\\d{4}년 \\d{2}월 \\d{2}일"))){
 
-            if (dday.toInt() == 0) {
-                binding.detailPageTvDday.text = "D-Day"
-            } else if (dday > 0) {
-                binding.detailPageTvDday.text = "D-${dday}"
-            } else if (dday < 0) {
-                val outday = -dday
-                binding.detailPageTvDday.text = "D+${outday}"
+            } else{
+                val targetDate = dateFormat.parse(dateData)
+                if (targetDate != null) {
+                    val timeDiff = targetDate.time - currentDate.time
+                    val dday = timeDiff / (1000 * 60 * 60 * 24)
+
+                    if (dday.toInt() == 0) {
+                        binding.detailPageTvDday.text = "D-Day"
+                    } else if (dday > 0) {
+                        binding.detailPageTvDday.text = "D-${dday}"
+                    } else if (dday < 0) {
+                        val outday = -dday
+                        binding.detailPageTvDday.text = "D+${outday}"
+                    }
+                } else {
+                    binding.detailPageTvDday.text = "유효하지 않은 날짜"
+                }
             }
-        } else {
-            binding.detailPageTvDday.text = "유효하지 않은 날짜"
         }
     }
 

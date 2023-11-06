@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sansaninfo.Data.ChatRoom
 import com.example.sansaninfo.Data.Message
+import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.databinding.ActivityChattingPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -38,7 +39,7 @@ class ChattingPageActivity : AppCompatActivity() {
         lateinit var firebaseDatabase: DatabaseReference
         lateinit var recycler_talks: RecyclerView
         lateinit var chatRoom: ChatRoom
-        lateinit var opponentUser: User
+        lateinit var opponentUser: UserData
         lateinit var chatRoomKey: String
         lateinit var myUid: String
 
@@ -58,7 +59,7 @@ class ChattingPageActivity : AppCompatActivity() {
 
             chatRoom = (intent.getSerializableExtra("ChatRoom")) as ChatRoom      //채팅방 정보
             chatRoomKey = intent.getStringExtra("ChatRoomKey")!!            //채팅방 키
-            opponentUser = (intent.getSerializableExtra("Opponent")) as User    //상대방 유저 정보
+            opponentUser = intent.getSerializableExtra("Opponent") as UserData    //상대방 유저 정보
         }
 
         fun initializeView() {    //뷰 초기화
@@ -67,7 +68,7 @@ class ChattingPageActivity : AppCompatActivity() {
             recycler_talks = binding.recyclerMessages
             btn_submit = binding.btnSubmit
             txt_title = binding.txtTItle
-            txt_title.text = opponentUser!!.name ?: ""
+            txt_title.text = opponentUser!!.nickname?: ""
         }
 
         fun initializeListener() {   //버튼 클릭 시 리스너 초기화

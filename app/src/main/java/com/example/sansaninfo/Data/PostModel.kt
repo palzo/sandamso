@@ -9,5 +9,6 @@ data class PostModel(
     var image: String = "",
     var kakao: String = "",
     var deadlinedate: String = "",
-    var writer: String? = ""
+    var writer: String? = "",
+    var roomId: String = ""
 )

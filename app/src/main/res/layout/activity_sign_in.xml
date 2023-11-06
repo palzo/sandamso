@@ -40,6 +40,7 @@
                 android:layout_height="640dp"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/signin_roundbox"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/signin_title">
@@ -98,11 +99,13 @@
                         android:layout_height="wrap_content" />
 
                     <TextView
+                        style="@style/SmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="5dp"
-                        android:text="@string/signin_tv_auto_login" />
+                        android:text="@string/signin_tv_auto_login"
+                        android:textSize="14sp" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/signin_switch_save_mail"
@@ -112,11 +115,13 @@
                         android:layout_marginStart="15dp" />
 
                     <TextView
+                        style="@style/SmallText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="5dp"
-                        android:text="@string/signin_tv_save_mail" />
+                        android:text="@string/signin_tv_save_mail"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView

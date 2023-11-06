@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class CommunityPageFragment : Fragment() {
@@ -101,7 +102,6 @@ class CommunityPageFragment : Fragment() {
         Log.d("menu", "좋아요순으로 정렬")
         communityList.sortBy { it.date }
         communityPageAdapter.addItem(communityList)
-
         communityPageAdapter.notifyDataSetChanged()
     }
 
@@ -109,9 +109,18 @@ class CommunityPageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostDeadline() {
         Log.d("menu", "마감일 순으로 정렬")
-        communityList.sortBy { communityPageAdapter.calculateDday(it) }
-        communityPageAdapter.addItem(communityList)
 
+        val currentDate = System.currentTimeMillis()
+
+        // 마감일에 따른 정렬
+        communityList.sortWith(compareBy { post ->
+            val deadlineDate = post.deadlinedate
+            val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+            val date = dateFormat.parse(deadlineDate)
+            val deadline = date?.time ?: 0
+            (currentDate - deadline).toInt()
+        })
+        communityPageAdapter.addItem(communityList)
         communityPageAdapter.notifyDataSetChanged()
     }
 

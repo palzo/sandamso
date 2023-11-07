@@ -145,6 +145,7 @@ class DetailPageActivity : AppCompatActivity() {
                 // 이미지 URI를 사용하여 이미지 표시
                 val storage = FirebaseStorage.getInstance()
                 val pathReference = storage.reference.child("images/${imageData}")
+                Log.d("pathReference", "pathReference: $pathReference")
 
                 pathReference.downloadUrl.addOnSuccessListener {
                     Log.d("Image Tag222", "$it")
@@ -195,6 +196,7 @@ class DetailPageActivity : AppCompatActivity() {
             intent.putExtra("switch", "edit")
             Log.d("id test", "id = $postId")
             startActivity(intent)
+            finish()
         }
     }
 

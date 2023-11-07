@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -39,6 +40,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.CompletableFuture
+import java.util.function.Supplier
 import kotlin.concurrent.thread
 
 class AddPageActivity : AppCompatActivity() {
@@ -516,25 +519,34 @@ class AddPageActivity : AppCompatActivity() {
                                 kakao = addPageTvKakaoOpen.text.toString(),
                             )
                             // 이미지 수정 시, 업로드하고 URL 업데이트 하기
-                            imageSetData(editData)
-                            firebaseDatabase.child("POST").child(id).setValue(editData)
-                            val intent =
-                                Intent(this@AddPageActivity, DetailPageActivity::class.java)
-                            intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
-                            intent.putExtra(
-                                "dataFromAddPageMaintext",
-                                addPageEtText.text.toString()
-                            )
-                            intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
-                            intent.putExtra(
-                                "dataFromAddPagekakao",
-                                addPageTvKakaoOpen.text.toString()
-                            )
-                            intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
-                            intent.putExtra("dataFromAddPageId", id)
-                            startActivity(intent)
-                            finish()
+                            CompletableFuture.supplyAsync(Supplier {
+                                imageSetData(editData)
+                            }).thenAccept { uploadedImageUrl ->
 
+                                firebaseDatabase.child("POST").child(id).setValue(editData)
+
+                                val intent =
+                                    Intent(this@AddPageActivity, DetailPageActivity::class.java)
+                                intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
+                                intent.putExtra(
+                                    "dataFromAddPageMaintext",
+                                    addPageEtText.text.toString()
+                                )
+                                intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
+                                intent.putExtra(
+                                    "dataFromAddPagekakao",
+                                    addPageTvKakaoOpen.text.toString()
+                                )
+                                intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
+                                intent.putExtra("dataFromAddPageId", id)
+
+                                // 이미지 URL 추가
+//                                intent.putExtra("dataFromAddPageimage", uploadedImageUrl)
+
+                                startActivity(intent)
+                                finish()
+
+                            }
                         }
                     }
                 }
@@ -545,22 +557,33 @@ class AddPageActivity : AppCompatActivity() {
     private fun imageSetData(editData: PostModel) {
         val id = intent.getStringExtra("dataFromAddPageId")
         val imageUri = Uri.parse(binding.addPageIvAdd.tag.toString())
-        val uri = makeFilePath("", "temp", imageUri)
-        editData.image = uri.replace("/", "")
-        if (imageUri != null) {
-            uploadImage(imageUri) {
-                if (it != null) {
+        val userChangedImage = !(imageUri == null || imageUri.toString().isEmpty())
+        if (userChangedImage) {
+            // 이미지를 변경한 경우
+            uploadImage(imageUri) { uploadedImageUrl ->
+                if (uploadedImageUrl != null) {
+                    // 업로드된 이미지의 URL을 editData에 설정
+                    editData.image = uploadedImageUrl
                     if (id != null) {
+                        // Firebase에 업데이트
                         firebaseDatabase.child("POST").child(id).setValue(editData)
-                        val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
+                        // DetailPageActivity 시작
+                        val intent = Intent()
                         intent.putExtra("dataFromAddPageimage", editData.image)
+                        Log.d("data check", "dataFromAddPageimage : ${intent.getStringExtra("dataFromAddPageimage")}")
+                        setResult(Activity.RESULT_OK, intent)
                     }
                 }
             }
         } else {
-            // 이미지가 선택되지 않은 경우 원래 있는 데이터로 사용하기
+            // 이미지를 변경하지 않은 경우
             if (id != null) {
+                // Firebase에 업데이트
                 firebaseDatabase.child("POST").child(id).setValue(editData)
+                // DetailPageActivity 시작
+                val intent = Intent()
+                intent.putExtra("dataFromAddPageimage", editData.image)
+                setResult(Activity.RESULT_OK, intent)
             }
         }
     }

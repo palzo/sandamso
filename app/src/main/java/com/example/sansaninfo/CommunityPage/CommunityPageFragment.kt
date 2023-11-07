@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPageActivity
 import com.example.sansaninfo.Data.PostModel
+import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
@@ -90,19 +91,17 @@ class CommunityPageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostLatest() {
         Log.d("menu", "최신순으로 정렬")
-        communityList.sortByDescending { it.date }
-        communityPageAdapter.addItem(communityList)
-
-        communityPageAdapter.notifyDataSetChanged()
-    }
-
-    // 좋아요순으로 정렬 -> 날짜 최신순대로 오름차순
-    @SuppressLint("NotifyDataSetChanged")
-    private fun sortPostLike() {
-        Log.d("menu", "좋아요순으로 정렬")
         communityList.sortBy { it.date }
         communityPageAdapter.addItem(communityList)
         communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 좋아요가 많은 순대로 정렬
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sortPostLike() {
+        Log.d("menu", "좋아요순으로 정렬")
+        /*communityPageAdapter.addItem(communityList)
+        communityPageAdapter.notifyDataSetChanged()*/
     }
 
     // 마감일순으로 정렬
@@ -128,16 +127,26 @@ class CommunityPageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostMine() {
         Log.d("menu", "내 글로만 최신순으로 정렬")
-
         val currentUser = auth.currentUser
         if(currentUser != null) {
-            val myPost = communityList.filter { it.nickname == currentUser.uid }
-            myPost.sortedBy { it.date }
-            val myPostMutable = myPost.toMutableList()
-            communityPageAdapter.addItem(myPostMutable)
-        }
+            val userId = currentUser.uid
 
-        communityPageAdapter.notifyDataSetChanged()
+            firebaseDatabase.child("users").child(userId).child("nickname")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()) {
+                            val currentNickname = snapshot.getValue(String ::class.java)
+                            val myPost = communityList.filter { it.nickname == currentNickname }
+                            val sortedMyPost = myPost.sortedBy { it.date }
+                            Log.d("MyPost", "$sortedMyPost")
+                            communityPageAdapter.addItem(sortedMyPost.toMutableList())
+                            communityPageAdapter.notifyDataSetChanged()
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+        }
     }
 
     override fun onResume() {

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sansaninfo.AddPage.AddPageActivity
 import com.example.sansaninfo.Data.PostModel
+import com.example.sansaninfo.Data.UserData
 import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.R
 import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class CommunityPageFragment : Fragment() {
@@ -89,29 +91,35 @@ class CommunityPageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostLatest() {
         Log.d("menu", "최신순으로 정렬")
-        communityList.sortByDescending { it.date }
+        communityList.sortBy { it.date }
         communityPageAdapter.addItem(communityList)
-
         communityPageAdapter.notifyDataSetChanged()
     }
 
-    // 좋아요순으로 정렬 -> 날짜 최신순대로 오름차순
+    // 좋아요가 많은 순대로 정렬
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostLike() {
         Log.d("menu", "좋아요순으로 정렬")
-        communityList.sortBy { it.date }
-        communityPageAdapter.addItem(communityList)
-
-        communityPageAdapter.notifyDataSetChanged()
+        /*communityPageAdapter.addItem(communityList)
+        communityPageAdapter.notifyDataSetChanged()*/
     }
 
     // 마감일순으로 정렬
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostDeadline() {
         Log.d("menu", "마감일 순으로 정렬")
-        communityList.sortBy { communityPageAdapter.calculateDday(it) }
-        communityPageAdapter.addItem(communityList)
 
+        val currentDate = System.currentTimeMillis()
+
+        // 마감일에 따른 정렬
+        communityList.sortWith(compareBy { post ->
+            val deadlineDate = post.deadlinedate
+            val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+            val date = dateFormat.parse(deadlineDate)
+            val deadline = date?.time ?: 0
+            (currentDate - deadline).toInt()
+        })
+        communityPageAdapter.addItem(communityList)
         communityPageAdapter.notifyDataSetChanged()
     }
 
@@ -119,16 +127,26 @@ class CommunityPageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostMine() {
         Log.d("menu", "내 글로만 최신순으로 정렬")
-
         val currentUser = auth.currentUser
         if(currentUser != null) {
-            val myPost = communityList.filter { it.nickname == currentUser.uid }
-            myPost.sortedBy { it.date }
-            val myPostMutable = myPost.toMutableList()
-            communityPageAdapter.addItem(myPostMutable)
-        }
+            val userId = currentUser.uid
 
-        communityPageAdapter.notifyDataSetChanged()
+            firebaseDatabase.child("users").child(userId).child("nickname")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()) {
+                            val currentNickname = snapshot.getValue(String ::class.java)
+                            val myPost = communityList.filter { it.nickname == currentNickname }
+                            val sortedMyPost = myPost.sortedBy { it.date }
+                            Log.d("MyPost", "$sortedMyPost")
+                            communityPageAdapter.addItem(sortedMyPost.toMutableList())
+                            communityPageAdapter.notifyDataSetChanged()
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+        }
     }
 
     override fun onResume() {

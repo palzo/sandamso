@@ -303,7 +303,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_regular"
-                    android:text="참여하러 가기"
+                    android:text="카카오톡 오픈 채팅 참여하기"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
@@ -325,6 +325,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/iv_ad_banner"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

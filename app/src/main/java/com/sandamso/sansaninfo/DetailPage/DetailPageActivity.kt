@@ -127,10 +127,10 @@ class DetailPageActivity : AppCompatActivity() {
                 binding.detailPageTvGather.text = "${deadlineData}까지 모집"
 
                 // 카카오톡 오픈채팅으로 이동하기
-                binding.detailPageLlKakaoChat.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(kakaoData))
-                    startActivity(intent)
-                }
+//                binding.detailPageLlKakaoChat.setOnClickListener {
+//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(kakaoData))
+//                    startActivity(intent)
+//                }
 
                 // 이미지 URI를 사용하여 이미지 표시
                 val storage = FirebaseStorage.getInstance()

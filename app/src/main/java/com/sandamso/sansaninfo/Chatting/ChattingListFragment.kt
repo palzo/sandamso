@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Chatting
+package com.sandamso.sansaninfo.Chatting
 
 import android.os.Bundle
 import android.util.Log
@@ -9,9 +9,9 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.Data.FBRoom
-import com.example.sansaninfo.Data.RoomData
-import com.example.sansaninfo.databinding.FragmentChattingListBinding
+import com.sandamso.sansaninfo.Data.FBRoom
+import com.sandamso.sansaninfo.Data.RoomData
+import com.sandamso.sansaninfo.databinding.FragmentChattingListBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener

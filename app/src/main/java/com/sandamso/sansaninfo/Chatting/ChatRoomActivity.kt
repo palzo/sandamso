@@ -1,13 +1,13 @@
-package com.example.sansaninfo.Chatting
+package com.sandamso.sansaninfo.Chatting
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.Data.FBRoom
-import com.example.sansaninfo.Data.MessageData
-import com.example.sansaninfo.Data.RoomData
-import com.example.sansaninfo.databinding.ActivityChattingPageBinding
+import com.sandamso.sansaninfo.Data.FBRoom
+import com.sandamso.sansaninfo.Data.MessageData
+import com.sandamso.sansaninfo.Data.RoomData
+import com.sandamso.sansaninfo.databinding.ActivityChattingPageBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference

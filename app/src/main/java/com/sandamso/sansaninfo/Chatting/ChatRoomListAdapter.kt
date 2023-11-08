@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Chatting
+package com.sandamso.sansaninfo.Chatting
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sansaninfo.Data.RoomData
+import com.sandamso.sansaninfo.Data.RoomData
 
 class ChatRoomListAdapter(val roomList:MutableList<RoomData>):RecyclerView.Adapter<ChatRoomListAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

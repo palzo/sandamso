@@ -1,11 +1,11 @@
-package com.example.sansaninfo.Chatting
+package com.sandamso.sansaninfo.Chatting
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sansaninfo.Data.MessageData
-import com.example.sansaninfo.databinding.ListTalkItemMineBinding
+import com.sandamso.sansaninfo.Data.MessageData
+import com.sandamso.sansaninfo.databinding.ListTalkItemMineBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -52,7 +52,7 @@ class MsgListAdapter(val msgList: MutableList<MessageData>) :
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val userData =
-                            snapshot.getValue(com.example.sansaninfo.Data.UserData::class.java)
+                            snapshot.getValue(com.sandamso.sansaninfo.Data.UserData::class.java)
                         if (userData != null) {
                             val nickname = userData.nickname
                             onNickNameFetched(nickname)

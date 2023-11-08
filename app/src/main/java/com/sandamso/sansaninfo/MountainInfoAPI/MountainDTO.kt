@@ -1,4 +1,4 @@
-package com.example.sansaninfo.MountainInfoAPI
+package com.sandamso.sansaninfo.MountainInfoAPI
 
 import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml

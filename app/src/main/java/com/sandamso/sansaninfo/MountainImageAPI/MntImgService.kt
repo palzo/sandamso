@@ -1,6 +1,6 @@
-package com.example.sansaninfo.MountainImageAPI
+package com.sandamso.sansaninfo.MountainImageAPI
 
-import com.example.sansaninfo.MountainInfoAPI.XmlResponse
+import com.sandamso.sansaninfo.MountainInfoAPI.XmlResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

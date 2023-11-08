@@ -1,7 +1,15 @@
 package com.example.sansaninfo.Data
 
-import java.io.Serializable
 
-data class RoomData (
+class RoomData {
+    var id: String = ""
     var title: String = ""
-) : Serializable
+    var users: String = ""
+
+    constructor()
+
+    constructor(title: String, creatorName: String) {
+        this.title = title
+        users = creatorName
+    }
+}

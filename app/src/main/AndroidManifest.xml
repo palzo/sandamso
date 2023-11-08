@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.sansaninfo">
+    package="com.sandamso.sansaninfo">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".GlobalApplication"
+        android:name="com.sandamso.sansaninfo.GlobalApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,7 +24,7 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".Chatting.ChatRoomActivity"
+            android:name="com.sandamso.sansaninfo.Chatting.ChatRoomActivity"
             android:exported="false" />
 
         <uses-library
@@ -36,25 +36,25 @@
             android:value="dh21bw2cew" />
 
         <activity
-            android:name=".MyPage.ChangeNicknameActivity"
+            android:name="com.sandamso.sansaninfo.MyPage.ChangeNicknameActivity"
             android:exported="false" />
         <activity
-            android:name=".SignPage.FindpwResultActivity"
+            android:name="com.sandamso.sansaninfo.SignPage.FindpwResultActivity"
             android:exported="false" />
         <activity
-            android:name=".SignPage.FindpwActivity"
+            android:name="com.sandamso.sansaninfo.SignPage.FindpwActivity"
             android:exported="false" />
         <activity
-            android:name=".InfoPage.InfoPage"
+            android:name="com.sandamso.sansaninfo.InfoPage.InfoPage"
             android:exported="false" />
         <activity
-            android:name=".DetailPage.DetailPageActivity"
+            android:name="com.sandamso.sansaninfo.DetailPage.DetailPageActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPage.AddPageActivity"
+            android:name="com.sandamso.sansaninfo.AddPage.AddPageActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreen"
+            android:name="com.sandamso.sansaninfo.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,15 +64,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignPage.SignUpActivity"
+            android:name="com.sandamso.sansaninfo.SignPage.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".Main.MainActivity"
+            android:name="com.sandamso.sansaninfo.Main.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustNothing" />
 
         <activity
-            android:name=".SignPage.SignInActivity"
+            android:name="com.sandamso.sansaninfo.SignPage.SignInActivity"
             android:windowSoftInputMode="adjustPan"
             android:exported="false"></activity>
 

@@ -12,11 +12,11 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 apply plugin: 'kotlin-kapt'
 
 android {
-    namespace 'com.example.sansaninfo'
+    namespace 'com.sandamso.sansaninfo'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.sansaninfo"
+        applicationId "com.sandamso.sansaninfo"
         minSdk 24
         targetSdk 33
         versionCode 1

@@ -1,4 +1,4 @@
-package com.example.sansaninfo.SearchPage
+package com.sandamso.sansaninfo.SearchPage
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.sansaninfo.BuildConfig
-import com.example.sansaninfo.MountainImageAPI.ImgResponse
-import com.example.sansaninfo.MountainImageAPI.MntImgClient
-import com.example.sansaninfo.R
-import com.example.sansaninfo.databinding.SearchpageItemBinding
+import com.sandamso.sansaninfo.BuildConfig
+import com.sandamso.sansaninfo.MountainImageAPI.ImgResponse
+import com.sandamso.sansaninfo.MountainImageAPI.MntImgClient
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.SearchpageItemBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

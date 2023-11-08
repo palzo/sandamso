@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.sansaninfo.SearchPage
+package com.sandamso.sansaninfo.SearchPage
 
 import android.content.Context
 import android.content.Intent
@@ -27,14 +27,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.sansaninfo.BuildConfig
-import com.example.sansaninfo.InfoPage.InfoPage
-import com.example.sansaninfo.MountainImageAPI.ImgResponse
-import com.example.sansaninfo.MountainImageAPI.MntImgClient
-import com.example.sansaninfo.MountainInfoAPI.ApiClient
-import com.example.sansaninfo.MountainInfoAPI.XmlResponse
-import com.example.sansaninfo.R
-import com.example.sansaninfo.databinding.FragmentSearchPageMountainBinding
+import com.sandamso.sansaninfo.BuildConfig
+import com.sandamso.sansaninfo.InfoPage.InfoPage
+import com.sandamso.sansaninfo.MountainImageAPI.ImgResponse
+import com.sandamso.sansaninfo.MountainImageAPI.MntImgClient
+import com.sandamso.sansaninfo.MountainInfoAPI.ApiClient
+import com.sandamso.sansaninfo.MountainInfoAPI.XmlResponse
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.FragmentSearchPageMountainBinding
 import kotlinx.android.parcel.Parcelize
 import retrofit2.Call
 import retrofit2.Callback

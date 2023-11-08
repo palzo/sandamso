@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.sandamso.sansaninfo.API.ModelData.Weather
@@ -137,10 +139,14 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         marker.height = 70
         marker.iconTintColor = Color.GREEN
         marker.map = naverMap
-
     }
 
     private fun initView() = with(binding) {
+        // 프로그래스 바
+        val progressLayout = findViewById<ConstraintLayout>(R.id.info_page_progress_constraintlayout)
+
+        progressLayout.visibility = View.VISIBLE
+
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
 
@@ -188,7 +194,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
          */
         fun setRegionLocation(address: String?): RegionList? {
             val regionList = RegionLocation().regionList
-            return regionList.find { mountainAddress?.contains(it.region) ?: false }
+            return regionList.find { address?.contains(it.region) ?: false }
         }
 
         val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
@@ -196,6 +202,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         fun fetchWeather(index: Int) {
             if (index >= baseTimes.size) {
                 return runOnUiThread {
+                    // API 호출 완료 후 프로그래머스 숨기기
+                    progressLayout.visibility = View.GONE
                     infoPageAdapter.addItem(weatherDataList, skyDataList)
                 }
             }
@@ -237,15 +245,6 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                                         else -> skyDataList.add(SkyData("4", "0"))
                                     }
                                 }
-                                /*Log.d(
-                                    "text",
-                                    "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}"
-                                )
-                                Log.d(
-                                    "text",
-                                    "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}"
-                                )
-                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")*/
                             }
                         }
                         fetchWeather(index + 1)

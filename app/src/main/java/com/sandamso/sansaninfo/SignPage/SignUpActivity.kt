@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.*/
-package com.example.sansaninfo.SignPage
+package com.sandamso.sansaninfo.SignPage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -17,8 +17,8 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
-import com.example.sansaninfo.Data.UserData
-import com.example.sansaninfo.databinding.ActivitySignUpBinding
+import com.sandamso.sansaninfo.Data.UserData
+import com.sandamso.sansaninfo.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

@@ -1,4 +1,4 @@
-package com.example.sansaninfo.SignPage
+package com.sandamso.sansaninfo.SignPage
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.sansaninfo.Main.MainActivity
-import com.example.sansaninfo.databinding.ActivitySignInBinding
+import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause

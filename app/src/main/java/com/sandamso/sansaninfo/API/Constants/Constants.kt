@@ -1,6 +1,6 @@
-package com.example.sansaninfo.API.Constants
+package com.sandamso.sansaninfo.API.Constants
 
-import com.example.sansaninfo.BuildConfig
+import com.sandamso.sansaninfo.BuildConfig
 
 class Constants {
     companion object {

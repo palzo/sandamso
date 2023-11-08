@@ -1,4 +1,4 @@
-package com.example.sansaninfo.DetailPage
+package com.sandamso.sansaninfo.DetailPage
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -11,10 +11,10 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import coil.load
-import com.example.sansaninfo.AddPage.AddPageActivity
-import com.example.sansaninfo.Data.PostModel
-import com.example.sansaninfo.R
-import com.example.sansaninfo.databinding.ActivityDetailPageBinding
+import com.sandamso.sansaninfo.AddPage.AddPageActivity
+import com.sandamso.sansaninfo.Data.PostModel
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

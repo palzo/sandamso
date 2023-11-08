@@ -1,4 +1,4 @@
-package com.example.sansaninfo
+package com.sandamso.sansaninfo
 
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk

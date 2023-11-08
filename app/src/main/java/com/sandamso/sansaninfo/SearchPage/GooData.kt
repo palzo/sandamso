@@ -1,4 +1,4 @@
-package com.example.sansaninfo.SearchPage
+package com.sandamso.sansaninfo.SearchPage
 
 class GooData {
     companion object {

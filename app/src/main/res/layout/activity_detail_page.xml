@@ -126,26 +126,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:background="@drawable/btn_desert_borderless"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="7dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/detail_page_tv_date"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/detail_page_tv_join"
+            style="@style/RegularText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="참여하기"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/detail_page_iv_join"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_handshake" />
-
-        <TextView
-            android:id="@+id/detail_page_tv_join"
-            style="@style/SmallText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="참여하기"
-            android:textSize="11sp" />
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="1dp"
+            android:src="@drawable/ic_handshake_white" />
 
     </LinearLayout>
 
@@ -284,7 +290,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/detail_page_talk_background"
+                android:background="@drawable/btn_desert_borderless"
                 android:gravity="center"
                 android:padding="13dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -293,18 +299,20 @@
 
                 <TextView
                     android:id="@+id/detail_page_tv_kakao_chat"
+                    style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_regular"
-                    android:text="카카오 오픈채팅"
+                    android:text="카카오톡 오픈 채팅 참여하기"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/detail_page_iv_kakao_chat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_marginStart="10dp"
-                    android:src="@drawable/ic_open_kakao" />
+                    android:src="@drawable/ic_handshake_white" />
 
             </LinearLayout>
 
@@ -317,6 +325,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/iv_ad_banner"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
-package com.example.sansaninfo.MountainInfoAPI
+package com.sandamso.sansaninfo.MountainInfoAPI
 
-import com.example.sansaninfo.BuildConfig
+import com.sandamso.sansaninfo.BuildConfig
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient

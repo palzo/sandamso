@@ -1,4 +1,4 @@
-package com.example.sansaninfo.AddPage
+package com.sandamso.sansaninfo.AddPage
 
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -19,12 +19,12 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import coil.load
-import com.example.sansaninfo.Data.FBRef
-import com.example.sansaninfo.Data.PostModel
-import com.example.sansaninfo.DetailPage.DetailPageActivity
-import com.example.sansaninfo.Main.MainActivity
-import com.example.sansaninfo.R
-import com.example.sansaninfo.databinding.ActivityAddPageBinding
+import com.sandamso.sansaninfo.Data.FBRef
+import com.sandamso.sansaninfo.Data.PostModel
+import com.sandamso.sansaninfo.DetailPage.DetailPageActivity
+import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.ActivityAddPageBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -395,7 +395,7 @@ class AddPageActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val userData =
-                            snapshot.getValue(com.example.sansaninfo.Data.UserData::class.java)
+                            snapshot.getValue(com.sandamso.sansaninfo.Data.UserData::class.java)
                         if (userData != null) {
                             val nickname = userData.nickname
                             onNickNameFetched(nickname)

@@ -266,12 +266,8 @@ class AddPageActivity : AppCompatActivity() {
     // 스토리지에 이미지 저장하기(경로 찾기)
     private fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
         val fullPath = makeFilePath("images", "temp", uri)
-        Log.d("images", "uri : $uri")
-        Log.d("images", "fullPath : $fullPath")
         val imageRef = storage.getReference(fullPath)
         val uploadTask = imageRef.putFile(uri)
-        Log.d("images", "imageRef : $imageRef")
-        Log.d("images", "uploadTask : $uploadTask")
 
         // 업로드 실행 및 결과 확인
         uploadTask.addOnFailureListener {
@@ -448,8 +444,6 @@ class AddPageActivity : AppCompatActivity() {
     // 수정하기
     private fun editData() {
         val id = intent.getStringExtra("dataFromAddPageId")
-        Log.d("id test", "id = $id")
-
         if (id != null) {
             firebaseDatabase.child("POST").child(id).get().addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -491,11 +485,6 @@ class AddPageActivity : AppCompatActivity() {
                 if (it.isSuccessful) {
                     val originalData = it.result.getValue(PostModel::class.java)
                     if (originalData != null) {
-                        Toast.makeText(
-                            this,
-                            binding.addPageTvDday.text.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
                         with(binding) {
                             // 수정된 데이터로 업데이트 하기
                             val editData = originalData.copy(
@@ -504,35 +493,29 @@ class AddPageActivity : AppCompatActivity() {
                                 deadlinedate = addPageTvDday.text.toString(),
                                 kakao = addPageTvKakaoOpen.text.toString(),
                             )
+                            val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
+                            intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
+                            intent.putExtra("dataFromAddPageMaintext", addPageEtText.text.toString())
+                            intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
+                            intent.putExtra("dataFromAddPagekakao", addPageTvKakaoOpen.text.toString())
+                            intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
+                            intent.putExtra("dataFromAddPageId", id)
                             // 이미지 수정 시, 업로드하고 URL 업데이트 하기
                             CompletableFuture.supplyAsync(Supplier {
                                 imageSetData(editData)
                             }).thenAccept { uploadedImageUrl ->
-
-                                firebaseDatabase.child("POST").child(id).setValue(editData)
-
-                                val intent =
-                                    Intent(this@AddPageActivity, DetailPageActivity::class.java)
-                                intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
-                                intent.putExtra(
-                                    "dataFromAddPageMaintext",
-                                    addPageEtText.text.toString()
-                                )
-                                intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
-                                intent.putExtra(
-                                    "dataFromAddPagekakao",
-                                    addPageTvKakaoOpen.text.toString()
-                                )
-                                intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
-                                intent.putExtra("dataFromAddPageId", id)
-
-                                // 이미지 URL 추가
-//                                intent.putExtra("dataFromAddPageimage", uploadedImageUrl)
-
-                                startActivity(intent)
-                                finish()
-
                             }
+                            showProgress(true)
+                            Toast.makeText(this@AddPageActivity, "게시글 수정중..", Toast.LENGTH_SHORT).show()
+                            thread(start = true) {
+                                Thread.sleep(2500)
+                                runOnUiThread {
+                                    startActivity(intent)
+                                    finish()
+                                    showProgress(false)
+                                }
+                            }
+                            firebaseDatabase.child("POST").child(id).setValue(editData)
                         }
                     }
                 }
@@ -553,11 +536,6 @@ class AddPageActivity : AppCompatActivity() {
                     if (id != null) {
                         // Firebase에 업데이트
                         firebaseDatabase.child("POST").child(id).setValue(editData)
-                        // DetailPageActivity 시작
-                        val intent = Intent()
-                        intent.putExtra("dataFromAddPageimage", editData.image)
-                        Log.d("data check", "dataFromAddPageimage : ${intent.getStringExtra("dataFromAddPageimage")}")
-                        setResult(Activity.RESULT_OK, intent)
                     }
                 }
             }

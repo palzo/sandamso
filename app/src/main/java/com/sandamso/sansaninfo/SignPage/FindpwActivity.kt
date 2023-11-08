@@ -1,10 +1,10 @@
-package com.example.sansaninfo.SignPage
+package com.sandamso.sansaninfo.SignPage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.sansaninfo.databinding.ActivityFindpwBinding
+import com.sandamso.sansaninfo.databinding.ActivityFindpwBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class FindpwActivity : AppCompatActivity() {

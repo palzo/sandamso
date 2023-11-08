@@ -1,9 +1,9 @@
-package com.example.sansaninfo.SignPage
+package com.sandamso.sansaninfo.SignPage
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.sansaninfo.databinding.ActivityFindpwResultBinding
+import com.sandamso.sansaninfo.databinding.ActivityFindpwResultBinding
 
 class FindpwResultActivity : AppCompatActivity() {
     private val binding by lazy { ActivityFindpwResultBinding.inflate(layoutInflater) }

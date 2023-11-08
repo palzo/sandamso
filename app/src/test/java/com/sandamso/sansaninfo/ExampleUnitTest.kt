@@ -1,4 +1,4 @@
-package com.example.sansaninfo
+package com.sandamso.sansaninfo
 
 import org.junit.Test
 

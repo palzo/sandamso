@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Data
+package com.sandamso.sansaninfo.Data
 
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase

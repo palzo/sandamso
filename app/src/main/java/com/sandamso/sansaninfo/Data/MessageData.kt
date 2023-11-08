@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Data
+package com.sandamso.sansaninfo.Data
 
 import java.text.SimpleDateFormat
 import java.util.Calendar

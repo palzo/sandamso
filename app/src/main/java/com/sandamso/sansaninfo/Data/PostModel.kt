@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Data
+package com.sandamso.sansaninfo.Data
 
 data class PostModel(
     var id: String = "",

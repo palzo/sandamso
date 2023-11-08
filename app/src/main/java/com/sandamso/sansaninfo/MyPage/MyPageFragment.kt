@@ -1,4 +1,4 @@
-package com.example.sansaninfo.MyPage
+package com.sandamso.sansaninfo.MyPage
 
 import android.content.Context
 import android.content.Intent
@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.example.sansaninfo.Data.UserData
-import com.example.sansaninfo.SignPage.FindpwActivity
-import com.example.sansaninfo.SignPage.SignInActivity
-import com.example.sansaninfo.databinding.FragmentMyPageBinding
+import com.sandamso.sansaninfo.Data.UserData
+import com.sandamso.sansaninfo.SignPage.FindpwActivity
+import com.sandamso.sansaninfo.SignPage.SignInActivity
+import com.sandamso.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

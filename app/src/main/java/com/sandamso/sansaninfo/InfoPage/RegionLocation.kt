@@ -1,4 +1,4 @@
-package com.example.sansaninfo.InfoPage
+package com.sandamso.sansaninfo.InfoPage
 
 data class RegionList(val region : String, val regionX : Int, val regionY : Int)
 

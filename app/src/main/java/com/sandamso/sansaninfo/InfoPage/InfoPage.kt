@@ -1,4 +1,4 @@
-package com.example.sansaninfo.InfoPage
+package com.sandamso.sansaninfo.InfoPage
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,13 +10,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.example.sansaninfo.API.ModelData.Weather
-import com.example.sansaninfo.API.Retrofit.WeatherClient
-import com.example.sansaninfo.BuildConfig
-import com.example.sansaninfo.Main.MainActivity
-import com.example.sansaninfo.R
-import com.example.sansaninfo.SearchPage.MntModel
-import com.example.sansaninfo.databinding.ActivityInfoPageBinding
+import com.sandamso.sansaninfo.API.ModelData.Weather
+import com.sandamso.sansaninfo.API.Retrofit.WeatherClient
+import com.sandamso.sansaninfo.BuildConfig
+import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.SearchPage.MntModel
+import com.sandamso.sansaninfo.databinding.ActivityInfoPageBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate

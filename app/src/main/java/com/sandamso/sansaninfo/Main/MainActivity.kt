@@ -18,15 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.example.sansaninfo.Main
+package com.sandamso.sansaninfo.Main
 
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.sansaninfo.databinding.ActivityMainBinding
-import com.example.spartube.main.MainViewModel
-import com.example.spartube.util.ConnectWatcher
+import com.sandamso.sansaninfo.databinding.ActivityMainBinding
+import com.sandamso.spartube.main.MainViewModel
+import com.sandamso.spartube.util.ConnectWatcher
 
 class MainActivity : AppCompatActivity() {
 

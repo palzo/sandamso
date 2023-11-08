@@ -1,12 +1,12 @@
-package com.example.sansaninfo.InfoPage
+package com.sandamso.sansaninfo.InfoPage
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sansaninfo.R
-import com.example.sansaninfo.databinding.WeatherItemBinding
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.WeatherItemBinding
 
 class InfoPageAdapter : RecyclerView.Adapter<InfoPageAdapter.WeatherHolder>() {
 

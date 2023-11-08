@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Main
+package com.sandamso.sansaninfo.Main
 
 import androidx.fragment.app.Fragment
 

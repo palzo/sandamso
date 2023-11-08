@@ -1,4 +1,4 @@
-package com.example.spartube.main
+package com.sandamso.spartube.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

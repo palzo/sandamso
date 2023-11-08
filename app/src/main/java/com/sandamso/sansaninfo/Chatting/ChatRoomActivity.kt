@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.MessageData
 import com.sandamso.sansaninfo.Data.RoomData
@@ -17,7 +18,8 @@ import com.google.firebase.database.ValueEventListener
 class ChatRoomActivity:AppCompatActivity() {
 
     private val binding by lazy { ActivityChattingPageBinding.inflate(layoutInflater) }
-
+    private lateinit var auth: FirebaseAuth
+    var currentUser = ""
     val roomList = mutableListOf<RoomData>()
     lateinit var msgRef: DatabaseReference
 
@@ -31,11 +33,16 @@ class ChatRoomActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        auth = FirebaseAuth.getInstance()
+        if(auth.currentUser != null) {
+            currentUser = auth.currentUser?.uid!!
+        }
+
         roomId = intent.getStringExtra("roomId") ?: "none"
         roomTitle = intent.getStringExtra("roomTitle") ?: "없음"
 
         msgRef = FBRoom.roomRef.child(roomId).child("messages")
-        adapter = MsgListAdapter(msgList)
+        adapter = MsgListAdapter(msgList, currentUser)
 
         with(binding){
             recyclerMessages.adapter = adapter

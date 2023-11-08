@@ -9,12 +9,12 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.*/
-package com.example.sansaninfo.MyPage
+package com.sandamso.sansaninfo.MyPage
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.sansaninfo.databinding.ActivityChangeNicknameBinding
+import com.sandamso.sansaninfo.databinding.ActivityChangeNicknameBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

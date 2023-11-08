@@ -1,4 +1,4 @@
-package com.example.sansaninfo.MountainInfoAPI
+package com.sandamso.sansaninfo.MountainInfoAPI
 
 import retrofit2.Call
 import retrofit2.http.GET

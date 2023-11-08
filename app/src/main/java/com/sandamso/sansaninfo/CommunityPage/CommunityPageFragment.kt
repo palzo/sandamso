@@ -1,4 +1,4 @@
-package com.example.sansaninfo.CommunityPage
+package com.sandamso.sansaninfo.CommunityPage
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,12 +11,12 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.AddPage.AddPageActivity
-import com.example.sansaninfo.Data.PostModel
-import com.example.sansaninfo.Data.UserData
-import com.example.sansaninfo.DetailPage.DetailPageActivity
-import com.example.sansaninfo.R
-import com.example.sansaninfo.databinding.FragmentCommunityPageBinding
+import com.sandamso.sansaninfo.AddPage.AddPageActivity
+import com.sandamso.sansaninfo.Data.PostModel
+import com.sandamso.sansaninfo.Data.UserData
+import com.sandamso.sansaninfo.DetailPage.DetailPageActivity
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.FragmentCommunityPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

@@ -1,4 +1,4 @@
-package com.example.sansaninfo.CommunityPage
+package com.sandamso.sansaninfo.CommunityPage
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.sansaninfo.Data.PostModel
-import com.example.sansaninfo.databinding.CommunityPageItemBinding
+import com.sandamso.sansaninfo.Data.PostModel
+import com.sandamso.sansaninfo.databinding.CommunityPageItemBinding
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.Date

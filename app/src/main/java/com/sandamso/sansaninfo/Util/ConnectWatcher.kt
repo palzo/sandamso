@@ -1,4 +1,4 @@
-package com.example.spartube.util
+package com.sandamso.spartube.util
 
 import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE

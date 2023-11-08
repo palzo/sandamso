@@ -1,4 +1,4 @@
-package com.example.sansaninfo.InfoPage
+package com.sandamso.sansaninfo.InfoPage
 
 data class WeatherData(
     val baseTime: String,

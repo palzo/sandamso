@@ -1,4 +1,4 @@
-package com.example.sansaninfo.Data
+package com.sandamso.sansaninfo.Data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

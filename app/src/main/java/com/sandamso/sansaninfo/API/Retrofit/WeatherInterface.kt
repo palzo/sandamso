@@ -1,6 +1,6 @@
-package com.example.sansaninfo.API.Retrofit
+package com.sandamso.sansaninfo.API.Retrofit
 
-import com.example.sansaninfo.API.ModelData.Weather
+import com.sandamso.sansaninfo.API.ModelData.Weather
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET

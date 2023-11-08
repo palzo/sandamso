@@ -1,4 +1,4 @@
-package com.example.sansaninfo.API.ModelData
+package com.sandamso.sansaninfo.API.ModelData
 
 data class Weather(val response: Response)
 

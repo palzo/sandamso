@@ -1,13 +1,13 @@
-package com.example.sansaninfo
+package com.sandamso.sansaninfo
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.example.sansaninfo.Main.MainActivity
-import com.example.sansaninfo.SignPage.SignInActivity
-import com.example.sansaninfo.databinding.ActivitySplashScreenBinding
+import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.SignPage.SignInActivity
+import com.sandamso.sansaninfo.databinding.ActivitySplashScreenBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashScreen : AppCompatActivity() {

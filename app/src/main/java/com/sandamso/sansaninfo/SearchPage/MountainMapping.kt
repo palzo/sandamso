@@ -1,7 +1,7 @@
-package com.example.sansaninfo.SearchPage
+package com.sandamso.sansaninfo.SearchPage
 
 import android.util.Log
-import com.example.sansaninfo.R
+import com.sandamso.sansaninfo.R
 import kotlin.random.Random
 
 object MountainMapping {

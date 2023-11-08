@@ -1,16 +1,14 @@
 package com.example.sansaninfo.Chatting
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.sansaninfo.Data.ChatRoom
 import com.example.sansaninfo.Data.FBRoom
 import com.example.sansaninfo.Data.RoomData
 import com.example.sansaninfo.databinding.FragmentChattingListBinding
@@ -18,13 +16,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
-@RequiresApi(Build.VERSION_CODES.O)
 class ChattingListFragment : Fragment() {
 
     val roomList = mutableListOf<RoomData>()
 
-    private val recyclerChatRoomsAdapter by lazy {
-        RecyclerChatRoomsAdapter(requireContext())
+    private val chatRoomListAdapter by lazy {
+        ChatRoomListAdapter(roomList)
     }
 
     private var _binding: FragmentChattingListBinding? = null
@@ -32,6 +29,8 @@ class ChattingListFragment : Fragment() {
 
     companion object {
         fun newInstance() = ChattingListFragment()
+        var userId: String = ""
+        var userName: String = ""
     }
 
     override fun onCreateView(
@@ -43,7 +42,9 @@ class ChattingListFragment : Fragment() {
         val view = binding.root
 
         binding.recyclerViewChattingRoom.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewChattingRoom.adapter = recyclerChatRoomsAdapter
+        binding.recyclerViewChattingRoom.adapter = chatRoomListAdapter
+
+        binding.chattingButton.setOnClickListener { openCreateRoom() }
 
         return view
     }
@@ -62,20 +63,37 @@ class ChattingListFragment : Fragment() {
     // 채팅방 목록 만들기
     private fun loadRooms() {
         FBRoom.roomRef.addValueEventListener(object : ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("load Rooms", "Data received")
                 roomList.clear()
                 for (item in snapshot.children) {
-                    item.getValue(RoomData::class.java)?.let { room -> roomList.add(room) }
+                    item.getValue(RoomData::class.java)?.let { room ->
+                        roomList.add(room)
+                    }
                 }
-                recyclerChatRoomsAdapter.chatRooms = roomList as ArrayList<ChatRoom>
-                recyclerChatRoomsAdapter.notifyDataSetChanged()
+                chatRoomListAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("load Rooms", "error = $error")
+                Log.d("load Rooms", "error")
             }
         })
+    }
+
+    private fun openCreateRoom() {
+        val editTitle = EditText(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("방 이름을 적어주세요.")
+            .setView(editTitle)
+            .setPositiveButton("만들기") { dlg, id ->
+                createRoom(editTitle.text.toString())
+            }
+        dialog.show()
+    }
+
+    private fun createRoom(title: String) {
+        val room = RoomData(title, userName)
+        val roomId = FBRoom.roomRef.push().key!!
+        room.id = roomId
+        FBRoom.roomRef.child(roomId).setValue(room)
     }
 }

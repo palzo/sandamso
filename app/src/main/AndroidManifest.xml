@@ -22,8 +22,9 @@
         android:theme="@style/Theme.SanSanInfo"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
-            android:name=".Chatting.ChattingPageActivity"
+            android:name=".Chatting.ChatRoomActivity"
             android:exported="false" />
 
         <uses-library
@@ -59,6 +60,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
         <activity
@@ -68,14 +70,17 @@
             android:name=".Main.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustNothing" />
+
         <activity
             android:name=".SignPage.SignInActivity"
             android:windowSoftInputMode="adjustPan"
             android:exported="false"></activity>
+
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true"
             android:launchMode="singleTask">
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

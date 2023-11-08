@@ -19,11 +19,8 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import coil.load
-import com.example.sansaninfo.Chatting.RecyclerChatRoomsAdapter
 import com.example.sansaninfo.Data.FBRef
-import com.example.sansaninfo.Data.FBRoom
 import com.example.sansaninfo.Data.PostModel
-import com.example.sansaninfo.Data.RoomData
 import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
@@ -53,10 +50,6 @@ class AddPageActivity : AppCompatActivity() {
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     private val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
-
-//    private lateinit var recyclerChatRoomsAdapter: RecyclerChatRoomsAdapter
-//
-//    private val roomList = mutableListOf<RoomData>()
 
 
     // 높은 API 버전에도 권한 요청하기
@@ -165,12 +158,6 @@ class AddPageActivity : AppCompatActivity() {
         with(binding) {
             val uri = Uri.parse(addPageIvAdd.tag.toString())
 
-            // 게시글 작성자 UID 가져오기
-            val userId = Firebase.auth.currentUser?.uid
-            // 방 생성 및 방 ID 가져오기
-            val roomTitle = addPageTvTitle.text.toString()
-            val roomId = createRoom(roomTitle)
-
             uploadImage(uri) {
                 if (it != null) {
 
@@ -185,8 +172,7 @@ class AddPageActivity : AppCompatActivity() {
                         kakao = addPageTvKakaoOpen.text.toString(),
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
-                        writer = userId,
-                        roomId = roomId
+                        writer = Firebase.auth.currentUser?.uid,
                     )
 
                     // 닉네임도 넣어주기
@@ -280,12 +266,8 @@ class AddPageActivity : AppCompatActivity() {
     // 스토리지에 이미지 저장하기(경로 찾기)
     private fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
         val fullPath = makeFilePath("images", "temp", uri)
-        Log.d("images", "uri : $uri")
-        Log.d("images", "fullPath : $fullPath")
         val imageRef = storage.getReference(fullPath)
         val uploadTask = imageRef.putFile(uri)
-        Log.d("images", "imageRef : $imageRef")
-        Log.d("images", "uploadTask : $uploadTask")
 
         // 업로드 실행 및 결과 확인
         uploadTask.addOnFailureListener {
@@ -462,8 +444,6 @@ class AddPageActivity : AppCompatActivity() {
     // 수정하기
     private fun editData() {
         val id = intent.getStringExtra("dataFromAddPageId")
-        Log.d("id test", "id = $id")
-
         if (id != null) {
             firebaseDatabase.child("POST").child(id).get().addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -505,11 +485,6 @@ class AddPageActivity : AppCompatActivity() {
                 if (it.isSuccessful) {
                     val originalData = it.result.getValue(PostModel::class.java)
                     if (originalData != null) {
-                        Toast.makeText(
-                            this,
-                            binding.addPageTvDday.text.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
                         with(binding) {
                             // 수정된 데이터로 업데이트 하기
                             val editData = originalData.copy(
@@ -518,35 +493,29 @@ class AddPageActivity : AppCompatActivity() {
                                 deadlinedate = addPageTvDday.text.toString(),
                                 kakao = addPageTvKakaoOpen.text.toString(),
                             )
+                            val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
+                            intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
+                            intent.putExtra("dataFromAddPageMaintext", addPageEtText.text.toString())
+                            intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
+                            intent.putExtra("dataFromAddPagekakao", addPageTvKakaoOpen.text.toString())
+                            intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
+                            intent.putExtra("dataFromAddPageId", id)
                             // 이미지 수정 시, 업로드하고 URL 업데이트 하기
                             CompletableFuture.supplyAsync(Supplier {
                                 imageSetData(editData)
                             }).thenAccept { uploadedImageUrl ->
-
-                                firebaseDatabase.child("POST").child(id).setValue(editData)
-
-                                val intent =
-                                    Intent(this@AddPageActivity, DetailPageActivity::class.java)
-                                intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
-                                intent.putExtra(
-                                    "dataFromAddPageMaintext",
-                                    addPageEtText.text.toString()
-                                )
-                                intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
-                                intent.putExtra(
-                                    "dataFromAddPagekakao",
-                                    addPageTvKakaoOpen.text.toString()
-                                )
-                                intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
-                                intent.putExtra("dataFromAddPageId", id)
-
-                                // 이미지 URL 추가
-//                                intent.putExtra("dataFromAddPageimage", uploadedImageUrl)
-
-                                startActivity(intent)
-                                finish()
-
                             }
+                            showProgress(true)
+                            Toast.makeText(this@AddPageActivity, "게시글 수정중..", Toast.LENGTH_SHORT).show()
+                            thread(start = true) {
+                                Thread.sleep(2500)
+                                runOnUiThread {
+                                    startActivity(intent)
+                                    finish()
+                                    showProgress(false)
+                                }
+                            }
+                            firebaseDatabase.child("POST").child(id).setValue(editData)
                         }
                     }
                 }
@@ -567,11 +536,6 @@ class AddPageActivity : AppCompatActivity() {
                     if (id != null) {
                         // Firebase에 업데이트
                         firebaseDatabase.child("POST").child(id).setValue(editData)
-                        // DetailPageActivity 시작
-                        val intent = Intent()
-                        intent.putExtra("dataFromAddPageimage", editData.image)
-                        Log.d("data check", "dataFromAddPageimage : ${intent.getStringExtra("dataFromAddPageimage")}")
-                        setResult(Activity.RESULT_OK, intent)
                     }
                 }
             }
@@ -609,27 +573,6 @@ class AddPageActivity : AppCompatActivity() {
             builder.setNegativeButton("취소", listener)
             builder.show()
         }
-    }
-
-//    fun openCreteRoom() {
-//        val roomTitle = binding.addPageTvTitle.text.toString()
-//        if (roomTitle.isNotEmpty()) {
-//            val roomId = createRoom(roomTitle)
-//            val newRoom = RoomData()
-//            newRoom.title = roomTitle
-//            roomList.add(newRoom)
-//            recyclerChatRoomsAdapter.notifyDataSetChanged()
-//
-//            Toast.makeText(this, "채팅방이 생성되었습니다.", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//
-    private fun createRoom(roomTitle: String): String {
-        val roomId = FBRoom.roomRef.push().key!!
-        val roomData = RoomData()
-        roomData.title = roomTitle
-        FBRoom.roomRef.child(roomId).setValue(roomData)
-        return roomId
     }
 }
 

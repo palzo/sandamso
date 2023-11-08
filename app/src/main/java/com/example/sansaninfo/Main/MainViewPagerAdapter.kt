@@ -6,7 +6,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.sansaninfo.Chatting.ChattingListFragment
 import com.example.sansaninfo.CommunityPage.CommunityPageFragment
 import com.example.sansaninfo.MyPage.MyPageFragment
-import com.example.sansaninfo.R
 import com.example.sansaninfo.SearchPage.SearchPageMountainFragment
 
 class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
@@ -44,5 +43,4 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     override fun createFragment(position: Int): Fragment {
         return fragments[position].fragment
     }
-
 }

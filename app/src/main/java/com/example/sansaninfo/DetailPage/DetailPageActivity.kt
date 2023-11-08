@@ -52,12 +52,6 @@ class DetailPageActivity : AppCompatActivity() {
         binding.detailPageIvBack.setOnClickListener {
             finish()
         }
-
-        // 넘어온 데이터 체크
-        Log.d("data check", "dataFromAddPageWriter : ${intent.getStringExtra("dataFromAddPageWriter")}")
-        Log.d("data check", "dataFromAddPageId : ${intent.getStringExtra("dataFromAddPageId")}")
-        Log.d("data check", "dataFromAddPagedday : ${intent.getStringExtra("dataFromAddPagedday")}")
-        Log.d("data check", "dataFromAddPageimage : ${intent.getStringExtra("dataFromAddPageimage")}")
     }
     private fun userCheck() {
         with(binding){
@@ -111,13 +105,11 @@ class DetailPageActivity : AppCompatActivity() {
 //        auth = FirebaseAuth.getInstance()
 
         postId = intent.getStringExtra("dataFromAddPageId") ?: ""
-        Log.d("postId", "$postId")
 
         firebaseDatabase.child("POST").child(postId).get().addOnCompleteListener {
             if (it.isSuccessful) {
                 val userData =
                     it.result.getValue(PostModel::class.java)
-                Log.d("userData", "$userData")
 
                 if (userData == null) return@addOnCompleteListener
                 val titleData = userData.title
@@ -126,7 +118,6 @@ class DetailPageActivity : AppCompatActivity() {
                 val nicknameData = userData.nickname
                 val deadlineData = userData.deadlinedate
                 val imageData = userData.image
-                Log.d("images", "${userData.image}")
                 val kakaoData = userData.kakao
 
                 binding.detailPageTvTitle.text = titleData
@@ -134,7 +125,6 @@ class DetailPageActivity : AppCompatActivity() {
                 binding.detailPageTvDate.text = "작성일: ${dateData}"
                 binding.detailPageTvName.text = "작성자: ${nicknameData}"
                 binding.detailPageTvGather.text = "${deadlineData}까지 모집"
-                Log.d("Image Tag", "$imageData")
 
                 // 카카오톡 오픈채팅으로 이동하기
                 binding.detailPageLlKakaoChat.setOnClickListener {
@@ -145,7 +135,6 @@ class DetailPageActivity : AppCompatActivity() {
                 // 이미지 URI를 사용하여 이미지 표시
                 val storage = FirebaseStorage.getInstance()
                 val pathReference = storage.reference.child("images/${imageData}")
-                Log.d("pathReference", "pathReference: $pathReference")
 
                 pathReference.downloadUrl.addOnSuccessListener {
                     Log.d("Image Tag222", "$it")

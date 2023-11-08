@@ -19,11 +19,8 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import coil.load
-import com.example.sansaninfo.Chatting.RecyclerChatRoomsAdapter
 import com.example.sansaninfo.Data.FBRef
-import com.example.sansaninfo.Data.FBRoom
 import com.example.sansaninfo.Data.PostModel
-import com.example.sansaninfo.Data.RoomData
 import com.example.sansaninfo.DetailPage.DetailPageActivity
 import com.example.sansaninfo.Main.MainActivity
 import com.example.sansaninfo.R
@@ -53,10 +50,6 @@ class AddPageActivity : AppCompatActivity() {
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     private val storage = Firebase.storage("gs://sansaninfo-7819a.appspot.com")
-
-//    private lateinit var recyclerChatRoomsAdapter: RecyclerChatRoomsAdapter
-//
-//    private val roomList = mutableListOf<RoomData>()
 
 
     // 높은 API 버전에도 권한 요청하기
@@ -165,12 +158,6 @@ class AddPageActivity : AppCompatActivity() {
         with(binding) {
             val uri = Uri.parse(addPageIvAdd.tag.toString())
 
-            // 게시글 작성자 UID 가져오기
-            val userId = Firebase.auth.currentUser?.uid
-            // 방 생성 및 방 ID 가져오기
-            val roomTitle = addPageTvTitle.text.toString()
-            val roomId = createRoom(roomTitle)
-
             uploadImage(uri) {
                 if (it != null) {
 
@@ -185,8 +172,7 @@ class AddPageActivity : AppCompatActivity() {
                         kakao = addPageTvKakaoOpen.text.toString(),
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
-                        writer = userId,
-                        roomId = roomId
+                        writer = Firebase.auth.currentUser?.uid,
                     )
 
                     // 닉네임도 넣어주기
@@ -609,27 +595,6 @@ class AddPageActivity : AppCompatActivity() {
             builder.setNegativeButton("취소", listener)
             builder.show()
         }
-    }
-
-//    fun openCreteRoom() {
-//        val roomTitle = binding.addPageTvTitle.text.toString()
-//        if (roomTitle.isNotEmpty()) {
-//            val roomId = createRoom(roomTitle)
-//            val newRoom = RoomData()
-//            newRoom.title = roomTitle
-//            roomList.add(newRoom)
-//            recyclerChatRoomsAdapter.notifyDataSetChanged()
-//
-//            Toast.makeText(this, "채팅방이 생성되었습니다.", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//
-    private fun createRoom(roomTitle: String): String {
-        val roomId = FBRoom.roomRef.push().key!!
-        val roomData = RoomData()
-        roomData.title = roomTitle
-        FBRoom.roomRef.child(roomId).setValue(roomData)
-        return roomId
     }
 }
 

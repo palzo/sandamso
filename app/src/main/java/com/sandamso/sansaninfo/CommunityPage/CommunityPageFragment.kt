@@ -103,6 +103,7 @@ class CommunityPageFragment : Fragment() {
         communityList.sortBy { it.date }
         communityPageAdapter.addItem(communityList)
         communityPageAdapter.notifyDataSetChanged()
+        isOverDeadline()
     }
 
     // 좋아요가 많은 순대로 정렬
@@ -130,6 +131,7 @@ class CommunityPageFragment : Fragment() {
         })
         communityPageAdapter.addItem(communityList)
         communityPageAdapter.notifyDataSetChanged()
+        isOverDeadline()
     }
 
     // 내 글로 정렬
@@ -148,6 +150,14 @@ class CommunityPageFragment : Fragment() {
                             val myPost = communityList.filter { it.nickname == currentNickname }
                             val sortedMyPost = myPost.sortedBy { it.date }
                             Log.d("MyPost", "$sortedMyPost")
+
+
+                            if(isDeadlineOption) {
+                                // 스위치가 켜져 있는 경우 -> 스위치 끄기
+                                binding.communitySwitch.isChecked = false
+                                isDeadlineOption = false
+                                isOverDeadline()
+                            }
                             communityPageAdapter.addItem(sortedMyPost.toMutableList())
                             communityPageAdapter.notifyDataSetChanged()
                         }
@@ -156,6 +166,7 @@ class CommunityPageFragment : Fragment() {
                     }
                 })
         }
+        isOverDeadline()
     }
 
     override fun onResume() {

@@ -33,6 +33,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import com.sandamso.sansaninfo.ChattingPage.ChatRoomListAdapter
+import com.sandamso.sansaninfo.Data.FBRoom
+import com.sandamso.sansaninfo.Data.RoomData
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -44,6 +47,12 @@ import kotlin.concurrent.thread
 class AddPageActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
+
+    val roomList = mutableListOf<RoomData>()
+
+    private val chatRoomListAdapter by lazy {
+        ChatRoomListAdapter(roomList)
+    }
 
     private var addImage = false
 
@@ -164,7 +173,7 @@ class AddPageActivity : AppCompatActivity() {
                     // 날짜 데이터 저장
                     val date = getData()
 
-                    // 파이어 베이스에 데이터 추가하기
+                    // 파이어 베이스에 POST 데이터 추가하기
                     var user = PostModel(
                         title = addPageTvTitle.text.toString(),
                         maintext = addPageEtText.text.toString(),
@@ -180,6 +189,14 @@ class AddPageActivity : AppCompatActivity() {
                         user = user.copy(nickname = nickname)
                         val postId = addItem(user)
 
+                        // 파이어 베이스에 Rooms 데이터 추가하기
+                        val roomId = addMsgData(
+                            RoomData(
+                                title = addPageTvTitle.text.toString(),
+                                users = Firebase.auth.currentUser?.uid ?: ""
+                            )
+                        )
+
                         val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
                         intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
                         intent.putExtra("dataFromAddPageMaintext", addPageEtText.text.toString())
@@ -190,6 +207,7 @@ class AddPageActivity : AppCompatActivity() {
                         intent.putExtra("dataFromAddPagenickname", nickname)
                         intent.putExtra("dataFromAddPageId", postId)
                         intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
+                        intent.putExtra("dataFromAddPageRoomId", roomId)
 
                         startActivity(intent)
                         finish()
@@ -204,6 +222,13 @@ class AddPageActivity : AppCompatActivity() {
         val id = FBRef.myRef.push().key!!
         user.id = id
         FBRef.myRef.child(id).setValue(user)
+        return id
+    }
+
+    private fun addMsgData(user: RoomData): String {
+        val id = FBRoom.roomRef.push().key!!
+        user.id = id
+        FBRoom.roomRef.child(id).setValue(user)
         return id
     }
 

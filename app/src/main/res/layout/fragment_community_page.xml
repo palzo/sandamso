@@ -13,8 +13,18 @@
         android:background="@color/grey_400"
         app:layout_constraintBottom_toTopOf="@+id/community_page_recyclerview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Switch
+        android:id="@+id/community_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="마감일 지난 글 제외"
+        app:layout_constraintEnd_toEndOf="@+id/view6"
+        app:layout_constraintTop_toBottomOf="@+id/community_image_option"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/community_tv_title"
@@ -41,11 +51,12 @@
         android:id="@+id/community_page_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/community_tv_title" />
+        app:layout_constraintTop_toBottomOf="@+id/community_switch" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/community_page_fab"

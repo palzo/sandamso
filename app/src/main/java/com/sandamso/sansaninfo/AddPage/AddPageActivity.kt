@@ -36,6 +36,7 @@ import com.google.firebase.storage.ktx.storage
 import com.sandamso.sansaninfo.ChattingPage.ChatRoomListAdapter
 import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.RoomData
+import com.sandamso.sansaninfo.SearchPage.MountainMapping
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -82,6 +83,8 @@ class AddPageActivity : AppCompatActivity() {
         editData()
         btnChange()
 
+        mntCheck()
+
         with(binding) {
             postButton.setOnClickListener {
 
@@ -103,19 +106,23 @@ class AddPageActivity : AppCompatActivity() {
                 } else if (addPageEtText.text.toString().length >= 5000) {
                     toastMessage("본문은 5000글자까지만 입력이 가능합니다.")
 
-                } else if (addPageTvKakaoOpen.text.toString().isEmpty()) {
-                    toastMessage("카카오 오픈채팅 링크를 입력해주세요.")
+                } else if (addPageEtMnt.text.toString().isEmpty()) {
+                    toastMessage("산이름을 입력해주세요.")
 
                 } else {
-                    showProgress(true)
-                    goneData()
-                    data()
-                    Toast.makeText(this@AddPageActivity, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
-                    thread(start = true) {
-                        Thread.sleep(2500)
-                        runOnUiThread {
-                            showProgress(false)
+                    if (addPageBtnMnt.text == "변경") {
+                        showProgress(true)
+                        goneData()
+                        data()
+                        Toast.makeText(this@AddPageActivity, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
+                        thread(start = true) {
+                            Thread.sleep(2500)
+                            runOnUiThread {
+                                showProgress(false)
+                            }
                         }
+                    } else {
+                        toastMessage("확인 버튼을 눌러주세요.")
                     }
                 }
             }
@@ -136,6 +143,37 @@ class AddPageActivity : AppCompatActivity() {
         binding.addPageIvBackbutton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun mntCheck() {
+        with(binding) {
+            addPageBtnMnt.setOnClickListener {
+                val background = resources.getDrawable(R.drawable.add_page_stroke_round_rec)
+
+                // 존재하는 산인지 찾기
+                val check = MountainMapping.getMountainCode(addPageEtMnt.text.trim().toString())
+                val mntList = listOf("한라산")
+
+                if ((check != 0 || mntList.contains(addPageEtMnt.text.trim().toString())) && addPageBtnMnt.text == "확인") {
+                    addPageBtnMnt.text = "변경"
+                    addPageEtMnt.isEnabled = false
+                    addPageEtMnt.background = background
+                    addPageErrMsg.visibility = View.INVISIBLE
+
+                } else if ((check != 0 || mntList.contains(addPageEtMnt.text.trim().toString())) && addPageBtnMnt.text == "변경") {
+                    addPageBtnMnt.text = "확인"
+                    addPageEtMnt.isEnabled = true
+                    addPageEtMnt.background = background
+                    addPageErrMsg.visibility = View.INVISIBLE
+                } else {
+//                    Toast.makeText(this@AddPageActivity,"존재하지않는 산입니다.", Toast.LENGTH_SHORT).show()
+                    val errBackground =
+                        resources.getDrawable(R.drawable.add_page_stroke_round_rec_err)
+                    addPageEtMnt.background = errBackground
+                    addPageErrMsg.visibility = View.VISIBLE
+                }
+            }
         }
     }
 
@@ -178,7 +216,7 @@ class AddPageActivity : AppCompatActivity() {
                         title = addPageTvTitle.text.toString(),
                         maintext = addPageEtText.text.toString(),
                         image = it,
-                        kakao = addPageTvKakaoOpen.text.toString(),
+                        mountain = addPageEtMnt.text.toString(),
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
                         writer = Firebase.auth.currentUser?.uid,
@@ -201,7 +239,7 @@ class AddPageActivity : AppCompatActivity() {
                         intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
                         intent.putExtra("dataFromAddPageMaintext", addPageEtText.text.toString())
                         intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
-                        intent.putExtra("dataFromAddPagekakao", addPageTvKakaoOpen.text.toString())
+                        intent.putExtra("dataFromAddPageMnt", addPageEtMnt.text.toString())
                         intent.putExtra("dataFromAddPageimage", it)
                         intent.putExtra("dataFromAddPagedate", date)
                         intent.putExtra("dataFromAddPagenickname", nickname)
@@ -288,6 +326,7 @@ class AddPageActivity : AppCompatActivity() {
             }
         }
     }
+
     // 스토리지에 이미지 저장하기(경로 찾기)
     private fun uploadImage(uri: Uri, onSuccess: (String?) -> Unit) {
         val fullPath = makeFilePath("images", "temp", uri)
@@ -305,6 +344,7 @@ class AddPageActivity : AppCompatActivity() {
             onSuccess(taskSnapshot.metadata?.name)
         }
     }
+
     private fun makeFilePath(path: String, userId: String, uri: Uri): String {
         val mimeType = contentResolver.getType(uri) ?: "/none" // MIME 타입 ex) images/jpeg
         val ext = mimeType.split("/")[1] // 확장자 ex) jpeg
@@ -428,6 +468,7 @@ class AddPageActivity : AppCompatActivity() {
                         }
                     }
                 }
+
                 override fun onCancelled(error: DatabaseError) {
                     Log.d("Nickname", "error = $error")
                 }
@@ -479,7 +520,7 @@ class AddPageActivity : AppCompatActivity() {
                         addPageTvTitle.setText(userData.title)
                         addPageTvDday.text = userData.deadlinedate
                         addPageEtText.setText(userData.maintext)
-                        addPageTvKakaoOpen.setText(userData.kakao)
+                        addPageEtMnt.setText(userData.mountain)
 
                         val storage = FirebaseStorage.getInstance()
                         val reference = storage.reference.child("images/${userData.image}")
@@ -516,13 +557,17 @@ class AddPageActivity : AppCompatActivity() {
                                 title = addPageTvTitle.text.toString(),
                                 maintext = addPageEtText.text.toString(),
                                 deadlinedate = addPageTvDday.text.toString(),
-                                kakao = addPageTvKakaoOpen.text.toString(),
+                                mountain = addPageEtMnt.text.toString(),
                             )
-                            val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
+                            val intent =
+                                Intent(this@AddPageActivity, DetailPageActivity::class.java)
                             intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())
-                            intent.putExtra("dataFromAddPageMaintext", addPageEtText.text.toString())
+                            intent.putExtra(
+                                "dataFromAddPageMaintext",
+                                addPageEtText.text.toString()
+                            )
                             intent.putExtra("dataFromAddPagedday", addPageTvDday.text.toString())
-                            intent.putExtra("dataFromAddPagekakao", addPageTvKakaoOpen.text.toString())
+                            intent.putExtra("dataFromAddPagekakao", addPageEtMnt.text.toString())
                             intent.putExtra("dataFromAddPageWriter", Firebase.auth.currentUser?.uid)
                             intent.putExtra("dataFromAddPageId", id)
                             // 이미지 수정 시, 업로드하고 URL 업데이트 하기
@@ -531,7 +576,8 @@ class AddPageActivity : AppCompatActivity() {
                             }).thenAccept { uploadedImageUrl ->
                             }
                             showProgress(true)
-                            Toast.makeText(this@AddPageActivity, "게시글 수정중..", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@AddPageActivity, "게시글 수정중..", Toast.LENGTH_SHORT)
+                                .show()
                             thread(start = true) {
                                 Thread.sleep(2500)
                                 runOnUiThread {

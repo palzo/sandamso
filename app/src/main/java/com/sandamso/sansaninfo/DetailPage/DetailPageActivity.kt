@@ -130,12 +130,14 @@ class DetailPageActivity : AppCompatActivity() {
                 val nicknameData = userData.nickname
                 val deadlineData = userData.deadlinedate
                 val imageData = userData.image
+                val mntData = userData.mountain
 
                 binding.detailPageTvTitle.text = titleData
                 binding.detailPageTvMemo.text = maintextData
                 binding.detailPageTvDate.text = "작성일: ${dateData}"
                 binding.detailPageTvName.text = "작성자: ${nicknameData}"
                 binding.detailPageTvGather.text = "${deadlineData}까지 모집"
+                binding.detailPageTvMnt.text = "<$mntData>"
 
 
                 // 이미지 URI를 사용하여 이미지 표시

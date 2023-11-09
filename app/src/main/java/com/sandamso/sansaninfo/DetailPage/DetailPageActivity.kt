@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import coil.load
 import com.sandamso.sansaninfo.AddPage.AddPageActivity
+import com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity
 import com.sandamso.sansaninfo.Data.PostModel
 import com.sandamso.sansaninfo.R
 import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
@@ -28,6 +29,8 @@ import java.util.Locale
 import kotlin.concurrent.thread
 
 class DetailPageActivity : AppCompatActivity() {
+
+    private val list = ArrayList<PostModel?>()
 
     private lateinit var auth: FirebaseAuth
 
@@ -52,7 +55,14 @@ class DetailPageActivity : AppCompatActivity() {
         binding.detailPageIvBack.setOnClickListener {
             finish()
         }
+
+        binding.detailPageLlJoin.setOnClickListener {
+            val intent = Intent(this@DetailPageActivity,ChatRoomActivity::class.java)
+            intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
+            startActivity(intent)
+        }
     }
+
     private fun userCheck() {
         with(binding){
             if (auth.currentUser?.uid == intent.getStringExtra("dataFromAddPageWriter")) {
@@ -102,7 +112,6 @@ class DetailPageActivity : AppCompatActivity() {
 
     // Add Page에서 입력한 데이터 가져오기
     private fun dataView() {
-//        auth = FirebaseAuth.getInstance()
 
         postId = intent.getStringExtra("dataFromAddPageId") ?: ""
 
@@ -111,6 +120,9 @@ class DetailPageActivity : AppCompatActivity() {
                 val userData =
                     it.result.getValue(PostModel::class.java)
 
+                list.clear()
+                list.add(userData)
+
                 if (userData == null) return@addOnCompleteListener
                 val titleData = userData.title
                 val maintextData = userData.maintext
@@ -118,7 +130,6 @@ class DetailPageActivity : AppCompatActivity() {
                 val nicknameData = userData.nickname
                 val deadlineData = userData.deadlinedate
                 val imageData = userData.image
-                val kakaoData = userData.kakao
 
                 binding.detailPageTvTitle.text = titleData
                 binding.detailPageTvMemo.text = maintextData
@@ -126,11 +137,6 @@ class DetailPageActivity : AppCompatActivity() {
                 binding.detailPageTvName.text = "작성자: ${nicknameData}"
                 binding.detailPageTvGather.text = "${deadlineData}까지 모집"
 
-                // 카카오톡 오픈채팅으로 이동하기
-//                binding.detailPageLlKakaoChat.setOnClickListener {
-//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(kakaoData))
-//                    startActivity(intent)
-//                }
 
                 // 이미지 URI를 사용하여 이미지 표시
                 val storage = FirebaseStorage.getInstance()

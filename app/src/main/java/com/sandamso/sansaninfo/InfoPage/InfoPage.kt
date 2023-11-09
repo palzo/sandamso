@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.sandamso.sansaninfo.API.ModelData.Weather
@@ -137,10 +139,15 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         marker.height = 70
         marker.iconTintColor = Color.GREEN
         marker.map = naverMap
-
     }
 
     private fun initView() = with(binding) {
+        // 프로그래스 바
+        val progressLayout = findViewById<ConstraintLayout>(R.id.info_page_progress_constraintlayout)
+        val weatherErrorLayout = findViewById<ConstraintLayout>(R.id.info_page_weather_error)
+
+        progressLayout.visibility = View.VISIBLE
+
         // Intent에서 Bundle을 가져옴
         val receivedBundle = intent.extras
 
@@ -188,7 +195,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
          */
         fun setRegionLocation(address: String?): RegionList? {
             val regionList = RegionLocation().regionList
-            return regionList.find { mountainAddress?.contains(it.region) ?: false }
+            return regionList.find { address?.contains(it.region) ?: false }
         }
 
         val baseTimes = listOf("0200", "0500", "0800", "1100", "1400", "1700", "2000", "2300")
@@ -196,6 +203,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         fun fetchWeather(index: Int) {
             if (index >= baseTimes.size) {
                 return runOnUiThread {
+                    // API 호출 완료 후 프로그래머스 숨기기
+                    progressLayout.visibility = View.GONE
                     infoPageAdapter.addItem(weatherDataList, skyDataList)
                 }
             }
@@ -204,57 +213,58 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             val nx = setRegionLocation(mountainAddress)?.regionX
             val ny = setRegionLocation(mountainAddress)?.regionY
 
-            CoroutineScope(Dispatchers.IO).launch {
-                WeatherClient.weatherNetwork.getWeatherInfo(
-                    serviceKey = BuildConfig.WEATHER_API_KEY,
-                    pageNo = 1,
-                    numOfRows = 10,
-                    dataType = "JSON",
-                    baseDate = today.toInt(),
-                    baseTime = baseTime,
-                    nx = nx!!,
-                    ny = ny!!,
+            if (nx != null && ny != null) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    WeatherClient.weatherNetwork.getWeatherInfo(
+                        serviceKey = BuildConfig.WEATHER_API_KEY,
+                        pageNo = 1,
+                        numOfRows = 10,
+                        dataType = "JSON",
+                        baseDate = today.toInt(),
+                        baseTime = baseTime,
+                        nx = nx,
+                        ny = ny,
 
-                    ).enqueue(object : Callback<Weather?> {
-                    override fun onResponse(call: Call<Weather?>, response: Response<Weather?>) {
-                        response.body().let {
-                            it?.response?.body?.items?.item?.forEach { item ->
-                                if (item.category == "TMP") {
-                                    val tmpValue = item.fcstValue
-                                    weatherDataList.add(WeatherData(baseTime, tmpValue))
-                                }
-                                if (item.category == "SKY") {
-                                    sky = item.fcstValue
-                                }
-                                if (item.category == "PTY") {
-                                    val ptyValue = item.fcstValue
-                                    when (ptyValue) {
-                                        "0" -> skyDataList.add(SkyData("0", sky))
-                                        "1" -> skyDataList.add(SkyData("1", "0"))
-                                        "2" -> skyDataList.add(SkyData("2", "0"))
-                                        "3" -> skyDataList.add(SkyData("3", "0"))
-                                        "4" -> skyDataList.add(SkyData("4", "0"))
-                                        else -> skyDataList.add(SkyData("4", "0"))
+                        ).enqueue(object : Callback<Weather?> {
+                        override fun onResponse(
+                            call: Call<Weather?>,
+                            response: Response<Weather?>
+                        ) {
+                            response.body().let {
+                                it?.response?.body?.items?.item?.forEach { item ->
+                                    if (item.category == "TMP") {
+                                        val tmpValue = item.fcstValue
+                                        weatherDataList.add(WeatherData(baseTime, tmpValue))
+                                    }
+                                    if (item.category == "SKY") {
+                                        sky = item.fcstValue
+                                    }
+                                    if (item.category == "PTY") {
+                                        val ptyValue = item.fcstValue
+                                        when (ptyValue) {
+                                            "0" -> skyDataList.add(SkyData("0", sky))
+                                            "1" -> skyDataList.add(SkyData("1", "0"))
+                                            "2" -> skyDataList.add(SkyData("2", "0"))
+                                            "3" -> skyDataList.add(SkyData("3", "0"))
+                                            "4" -> skyDataList.add(SkyData("4", "0"))
+                                            else -> skyDataList.add(SkyData("4", "0"))
+                                        }
                                     }
                                 }
-                                /*Log.d(
-                                    "text",
-                                    "baseDate : ${item.baseDate}, baseTime : ${item.baseTime}, category : ${item.category}"
-                                )
-                                Log.d(
-                                    "text",
-                                    "fxstDate : ${item.fcstTime}, fxstDate : ${item.fcstDate}, fxstValue : ${item.fcstValue}"
-                                )
-                                Log.d("text", "nx : ${item.nx}, ny : ${item.ny}")*/
                             }
+                            fetchWeather(index + 1)
                         }
-                        fetchWeather(index + 1)
-                    }
 
-                    override fun onFailure(call: Call<Weather?>, t: Throwable) {
-                        Log.e("error", "${t.message}")
-                    }
-                })
+                        override fun onFailure(call: Call<Weather?>, t: Throwable) {
+                            Log.e("error", "${t.message}")
+                        }
+                    })
+                }
+            }
+            else {
+                // 날씨 정보를 불러올 수 없다는 textview 출력
+                progressLayout.visibility = View.GONE
+                weatherErrorLayout.visibility = View.VISIBLE
             }
         }
         fetchWeather(0)

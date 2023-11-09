@@ -67,6 +67,7 @@ class CommunityPageAdapter :
             communityItemTvNickname.text = items.nickname
             communityItemTvDate.text = items.date
             communityItemTvDday.text = calculateDday(items)
+            communityItemTvMnt.text = items.mountain
 
             // 이미지 URI를 사용하여 이미지 표시하기
             val storage = FirebaseStorage.getInstance()

@@ -26,7 +26,7 @@ class GooData {
 
         // 인천
         val incheonList: ArrayList<String> = arrayListOf(
-            "서구", "남동구", "강화군", "옹진군", "중구", "부평구"
+            "서구", "남동구", "강화군", "옹진군", "중구", "부평구", "남구"
         )
 
         // 광주

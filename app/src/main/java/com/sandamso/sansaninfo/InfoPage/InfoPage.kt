@@ -144,6 +144,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private fun initView() = with(binding) {
         // 프로그래스 바
         val progressLayout = findViewById<ConstraintLayout>(R.id.info_page_progress_constraintlayout)
+        val weatherErrorLayout = findViewById<ConstraintLayout>(R.id.info_page_weather_error)
 
         progressLayout.visibility = View.VISIBLE
 
@@ -262,6 +263,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             }
             else {
                 // 날씨 정보를 불러올 수 없다는 textview 출력
+                progressLayout.visibility = View.GONE
+                weatherErrorLayout.visibility = View.VISIBLE
             }
         }
         fetchWeather(0)

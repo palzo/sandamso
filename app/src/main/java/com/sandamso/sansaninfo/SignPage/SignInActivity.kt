@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sandamso.sansaninfo.Main.MainActivity
@@ -87,6 +88,8 @@ class SignInActivity : AppCompatActivity() {
                                 toastMessage("로그인 성공 !")
                                 saveData()
                                 startActivity(signInIntent)
+
+
                             }
                             // 이메일 인증 안했을 경우
                             else {
@@ -110,17 +113,7 @@ class SignInActivity : AppCompatActivity() {
             startActivity(signupIntent)
         }
 
-        /**
-         *   출시 전에 릴리즈 해시키 값 가져와야 함
-         */
-        // 로그인 정보 확인 (테스트 용)
-        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-            if (error != null) {
-//                Toast.makeText(this, "${error.message}", Toast.LENGTH_SHORT).show()
-            } else if (tokenInfo != null) {
-//                Toast.makeText(this, "토큰 정보 보기 성공", Toast.LENGTH_SHORT).show()
-            }
-        }
+
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
                 when {
@@ -152,11 +145,25 @@ class SignInActivity : AppCompatActivity() {
                         "${user?.kakaoAccount?.email.toString()} 님 로그인 성공",
                         Toast.LENGTH_SHORT
                     ).show()
-//                    user?.kakaoAccount?.email
+
                 }
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
                 finish()
+            }
+        }
+
+        /**
+         *   출시 전에 릴리즈 해시키 값 가져와야 함
+         */
+        // 로그인 정보 확인 (테스트 용)
+        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+            if (error != null) {
+//                Toast.makeText(this, "${error.message}", Toast.LENGTH_SHORT).show()
+                Log.d("kakao", "${error.message}")
+            } else if (tokenInfo != null) {
+                Log.d("kakao", "$tokenInfo")
+//                Toast.makeText(this, "토큰 정보 보기 성공", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -169,31 +176,25 @@ class SignInActivity : AppCompatActivity() {
                 UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
             }
         }
-        // 테스트 하고 지울 버튼 (카카오 로그인)
-        binding.signinTitle.setOnClickListener {
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                UserApiClient.instance.loginWithKakaoTalk(this, callback = callback)
-            } else {
-                UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
-            }
-        }
+
         loadData()
     }
 
     private fun saveData() = with(binding) {
         val autoLogin = getSharedPreferences("prefLogin", 0)
-        val saveEmail = getSharedPreferences("prefEmail", 0)
         val autoLoginEdit = autoLogin.edit()
+
+        val saveEmail = getSharedPreferences("prefEmail", 0)
         val saveEmailEdit = saveEmail.edit()
+
         // 데이터 저장
         if (signinSwitchAutoLogin.isChecked) {
             autoLoginEdit.putString("login", "1")
             autoLoginEdit.putString("pw", signinEtPw.text.toString())
             autoLoginEdit.apply()
         } else {
-            saveEmailEdit.putString("login", "0")
+            autoLoginEdit.putString("login", "0")
             autoLoginEdit.putString("pw", "0")
-            saveEmailEdit.apply()
             autoLoginEdit.apply()
         }
         if (signinSwitchSaveMail.isChecked) {

@@ -7,7 +7,7 @@ data class PostModel(
     var title: String = "",
     var maintext: String = "",
     var image: String = "",
-    var kakao: String = "",
+    var mountain: String = "",
     var deadlinedate: String = "",
     var writer: String? = "",
     var roomId: String = ""

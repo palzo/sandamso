@@ -64,36 +64,14 @@ class CommunityPageFragment : Fragment() {
             isOverDeadline()
         }
 
-        binding.communityImageOption.setOnClickListener {
-            Log.d("MENU", "버튼 눌렀냐?")
-            val menu = PopupMenu(context, it)
-            menu.menuInflater.inflate(R.menu.sort_option, menu.menu)
-            menu.setOnMenuItemClickListener {
-                when(it.itemId) {
-                    R.id.menu_option_latest -> {
-                        sortPostLatest()
-                        true
-                    }
-                    R.id.menu_option_like -> {
-                        sortPostLike()
-                        true
-                    }
-                    R.id.menu_option_deadline -> {
-                        sortPostDeadline()
-                        true
-                    }
-                    R.id.menu_option_mine -> {
-                        sortPostMine()
-                        true
-                    }
-                    else -> {
-                        false
-                    }
-                }
+        binding.communitySpinner.setOnSpinnerItemSelectedListener<String> { _, _, _, sort ->
+            when(sort) {
+                "최신순" -> sortPostLatest()
+                "인기순" -> sortPostLike()
+                "마감일순" -> sortPostDeadline()
+                "내 글 순" -> sortPostMine()
             }
-            menu.show()
         }
-
         return binding.root
     }
     // 최신순으로 정렬 -> 날짜 최신순대로 내림차순

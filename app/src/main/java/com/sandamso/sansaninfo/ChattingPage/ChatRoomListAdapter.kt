@@ -1,4 +1,4 @@
-package com.sandamso.sansaninfo.Chatting
+package com.sandamso.sansaninfo.ChattingPage
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -30,14 +30,14 @@ class ChatRoomListAdapter(val roomList:MutableList<RoomData>):RecyclerView.Adapt
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, ChatRoomActivity::class.java)
                 intent.putExtra("roomId", mRoom.id)
-                intent.putExtra("roomTitle",mRoom.title)
+                intent.putExtra("dataFromdetailPageTitle",mRoom.title)
                 itemView.context.startActivity(intent)
             }
         }
 
         fun setRoom(room: RoomData) {
             this.mRoom = room
-            itemView.findViewById<TextView>(android.R.id.text1).setText(room.title)
+            itemView.findViewById<TextView>(android.R.id.text1).text = room.title
         }
     }
 }

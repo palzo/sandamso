@@ -34,6 +34,9 @@ class CommunityPageFragment : Fragment() {
     private val communityPageAdapter by lazy { CommunityPageAdapter() }
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
+    // 마감일 지난 글 옵션 필터 체크 여부
+    private var isDeadlineOption = false
+
     companion object {
         fun newInstance() = CommunityPageFragment()
     }
@@ -55,8 +58,14 @@ class CommunityPageFragment : Fragment() {
             startActivity(intent)
         }
 
+        // 스위치 옵션을 눌렀을 경우
+        binding.communitySwitch.setOnCheckedChangeListener { _, isChecked ->
+            isDeadlineOption = isChecked
+            isOverDeadline()
+        }
+
         binding.communityImageOption.setOnClickListener {
-            Log.d("Options", "버튼 눌렀냐?")
+            Log.d("MENU", "버튼 눌렀냐?")
             val menu = PopupMenu(context, it)
             menu.menuInflater.inflate(R.menu.sort_option, menu.menu)
             menu.setOnMenuItemClickListener {
@@ -214,5 +223,32 @@ class CommunityPageFragment : Fragment() {
                 override fun onCancelled(error: DatabaseError) {
                 }
             })
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun isOverDeadline() {
+        Log.d("Press Switch", "스위치 눌렀냐?")
+        val currentDate = System.currentTimeMillis()
+
+        Log.d("check", "$isDeadlineOption")
+        // 제외하는 옵션 눌렀을 경우
+        if(isDeadlineOption) {
+            val filterList = communityList.filter { post ->
+                val deadlineDate = post.deadlinedate
+                val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+                val date = dateFormat.parse(deadlineDate)
+                val deadline = date?.time ?: 0
+                currentDate < deadline
+            }
+            Log.d("if check", "$isDeadlineOption")
+            communityPageAdapter.addItem(filterList.toMutableList())
+        }
+        else {
+            Log.d("else check", "$isDeadlineOption")
+            communityPageAdapter.addItem(communityList)
+            // 상단으로 올라가기
+            binding.communityPageRecyclerview.scrollToPosition(communityList.size - 1)
+        }
+        communityPageAdapter.notifyDataSetChanged()
     }
 }

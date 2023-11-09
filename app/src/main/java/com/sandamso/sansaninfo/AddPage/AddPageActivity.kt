@@ -48,7 +48,7 @@ class AddPageActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
 
-    val roomList = mutableListOf<RoomData>()
+    private val roomList = mutableListOf<RoomData>()
 
     private val chatRoomListAdapter by lazy {
         ChatRoomListAdapter(roomList)
@@ -188,14 +188,21 @@ class AddPageActivity : AppCompatActivity() {
                     setNickname { nickname ->
                         user = user.copy(nickname = nickname)
                         val postId = addItem(user)
+                        val uid = Firebase.auth.currentUser?.uid ?: ""
+                        val roomdata = RoomData()
+                        roomdata.title = addPageTvTitle.text.toString()
+                        roomdata.postId = postId
+                        roomdata.users[uid] = true
 
                         // 파이어 베이스에 Rooms 데이터 추가하기
                         val roomId = addMsgData(
-                            RoomData(
-                                title = addPageTvTitle.text.toString(),
-                                users = Firebase.auth.currentUser?.uid ?: ""
-                            )
+                            roomdata
                         )
+
+                        // 파이어 베이스 POST - roomId 보여주기
+                        val map = mutableMapOf<String, Any>()
+                        map["roomId"] = roomId
+                        firebaseDatabase.child("POST").child(postId).updateChildren(map)
 
                         val intent = Intent(this@AddPageActivity, DetailPageActivity::class.java)
                         intent.putExtra("dataFromAddPageTitle", addPageTvTitle.text.toString())

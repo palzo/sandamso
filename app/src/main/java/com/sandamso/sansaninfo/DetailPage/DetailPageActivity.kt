@@ -61,8 +61,8 @@ class DetailPageActivity : AppCompatActivity() {
         binding.detailPageLlJoin.setOnClickListener {
             val intent = Intent(this@DetailPageActivity, ChatRoomActivity::class.java)
             intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
-            joinRoom()
             intent.putExtra("roomId",roomid)
+            joinRoom()
             startActivity(intent)
         }
 
@@ -301,9 +301,7 @@ class DetailPageActivity : AppCompatActivity() {
 
     // 참여하기 눌렀을 때, users 필드에 사용자 아이디 추가하기
     private fun joinRoom(){
-//        val roomId = intent.getStringExtra("roomId")
         val currentUser = FirebaseAuth.getInstance().currentUser?.uid
-
         if (roomid != null && currentUser != null) {
             FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)
         }

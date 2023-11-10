@@ -155,13 +155,19 @@ class AddPageActivity : AppCompatActivity() {
                 val check = MountainMapping.getMountainCode(addPageEtMnt.text.trim().toString())
                 val mntList = listOf("한라산")
 
-                if ((check != 0 || mntList.contains(addPageEtMnt.text.trim().toString())) && addPageBtnMnt.text == "확인") {
+                if ((check != 0 || mntList.contains(
+                        addPageEtMnt.text.trim().toString()
+                    )) && addPageBtnMnt.text == "확인"
+                ) {
                     addPageBtnMnt.text = "변경"
                     addPageEtMnt.isEnabled = false
                     addPageEtMnt.background = background
                     addPageErrMsg.visibility = View.INVISIBLE
 
-                } else if ((check != 0 || mntList.contains(addPageEtMnt.text.trim().toString())) && addPageBtnMnt.text == "변경") {
+                } else if ((check != 0 || mntList.contains(
+                        addPageEtMnt.text.trim().toString()
+                    )) && addPageBtnMnt.text == "변경"
+                ) {
                     addPageBtnMnt.text = "확인"
                     addPageEtMnt.isEnabled = true
                     addPageEtMnt.background = background
@@ -230,7 +236,8 @@ class AddPageActivity : AppCompatActivity() {
                         val roomdata = RoomData()
                         roomdata.title = addPageTvTitle.text.toString()
                         roomdata.postId = postId
-                        roomdata.users[uid] = true
+                        roomdata.users = mapOf(uid to uid)
+//                        roomdata.users[uid] = true
 
                         // 파이어 베이스에 Rooms 데이터 추가하기
                         val roomId = addMsgData(

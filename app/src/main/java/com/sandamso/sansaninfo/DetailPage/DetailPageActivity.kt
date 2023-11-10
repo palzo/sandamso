@@ -22,6 +22,7 @@ import com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity
 import com.sandamso.sansaninfo.Data.PostModel
 import com.sandamso.sansaninfo.R
 import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
+import com.sandamso.sansaninfo.Data.FBRoom
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,6 +39,8 @@ class DetailPageActivity : AppCompatActivity() {
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     private lateinit var postId: String
+
+    private var roomid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +61,8 @@ class DetailPageActivity : AppCompatActivity() {
         binding.detailPageLlJoin.setOnClickListener {
             val intent = Intent(this@DetailPageActivity, ChatRoomActivity::class.java)
             intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
+            joinRoom()
+            intent.putExtra("roomId",roomid)
             startActivity(intent)
         }
 
@@ -146,6 +151,7 @@ class DetailPageActivity : AppCompatActivity() {
                 binding.detailPageTvName.text = "작성자: ${nicknameData}"
                 binding.detailPageTvGather.text = "${deadlineData}까지 모집"
                 binding.detailPageTvMnt.text = "<$mntData>"
+                roomid = userData.roomId
 
 
                 // 이미지 URI를 사용하여 이미지 표시
@@ -290,6 +296,16 @@ class DetailPageActivity : AppCompatActivity() {
                 Log.e("Firebase Storage", "객체 삭제 오류: ${exception.message}")
                 Toast.makeText(this, "객체 삭제 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    // 참여하기 눌렀을 때, users 필드에 사용자 아이디 추가하기
+    private fun joinRoom(){
+//        val roomId = intent.getStringExtra("roomId")
+        val currentUser = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (roomid != null && currentUser != null) {
+            FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)
         }
     }
 }

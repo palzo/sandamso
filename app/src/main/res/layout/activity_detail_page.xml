@@ -274,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="25dp"
                     android:layout_marginTop="13dp"
-                    android:layout_marginBottom="200dp"
+                    android:layout_marginBottom="300dp"
                     android:text="저랑 같이 설악산 한 번 정복하실 분 구합니다! \n날짜는 다음주 수요일 입니다 많은 분들 참여 바랍니다!  \n참여하실 분은 좋댓 구알~!"
                     android:textColor="#4A4A4A"
                     app:layout_constraintBottom_toBottomOf="parent"

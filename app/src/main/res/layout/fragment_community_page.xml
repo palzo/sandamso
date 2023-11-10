@@ -10,25 +10,27 @@
         android:id="@+id/view6"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="15dp"
         android:background="@color/grey_400"
-        app:layout_constraintBottom_toTopOf="@+id/community_page_recyclerview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/community_tv_title" />
 
     <Switch
         android:id="@+id/community_switch"
+        style="@style/RegularText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="8dp"
         android:text="마감일 지난 글 제외"
-        app:layout_constraintEnd_toEndOf="@+id/view6"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/grey_700"
+        app:layout_constraintStart_toStartOf="@+id/community_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/view6"
         tools:ignore="MissingConstraints,UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/community_tv_title"
-        style="@style/Title"
+        style="@style/PageTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -39,9 +41,9 @@
 
     <com.skydoves.powerspinner.PowerSpinnerView
         android:id="@+id/community_spinner"
+        style="@style/RegularText"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/community_page_sort"
         android:gravity="center"
@@ -49,8 +51,9 @@
         android:padding="5dp"
         android:textColorHint="@color/new_black"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/community_switch"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/community_switch"
+        app:layout_constraintTop_toTopOf="@+id/community_switch"
         app:spinner_arrow_gravity="end"
         app:spinner_arrow_tint="@color/new_black"
         app:spinner_divider_color="@color/light_grey"
@@ -67,7 +70,7 @@
         android:id="@+id/community_page_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

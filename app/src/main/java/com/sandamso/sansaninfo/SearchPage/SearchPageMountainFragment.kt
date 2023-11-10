@@ -78,7 +78,11 @@ class SearchPageMountainFragment : Fragment() {
                 requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.searchPageEtSearchText.windowToken, 0)
 
-            getMntInfo(0, binding.searchPageEtSearchText.text.trim().toString())
+            if(binding.searchPageEtSearchText.text.isEmpty()){
+                searchFail()
+            }else{
+                getMntInfo(0, binding.searchPageEtSearchText.text.trim().toString())
+            }
 
         }
 
@@ -86,10 +90,6 @@ class SearchPageMountainFragment : Fragment() {
         binding.searchPageSpinnerSido.setOnSpinnerItemSelectedListener<String> { _, _, _, sido ->
 
             getMntInfo(1, sido)
-
-            binding.searchPageIvBackpackers.visibility = View.GONE
-            binding.searchPageTvBackpackers.visibility = View.GONE
-
             // spinner 2 초기화 (첫 번째 spinner에 알맞은 구, 군을 가져옴)
             initSpinner(sido)
 
@@ -98,17 +98,10 @@ class SearchPageMountainFragment : Fragment() {
         // 산으로 검색 버튼 클릭 시 UI 초기화
         binding.searchPageBtMountain.setOnClickListener {
             searchSwitch(1)
-
-            binding.searchPageIvBackpackers.visibility = View.VISIBLE
-            binding.searchPageTvBackpackers.visibility = View.VISIBLE
-
         }
         // 지역으로 검색 버튼 클릭 시 UI 초기화
         binding.searchPageBtRegion.setOnClickListener {
             searchSwitch(2)
-
-            binding.searchPageIvBackpackers.visibility = View.VISIBLE
-            binding.searchPageTvBackpackers.visibility = View.VISIBLE
         }
 
         // 지역명으로 검색 시 spinner 2
@@ -133,10 +126,6 @@ class SearchPageMountainFragment : Fragment() {
 
     // 산 이름, 산 지역을 검색할 경우 정보를 가져옴
     private fun getMntInfo(position: Int, inputValue: String) {
-
-        binding.searchPageIvBackpackers.visibility = View.GONE
-        binding.searchPageTvBackpackers.visibility = View.GONE
-
 
         var mntName = ""
         var mntRegion = ""
@@ -181,6 +170,8 @@ class SearchPageMountainFragment : Fragment() {
                 findImgURL()
                 if (isAdded) {
                     requireActivity().runOnUiThread {
+                        binding.searchPageIvBackpackers.visibility = View.GONE
+                        binding.searchPageTvBackpackers.visibility = View.GONE
                         searchPageAdapter.addItems(mntList)
                     }
                 }
@@ -188,12 +179,17 @@ class SearchPageMountainFragment : Fragment() {
 
             override fun onFailure(call: Call<XmlResponse?>, t: Throwable) {
                 Log.e("test", "getMntInfo onFailure: ${t.message}")
-
-                binding.searchPageIvBackpackers.visibility = View.VISIBLE
-                binding.searchPageTvBackpackers.visibility = View.VISIBLE
-                Toast.makeText(activity, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                searchFail()
             }
         })
+    }
+
+    private fun searchFail(){
+        binding.searchPageIvBackpackers.visibility = View.VISIBLE
+        binding.searchPageTvBackpackers.visibility = View.VISIBLE
+        mntList.clear()
+        searchPageAdapter.itemsClear()
+        Toast.makeText(activity, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
     }
 
     // 산 코드를 이용하여 이미지 URL을 받아오는 부분
@@ -264,6 +260,8 @@ class SearchPageMountainFragment : Fragment() {
             searchPageEtSearchText.text.clear()
             binding.searchPageSpinnerSido.dismiss()
             binding.searchPageSpinnerGoo.dismiss()
+            binding.searchPageIvBackpackers.visibility = View.VISIBLE
+            binding.searchPageTvBackpackers.visibility = View.VISIBLE
 
         } else if (position == 2 && searchPageSpinnerSido.visibility == View.INVISIBLE) {
 
@@ -275,6 +273,8 @@ class SearchPageMountainFragment : Fragment() {
             searchPageSpinnerGoo.visibility = View.VISIBLE
             searchPageBtMountain.setBackgroundResource(btn)
             searchPageBtRegion.setBackgroundResource(clickBtn)
+            binding.searchPageIvBackpackers.visibility = View.VISIBLE
+            binding.searchPageTvBackpackers.visibility = View.VISIBLE
 
         }
     }

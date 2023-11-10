@@ -19,10 +19,10 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.sandamso.sansaninfo.AddPage.AddPageActivity
 import com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity
+import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.PostModel
 import com.sandamso.sansaninfo.R
 import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
-import com.sandamso.sansaninfo.Data.FBRoom
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -61,7 +61,7 @@ class DetailPageActivity : AppCompatActivity() {
         binding.detailPageLlJoin.setOnClickListener {
             val intent = Intent(this@DetailPageActivity, ChatRoomActivity::class.java)
             intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
-            intent.putExtra("roomId",roomid)
+            intent.putExtra("roomId", roomid)
             joinRoom()
             startActivity(intent)
         }
@@ -150,7 +150,7 @@ class DetailPageActivity : AppCompatActivity() {
                 binding.detailPageTvDate.text = "작성일: ${dateData}"
                 binding.detailPageTvName.text = "작성자: ${nicknameData}"
                 binding.detailPageTvGather.text = "${deadlineData}까지 모집"
-                binding.detailPageTvMnt.text = "<$mntData>"
+                binding.detailPageTvMnt.text = "$mntData"
                 roomid = userData.roomId
 
 
@@ -300,7 +300,7 @@ class DetailPageActivity : AppCompatActivity() {
     }
 
     // 참여하기 눌렀을 때, users 필드에 사용자 아이디 추가하기
-    private fun joinRoom(){
+    private fun joinRoom() {
         val currentUser = FirebaseAuth.getInstance().currentUser?.uid
         if (roomid != null && currentUser != null) {
             FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)

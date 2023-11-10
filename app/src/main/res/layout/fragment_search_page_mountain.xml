@@ -108,7 +108,7 @@
             app:spinner_popup_animation="normal"
             app:spinner_popup_background="@color/white"
             app:spinner_popup_max_height="240dp"
-            app:spinner_selected_item_background="@color/light_mint"
+            app:spinner_selected_item_background="@color/desert"
             tools:ignore="HardcodedText, UnusedAttribute" />
 
         <com.skydoves.powerspinner.PowerSpinnerView
@@ -140,6 +140,7 @@
             app:spinner_popup_animation="normal"
             app:spinner_popup_background="@color/white"
             app:spinner_popup_max_height="240dp"
+            app:spinner_selected_item_background="@color/desert"
             tools:ignore="HardcodedText, UnusedAttribute" />
     </LinearLayout>
 

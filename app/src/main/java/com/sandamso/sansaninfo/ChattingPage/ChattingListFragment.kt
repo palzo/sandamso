@@ -51,11 +51,6 @@ class ChattingListFragment : Fragment() {
         return view
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        loadRooms()
-//    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

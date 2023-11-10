@@ -1,30 +1,24 @@
 package com.sandamso.sansaninfo.AddPage
 
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import coil.load
-import com.sandamso.sansaninfo.Data.FBRef
-import com.sandamso.sansaninfo.Data.PostModel
-import com.sandamso.sansaninfo.DetailPage.DetailPageActivity
-import com.sandamso.sansaninfo.Main.MainActivity
-import com.sandamso.sansaninfo.R
-import com.sandamso.sansaninfo.databinding.ActivityAddPageBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -34,9 +28,15 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.sandamso.sansaninfo.ChattingPage.ChatRoomListAdapter
+import com.sandamso.sansaninfo.Data.FBRef
 import com.sandamso.sansaninfo.Data.FBRoom
+import com.sandamso.sansaninfo.Data.PostModel
 import com.sandamso.sansaninfo.Data.RoomData
+import com.sandamso.sansaninfo.DetailPage.DetailPageActivity
+import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.R
 import com.sandamso.sansaninfo.SearchPage.MountainMapping
+import com.sandamso.sansaninfo.databinding.ActivityAddPageBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -87,29 +87,7 @@ class AddPageActivity : AppCompatActivity() {
 
         with(binding) {
             postButton.setOnClickListener {
-
-                if (addPageTvTitle.text.toString().isEmpty()) {
-                    toastMessage("제목을 입력해주세요.")
-
-                } else if (addPageTvTitle.text.toString().length >= 30) {
-                    toastMessage("제목은 30글자 이하로 입력해주세요.")
-
-                } else if (!addImage) {
-                    toastMessage("이미지를 첨부해 주세요.")
-
-                } else if (addPageTvDday.text.toString().isEmpty()) {
-                    toastMessage("모임 마감일을 설정해주세요.")
-
-                } else if (addPageEtText.text.toString().isEmpty()) {
-                    toastMessage("본문 내용을 입력해주세요.")
-
-                } else if (addPageEtText.text.toString().length >= 5000) {
-                    toastMessage("본문은 5000글자까지만 입력이 가능합니다.")
-
-                } else if (addPageEtMnt.text.toString().isEmpty()) {
-                    toastMessage("산이름을 입력해주세요.")
-
-                } else {
+                if (inputValidation()) {
                     if (addPageBtnMnt.text == "변경") {
                         showProgress(true)
                         goneData()
@@ -146,6 +124,58 @@ class AddPageActivity : AppCompatActivity() {
         }
     }
 
+    private fun inputValidation(): Boolean {
+
+        val title = binding.addPageTvTitle.text.toString()
+        val text = binding.addPageEtText.text.toString()
+        val mnt = binding.addPageEtMnt.text.toString()
+        val dday = binding.addPageTvDday.text.toString()
+
+        if (title.isEmpty()) {
+            toastMessage("제목을 입력해주세요.")
+            return false
+        } else if (title.length >= 31) {
+            toastMessage("제목은 30글자 이하로 입력해주세요.")
+            return false
+        } else if (!addImage) {
+            toastMessage("이미지를 첨부해 주세요.")
+            return false
+        } else if (dday.isEmpty()) {
+            toastMessage("모임 마감일을 설정해주세요.")
+            return false
+        } else if (text.isEmpty()) {
+            toastMessage("본문 내용을 입력해주세요.")
+            return false
+        } else if (text.length >= 5000) {
+            toastMessage("본문은 5000글자까지만 입력이 가능합니다.")
+            return false
+        } else if (mnt.isEmpty()) {
+            toastMessage("산이름을 입력해주세요.")
+            return false
+        }
+        return true
+    }
+
+    private fun addBtn() {
+
+        val mnt = binding.addPageBtnMnt.text
+
+        if (mnt == "변경") {
+            showProgress(true)
+            goneData()
+            data()
+            Toast.makeText(this@AddPageActivity, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
+            thread(start = true) {
+                Thread.sleep(2500)
+                runOnUiThread {
+                    showProgress(false)
+                }
+            }
+        } else {
+            toastMessage("확인 버튼을 눌러주세요.")
+        }
+    }
+
     private fun mntCheck() {
         with(binding) {
             addPageBtnMnt.setOnClickListener {
@@ -155,13 +185,19 @@ class AddPageActivity : AppCompatActivity() {
                 val check = MountainMapping.getMountainCode(addPageEtMnt.text.trim().toString())
                 val mntList = listOf("한라산")
 
-                if ((check != 0 || mntList.contains(addPageEtMnt.text.trim().toString())) && addPageBtnMnt.text == "확인") {
+                if ((check != 0 || mntList.contains(
+                        addPageEtMnt.text.trim().toString()
+                    )) && addPageBtnMnt.text == "확인"
+                ) {
                     addPageBtnMnt.text = "변경"
                     addPageEtMnt.isEnabled = false
                     addPageEtMnt.background = background
                     addPageErrMsg.visibility = View.INVISIBLE
 
-                } else if ((check != 0 || mntList.contains(addPageEtMnt.text.trim().toString())) && addPageBtnMnt.text == "변경") {
+                } else if ((check != 0 || mntList.contains(
+                        addPageEtMnt.text.trim().toString()
+                    )) && addPageBtnMnt.text == "변경"
+                ) {
                     addPageBtnMnt.text = "확인"
                     addPageEtMnt.isEnabled = true
                     addPageEtMnt.background = background
@@ -543,7 +579,15 @@ class AddPageActivity : AppCompatActivity() {
         }
 
         binding.completeButton.setOnClickListener {
-            saveEditeData()
+            //여기에 함수 넣기
+            val check = inputValidation()
+            if (check) {
+                if (binding.addPageBtnMnt.text == "변경") {
+                    saveEditeData()
+                } else {
+                    toastMessage("확인 버튼을 눌러주세요.")
+                }
+            }
         }
 
         binding.cancelButton.setOnClickListener {

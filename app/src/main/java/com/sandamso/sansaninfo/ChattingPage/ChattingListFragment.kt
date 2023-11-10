@@ -5,16 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.ktx.auth
 import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.RoomData
 import com.sandamso.sansaninfo.databinding.FragmentChattingListBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 
 class ChattingListFragment : Fragment() {
 
@@ -27,10 +27,12 @@ class ChattingListFragment : Fragment() {
     private var _binding: FragmentChattingListBinding? = null
     private val binding get() = _binding!!
 
+    private val userId: String by lazy {
+        Firebase.auth.currentUser?.uid ?: ""
+    }
+
     companion object {
         fun newInstance() = ChattingListFragment()
-        var userId: String = ""
-        var userName: String = ""
     }
 
     override fun onCreateView(
@@ -44,14 +46,9 @@ class ChattingListFragment : Fragment() {
         binding.recyclerViewChattingRoom.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewChattingRoom.adapter = chatRoomListAdapter
 
-        binding.chattingButton.setOnClickListener { openCreateRoom() }
+        loadRooms()
 
         return view
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loadRooms()
     }
 
     override fun onDestroy() {
@@ -64,9 +61,13 @@ class ChattingListFragment : Fragment() {
         FBRoom.roomRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 roomList.clear()
+
                 for (item in snapshot.children) {
                     val room = item.getValue(RoomData::class.java)
-                    if (room != null) {
+                    Log.d("RoomData", "RoomData = $room")
+
+                    if (room != null && userId in room.users.values) {
+                        Log.d("joinUser", "joinUser = $userId")
                         roomList.add(room)
                     }
                 }
@@ -74,26 +75,8 @@ class ChattingListFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("load Rooms", "error")
+                Log.e("load Rooms", "Error loading rooms")
             }
         })
-    }
-
-    private fun openCreateRoom() {
-        val editTitle = EditText(requireContext())
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("방 이름을 적어주세요.")
-            .setView(editTitle)
-            .setPositiveButton("만들기") { dlg, id ->
-                createRoom(editTitle.text.toString())
-            }
-        dialog.show()
-    }
-
-    private fun createRoom(title: String) {
-        val room = RoomData(title, userName)
-        val roomId = FBRoom.roomRef.push().key!!
-        room.id = roomId
-        FBRoom.roomRef.child(roomId).setValue(room)
     }
 }

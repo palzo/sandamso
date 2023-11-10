@@ -269,7 +269,6 @@ class AddPageActivity : AppCompatActivity() {
                         roomdata.title = addPageTvTitle.text.toString()
                         roomdata.postId = postId
                         roomdata.users = mapOf(uid to uid)
-//                        roomdata.users[uid] = true
 
                         // 파이어 베이스에 Rooms 데이터 추가하기
                         val roomId = addMsgData(

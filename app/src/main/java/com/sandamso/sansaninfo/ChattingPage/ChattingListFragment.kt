@@ -65,7 +65,8 @@ class ChattingListFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 roomList.clear()
                 for (item in snapshot.children) {
-                    item.getValue(RoomData::class.java)?.let { room ->
+                    val room = item.getValue(RoomData::class.java)
+                    if (room != null) {
                         roomList.add(room)
                     }
                 }

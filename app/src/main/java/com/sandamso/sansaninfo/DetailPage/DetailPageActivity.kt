@@ -2,20 +2,14 @@ package com.sandamso.sansaninfo.DetailPage
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import coil.load
-import com.sandamso.sansaninfo.AddPage.AddPageActivity
-import com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity
-import com.sandamso.sansaninfo.Data.PostModel
-import com.sandamso.sansaninfo.R
-import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,6 +17,11 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
+import com.sandamso.sansaninfo.AddPage.AddPageActivity
+import com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity
+import com.sandamso.sansaninfo.Data.PostModel
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -57,14 +56,22 @@ class DetailPageActivity : AppCompatActivity() {
         }
 
         binding.detailPageLlJoin.setOnClickListener {
-            val intent = Intent(this@DetailPageActivity,ChatRoomActivity::class.java)
+            val intent = Intent(this@DetailPageActivity, ChatRoomActivity::class.java)
             intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
             startActivity(intent)
+        }
+
+        val swipeRefreshLayout = binding.detailPageRefresh
+        swipeRefreshLayout.setOnRefreshListener {
+            finish()
+            startActivity(intent)
+            overridePendingTransition(0, 0)
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
     private fun userCheck() {
-        with(binding){
+        with(binding) {
             if (auth.currentUser?.uid == intent.getStringExtra("dataFromAddPageWriter")) {
                 detailPageLlRevise.visibility = View.VISIBLE
                 detailPageLlDelete.visibility = View.VISIBLE
@@ -76,6 +83,7 @@ class DetailPageActivity : AppCompatActivity() {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         dataView()
@@ -162,9 +170,9 @@ class DetailPageActivity : AppCompatActivity() {
         val currentDate = Date()
 
         if (dateData != null) {
-            if(dateData.matches(Regex("\\d{4}년 \\d{2}월 \\d{2}일"))){
+            if (dateData.matches(Regex("\\d{4}년 \\d{2}월 \\d{2}일"))) {
 
-            } else{
+            } else {
                 val targetDate = dateFormat.parse(dateData)
                 if (targetDate != null) {
                     val timeDiff = targetDate.time - currentDate.time

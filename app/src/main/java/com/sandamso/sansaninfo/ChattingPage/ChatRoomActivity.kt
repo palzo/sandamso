@@ -45,7 +45,6 @@ class ChatRoomActivity:AppCompatActivity() {
 
         msgRef = FBRoom.roomRef.child(roomId).child("messages")
         adapter = MsgListAdapter(msgList, currentUser)
-        Log.d("currentUser", "$currentUser")
 
         with(binding){
             recyclerMessages.adapter = adapter

@@ -24,27 +24,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/detail_page_tv_top_title"
-        style="@style/PageTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="메아리"
-        app:layout_constraintBottom_toBottomOf="@id/detail_page_iv_back"
-        app:layout_constraintStart_toEndOf="@id/detail_page_iv_back"
-        app:layout_constraintTop_toTopOf="@id/detail_page_iv_back" />
-
-    <TextView
-        android:id="@+id/detail_page_tv_mnt"
-        style="@style/PageTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="설악산"
-        app:layout_constraintBottom_toBottomOf="@+id/detail_page_tv_top_title"
-        app:layout_constraintStart_toEndOf="@+id/detail_page_tv_top_title"
-        app:layout_constraintTop_toTopOf="@+id/detail_page_tv_top_title" />
-
-    <TextView
         android:id="@+id/detail_page_tv_title"
         style="@style/PageTitle"
         android:layout_width="0dp"
@@ -63,7 +42,7 @@
         style="@style/RegularText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="25dp"
         android:text="작성자: 화산파이리"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/detail_page_tv_title"
@@ -316,5 +295,16 @@
         android:src="@drawable/iv_ad_banner"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/detail_page_tv_mnt"
+        style="@style/PageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="설악산"
+        app:layout_constraintBottom_toBottomOf="@+id/detail_page_iv_back"
+        app:layout_constraintStart_toEndOf="@+id/detail_page_iv_back"
+        app:layout_constraintTop_toTopOf="@+id/detail_page_iv_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

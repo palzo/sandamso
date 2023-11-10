@@ -10,10 +10,11 @@
         android:id="@+id/view6"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="15dp"
         android:background="@color/grey_400"
-        app:layout_constraintBottom_toTopOf="@+id/community_page_recyclerview"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/community_tv_title" />
 
     <Switch
         android:id="@+id/community_switch"
@@ -24,7 +25,7 @@
         android:text="마감일 지난 글 제외"
         android:textColor="@color/grey_700"
         app:layout_constraintStart_toStartOf="@+id/community_tv_title"
-        app:layout_constraintTop_toBottomOf="@+id/community_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/view6"
         tools:ignore="MissingConstraints,UseSwitchCompatOrMaterialXml" />
 
     <TextView
@@ -69,7 +70,7 @@
         android:id="@+id/community_page_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

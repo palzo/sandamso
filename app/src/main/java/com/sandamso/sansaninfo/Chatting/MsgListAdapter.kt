@@ -15,7 +15,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
-import com.sandamso.sansaninfo.Chatting.ChattingListFragment.Companion.userName
 import com.sandamso.sansaninfo.R
 import com.sandamso.sansaninfo.databinding.ListTalkItemOthersBinding
 

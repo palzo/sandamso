@@ -88,8 +88,6 @@ class SignInActivity : AppCompatActivity() {
                                 toastMessage("로그인 성공 !")
                                 saveData()
                                 startActivity(signInIntent)
-
-
                             }
                             // 이메일 인증 안했을 경우
                             else {
@@ -142,10 +140,11 @@ class SignInActivity : AppCompatActivity() {
                 UserApiClient.instance.me { user, error ->
                     Toast.makeText(
                         this,
-                        "${user?.kakaoAccount?.profile?.nickname.toString()} 님 로그인 성공",
+                        "${user?.kakaoAccount?.email.toString()} 님 로그인 성공",
                         Toast.LENGTH_SHORT
                     ).show()
-
+//                    user?.kakaoAccount?.profile?.nickname.toString()
+//                    user?.kakaoAccount?.email.toString()
                 }
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
@@ -153,17 +152,14 @@ class SignInActivity : AppCompatActivity() {
             }
         }
 
-        /**
-         *   출시 전에 릴리즈 해시키 값 가져와야 함
-         */
         // 로그인 정보 확인 (테스트 용)
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
             if (error != null) {
 //                Toast.makeText(this, "${error.message}", Toast.LENGTH_SHORT).show()
-                Log.d("kakao", "${error.message}")
+                Log.d("kakao", "error : ${error.message}")
             } else if (tokenInfo != null) {
-                Log.d("kakao", "$tokenInfo")
-//                Toast.makeText(this, "토큰 정보 보기 성공", Toast.LENGTH_SHORT).show()
+                Log.d("kakao", "${tokenInfo}")
+                Toast.makeText(this, "tokenInfo : $tokenInfo", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -218,7 +214,6 @@ class SignInActivity : AppCompatActivity() {
             signinEtEmail.setText(saveEmail.getString("email", ""))
         }
     }
-
     private fun toastMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

@@ -12,13 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.sandamso.sansaninfo.API.ModelData.Weather
-import com.sandamso.sansaninfo.API.Retrofit.WeatherClient
-import com.sandamso.sansaninfo.BuildConfig
-import com.sandamso.sansaninfo.Main.MainActivity
-import com.sandamso.sansaninfo.R
-import com.sandamso.sansaninfo.SearchPage.MntModel
-import com.sandamso.sansaninfo.databinding.ActivityInfoPageBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
@@ -27,6 +20,13 @@ import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
+import com.sandamso.sansaninfo.API.ModelData.Weather
+import com.sandamso.sansaninfo.API.Retrofit.WeatherClient
+import com.sandamso.sansaninfo.BuildConfig
+import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.SearchPage.MntModel
+import com.sandamso.sansaninfo.databinding.ActivityInfoPageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,10 +44,9 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     private val binding by lazy { ActivityInfoPageBinding.inflate(layoutInflater) }
 
-    private var latitude = 0.0
-    private var longitude = 0.0
     private var mountainAddress: String? = null
     private var mountainHeight: String? = null
+    private var mountainName: String? = null
     private lateinit var mapView: MapView // 네이버 지도
     private lateinit var naverMap: NaverMap
     private lateinit var address: LatLng
@@ -127,19 +126,27 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(map: NaverMap) {
         naverMap = map
-        naverMap.maxZoom = 18.0
-        // 초기 위치 설정
-        val initialPosition = address
+        naverMap.maxZoom = 12.0
+
+        // 산의 위치
+        val initialPosition = mountainName?.let { convertAddressToLatLng(it) }
+        // 초기 위치로 이동
         val cameraUpdate =
-            CameraUpdate.scrollTo(initialPosition).animate(CameraAnimation.Easing)
-        naverMap.moveCamera(cameraUpdate)
+            initialPosition?.let { CameraUpdate.scrollTo(it).animate(CameraAnimation.Easing) }
+        if (cameraUpdate != null) {
+            naverMap.moveCamera(cameraUpdate)
+        }
+        // 마커 생성 및 추가
         val marker = Marker()
-        marker.position = initialPosition
+        if (initialPosition != null) {
+            marker.position = initialPosition
+        }
         marker.width = 50
         marker.height = 70
         marker.iconTintColor = Color.GREEN
         marker.map = naverMap
     }
+
 
     private fun initView() = with(binding) {
         // 프로그래스 바
@@ -157,7 +164,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
             receivedList?.let {
                 mountainAddress = it.mntAddress
                 mountainHeight = it.mntHgt
-                address = convertAddressToLatLng(it.mntAddress)
+                mountainName = it.mntAddress + " " + it.mntName
+                address = convertAddressToLatLng(it.mntAddress + " " + it.mntName)
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
                 binding.infoPageTvMountainHeight.text = "해발고도 : " + it.mntHgt + "m"
@@ -274,22 +282,21 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
         val geocoder = Geocoder(this)
         try {
             val addresses = geocoder.getFromLocationName(address, 1)
-            if (addresses != null) {
-                if (addresses.isNotEmpty()) {
-                    val location = addresses[0]
-                    latitude = location.latitude
-                    longitude = location.longitude
-
-                    // 추가 작업: 위치를 활용한 특정 기능 수행
-                } else {
-                    Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
-                }
+            if (addresses != null && addresses.isNotEmpty()) {
+                val location = addresses[0]
+                val latitude = location.latitude
+                val longitude = location.longitude
+//                Toast.makeText(this, "$address", Toast.LENGTH_SHORT).show()
+                return LatLng(latitude, longitude)
+            } else {
+                Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             Log.e("주소 변환 오류", e.message.toString())
         }
-        return LatLng(latitude, longitude)
+        return LatLng(37.239700, 131.868762) // 변환에 실패한 경우 기본 위치를 반환합니다.
     }
+
 
     private fun removeSpecialCharacters(inputText: String): String {
         var result = inputText

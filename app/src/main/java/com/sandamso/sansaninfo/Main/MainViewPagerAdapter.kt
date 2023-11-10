@@ -3,7 +3,7 @@ package com.sandamso.sansaninfo.Main
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.sandamso.sansaninfo.Chatting.ChattingListFragment
+import com.sandamso.sansaninfo.ChattingPage.ChattingListFragment
 import com.sandamso.sansaninfo.CommunityPage.CommunityPageFragment
 import com.sandamso.sansaninfo.MyPage.MyPageFragment
 import com.sandamso.sansaninfo.SearchPage.SearchPageMountainFragment

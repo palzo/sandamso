@@ -9,6 +9,7 @@ import com.sandamso.sansaninfo.Main.MainActivity
 import com.sandamso.sansaninfo.SignPage.SignInActivity
 import com.sandamso.sansaninfo.databinding.ActivitySplashScreenBinding
 import com.google.firebase.auth.FirebaseAuth
+import java.lang.Exception
 
 class SplashScreen : AppCompatActivity() {
 
@@ -27,18 +28,32 @@ class SplashScreen : AppCompatActivity() {
             // 자동 로그인 기능
             val pw = autoLogin.getString("pw", "")
             if (email != null && pw != null) {
-                auth.signInWithEmailAndPassword(email, pw)
-                    .addOnCompleteListener {
-                        val user = auth.currentUser
-                        if (user != null && user.isEmailVerified) {
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                val intent = Intent(this, MainActivity::class.java)
-                                startActivity(intent)
-                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                                finish()
-                            }, 0)
+                try{
+                    auth.signInWithEmailAndPassword(email, pw)
+                        .addOnCompleteListener {
+                            val user = auth.currentUser
+                            if (user != null && user.isEmailVerified) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+                                    finish()
+                                }, 0)
+                            }
                         }
-                    }
+                }catch (e: Exception){
+                    val autoLogin = getSharedPreferences("prefLogin", 0)
+                    val autoLoginEdit = autoLogin.edit()
+                    autoLoginEdit.putString("login", "0")
+                    autoLoginEdit.putString("pw", "0")
+                    autoLoginEdit.apply()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(this, SignInActivity::class.java)
+                        startActivity(intent)
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+                        finish()
+                    }, 0)
+                }
             }
         } else {
             Handler(Looper.getMainLooper()).postDelayed({

@@ -1,10 +1,11 @@
 package com.sandamso.sansaninfo.Chatting
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.sandamso.sansaninfo.Data.MessageData
 import com.sandamso.sansaninfo.databinding.ListTalkItemMineBinding
@@ -93,24 +94,24 @@ class MsgListAdapter(val msgList: MutableList<MessageData>, val currentUser : St
 
     // Firebase에서 닉네임 가져오기
     private fun setNickname(onNickNameFetched: (String) -> Unit) {
+        val userReference = FirebaseDatabase.getInstance().getReference("users")
         val uid = Firebase.auth.currentUser?.uid ?: ""
-        FirebaseDatabase.getInstance().reference.child("users").child(uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+        if(uid.isNotEmpty()){
+            userReference.child(uid).addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        val userData =
-                            snapshot.getValue(com.sandamso.sansaninfo.Data.UserData::class.java)
-                        if (userData != null) {
-                            val nickname = userData.nickname
-                            onNickNameFetched(nickname)
-                            Log.d("Nickname", "작성자: ${nickname}")
-                        }
+                    val nickname = snapshot.child("nickname").getValue(String::class.java)
+                    if(!nickname.isNullOrEmpty()){
+                        Log.d("test1", "$nickname")
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
-                    Log.d("Nickname", "error = $error")
+                    TODO("Not yet implemented")
                 }
+
             })
+        }else{
+
+        }
     }
 
     // 사용자 1의 viewHolder 클래스 정의

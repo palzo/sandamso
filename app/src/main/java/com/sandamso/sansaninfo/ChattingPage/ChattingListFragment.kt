@@ -1,4 +1,4 @@
-package com.sandamso.sansaninfo.Chatting
+package com.sandamso.sansaninfo.ChattingPage
 
 import android.os.Bundle
 import android.util.Log
@@ -51,7 +51,6 @@ class ChattingListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        //데이터베이스에서 데이터 읽어오기
         loadRooms()
     }
 

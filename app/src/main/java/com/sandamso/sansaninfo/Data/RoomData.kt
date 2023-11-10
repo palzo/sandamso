@@ -1,15 +1,9 @@
 package com.sandamso.sansaninfo.Data
 
 
-class RoomData {
-    var id: String = ""
-    var title: String = ""
-    var users: String = ""
-
-    constructor()
-
-    constructor(title: String, creatorName: String) {
-        this.title = title
-        users = creatorName
-    }
-}
+data class RoomData (
+    var id: String = "",
+    var title: String = "",
+    var users: MutableMap<String, Boolean> = HashMap(),
+    var postId: String = ""
+)

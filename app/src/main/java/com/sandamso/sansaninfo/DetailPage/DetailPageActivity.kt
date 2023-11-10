@@ -2,19 +2,14 @@ package com.sandamso.sansaninfo.DetailPage
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import coil.load
-import com.sandamso.sansaninfo.AddPage.AddPageActivity
-import com.sandamso.sansaninfo.Data.PostModel
-import com.sandamso.sansaninfo.R
-import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,12 +17,20 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
+import com.sandamso.sansaninfo.AddPage.AddPageActivity
+import com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity
+import com.sandamso.sansaninfo.Data.PostModel
+import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
+import com.sandamso.sansaninfo.Data.FBRoom
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.concurrent.thread
 
 class DetailPageActivity : AppCompatActivity() {
+
+    private val list = ArrayList<PostModel?>()
 
     private lateinit var auth: FirebaseAuth
 
@@ -36,6 +39,8 @@ class DetailPageActivity : AppCompatActivity() {
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
 
     private lateinit var postId: String
+
+    private var roomid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +57,26 @@ class DetailPageActivity : AppCompatActivity() {
         binding.detailPageIvBack.setOnClickListener {
             finish()
         }
+
+        binding.detailPageLlJoin.setOnClickListener {
+            val intent = Intent(this@DetailPageActivity, ChatRoomActivity::class.java)
+            intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
+            joinRoom()
+            intent.putExtra("roomId",roomid)
+            startActivity(intent)
+        }
+
+        val swipeRefreshLayout = binding.detailPageRefresh
+        swipeRefreshLayout.setOnRefreshListener {
+            finish()
+            startActivity(intent)
+            overridePendingTransition(0, 0)
+            swipeRefreshLayout.isRefreshing = false
+        }
     }
+
     private fun userCheck() {
-        with(binding){
+        with(binding) {
             if (auth.currentUser?.uid == intent.getStringExtra("dataFromAddPageWriter")) {
                 detailPageLlRevise.visibility = View.VISIBLE
                 detailPageLlDelete.visibility = View.VISIBLE
@@ -66,6 +88,7 @@ class DetailPageActivity : AppCompatActivity() {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         dataView()
@@ -102,7 +125,6 @@ class DetailPageActivity : AppCompatActivity() {
 
     // Add Page에서 입력한 데이터 가져오기
     private fun dataView() {
-//        auth = FirebaseAuth.getInstance()
 
         postId = intent.getStringExtra("dataFromAddPageId") ?: ""
 
@@ -111,6 +133,9 @@ class DetailPageActivity : AppCompatActivity() {
                 val userData =
                     it.result.getValue(PostModel::class.java)
 
+                list.clear()
+                list.add(userData)
+
                 if (userData == null) return@addOnCompleteListener
                 val titleData = userData.title
                 val maintextData = userData.maintext
@@ -118,19 +143,16 @@ class DetailPageActivity : AppCompatActivity() {
                 val nicknameData = userData.nickname
                 val deadlineData = userData.deadlinedate
                 val imageData = userData.image
-                val kakaoData = userData.kakao
+                val mntData = userData.mountain
 
                 binding.detailPageTvTitle.text = titleData
                 binding.detailPageTvMemo.text = maintextData
                 binding.detailPageTvDate.text = "작성일: ${dateData}"
                 binding.detailPageTvName.text = "작성자: ${nicknameData}"
                 binding.detailPageTvGather.text = "${deadlineData}까지 모집"
+                binding.detailPageTvMnt.text = "<$mntData>"
+                roomid = userData.roomId
 
-                // 카카오톡 오픈채팅으로 이동하기
-//                binding.detailPageLlKakaoChat.setOnClickListener {
-//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(kakaoData))
-//                    startActivity(intent)
-//                }
 
                 // 이미지 URI를 사용하여 이미지 표시
                 val storage = FirebaseStorage.getInstance()
@@ -154,9 +176,9 @@ class DetailPageActivity : AppCompatActivity() {
         val currentDate = Date()
 
         if (dateData != null) {
-            if(dateData.matches(Regex("\\d{4}년 \\d{2}월 \\d{2}일"))){
+            if (dateData.matches(Regex("\\d{4}년 \\d{2}월 \\d{2}일"))) {
 
-            } else{
+            } else {
                 val targetDate = dateFormat.parse(dateData)
                 if (targetDate != null) {
                     val timeDiff = targetDate.time - currentDate.time
@@ -274,6 +296,16 @@ class DetailPageActivity : AppCompatActivity() {
                 Log.e("Firebase Storage", "객체 삭제 오류: ${exception.message}")
                 Toast.makeText(this, "객체 삭제 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    // 참여하기 눌렀을 때, users 필드에 사용자 아이디 추가하기
+    private fun joinRoom(){
+//        val roomId = intent.getStringExtra("roomId")
+        val currentUser = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (roomid != null && currentUser != null) {
+            FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)
         }
     }
 }

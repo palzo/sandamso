@@ -122,6 +122,8 @@ class AddPageActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+        val receiveMnt = intent.getStringExtra("mnt")
+        binding.addPageEtMnt.setText(receiveMnt)
     }
 
     private fun inputValidation(): Boolean {

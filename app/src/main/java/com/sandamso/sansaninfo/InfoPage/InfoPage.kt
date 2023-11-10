@@ -22,6 +22,7 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.sandamso.sansaninfo.API.ModelData.Weather
 import com.sandamso.sansaninfo.API.Retrofit.WeatherClient
+import com.sandamso.sansaninfo.AddPage.AddPageActivity
 import com.sandamso.sansaninfo.BuildConfig
 import com.sandamso.sansaninfo.Main.MainActivity
 import com.sandamso.sansaninfo.R
@@ -47,6 +48,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
     private var mountainAddress: String? = null
     private var mountainHeight: String? = null
     private var mountainName: String? = null
+    private var infoMntName: String? = null
     private lateinit var mapView: MapView // 네이버 지도
     private lateinit var naverMap: NaverMap
     private lateinit var address: LatLng
@@ -87,6 +89,13 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 fm.beginTransaction().add(R.id.info_page_iv_map, it).commit()
             }
         mapFragment.getMapAsync(this)
+
+        binding.infoPageBtnMntName.setOnClickListener {
+            val mntName = infoMntName
+            val intent = Intent(this, AddPageActivity::class.java)
+            intent.putExtra("mnt", mntName)
+            startActivity(intent)
+        }
     }
 
     override fun onStart() {
@@ -150,7 +159,8 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 
     private fun initView() = with(binding) {
         // 프로그래스 바
-        val progressLayout = findViewById<ConstraintLayout>(R.id.info_page_progress_constraintlayout)
+        val progressLayout =
+            findViewById<ConstraintLayout>(R.id.info_page_progress_constraintlayout)
         val weatherErrorLayout = findViewById<ConstraintLayout>(R.id.info_page_weather_error)
 
         progressLayout.visibility = View.VISIBLE
@@ -165,6 +175,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                 mountainAddress = it.mntAddress
                 mountainHeight = it.mntHgt
                 mountainName = it.mntAddress + " " + it.mntName
+                infoMntName = it.mntName
                 address = convertAddressToLatLng(it.mntAddress + " " + it.mntName)
                 binding.infoPageTvMountainName.text = it.mntName
                 binding.infoPageTvMountainAddress.text = it.mntAddress
@@ -268,8 +279,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
                         }
                     })
                 }
-            }
-            else {
+            } else {
                 // 날씨 정보를 불러올 수 없다는 textview 출력
                 progressLayout.visibility = View.GONE
                 weatherErrorLayout.visibility = View.VISIBLE

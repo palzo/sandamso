@@ -39,10 +39,12 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="40dp"
             android:text="산바람"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view10" />
 
         <ScrollView
+            android:id="@+id/scrollView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -126,19 +128,16 @@
                             style="@style/RegularText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="2.2"
                             android:text="@string/my_page_tv_nickname_view" />
 
-                        <TextView
-                            android:id="@+id/my_page_et_nickname"
-                            style="@style/Title"
-                            android:layout_width="0dp"
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:background="@android:color/transparent"
-                            android:paddingHorizontal="30dp"
-                            android:text="북한산날다람쥐"
-                            android:textAlignment="textEnd" />
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_right_direction" />
 
                     </LinearLayout>
 
@@ -158,16 +157,24 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp">
 
                         <TextView
                             style="@style/RegularText"
                             android:layout_width="26dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginHorizontal="10dp"
                             android:layout_weight="2"
                             android:text="비밀번호 변경하러 가기" />
+
+                        <ImageView
+                            android:id="@+id/imageView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_right_direction" />
 
                     </LinearLayout>
 
@@ -223,9 +230,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" 님"
-            app:layout_constraintBottom_toBottomOf="@+id/my_page_tv_name"
-            app:layout_constraintStart_toEndOf="@+id/my_page_tv_name"
-            app:layout_constraintTop_toTopOf="@+id/my_page_tv_name" />
+            app:layout_constraintBottom_toBottomOf="@+id/my_page_et_nickname"
+            app:layout_constraintStart_toEndOf="@+id/my_page_et_nickname"
+            app:layout_constraintTop_toTopOf="@+id/my_page_et_nickname" />
+
+        <TextView
+            android:id="@+id/my_page_et_nickname"
+            style="@style/PageTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="40dp"
+            android:layout_weight="2"
+            android:background="@android:color/transparent"
+            android:text="북한산날다람쥐"
+            android:textAlignment="textEnd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view10" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

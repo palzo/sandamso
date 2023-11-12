@@ -13,7 +13,7 @@ import com.sandamso.sansaninfo.Data.MessageData
 import com.sandamso.sansaninfo.databinding.ListTalkItemMineBinding
 import com.sandamso.sansaninfo.databinding.ListTalkItemOthersBinding
 
-class MsgListAdapter(val msgList: MutableList<MessageData>, var currentUser : String) :
+class MsgListAdapter(val msgList: MutableList<MessageData>, var currentUser : String, var recyclerView: RecyclerView) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // 채팅할 유저1, 유저2 viewType 상수 정의
@@ -39,8 +39,7 @@ class MsgListAdapter(val msgList: MutableList<MessageData>, var currentUser : St
         val room = msgList[position]
         val userId = currentUser
         currentUserNick(userId)
-        Log.d("room id", "${room.msg}")
-        Log.d("room id", "${room.userName}")
+        Log.d("room userName", "${room.userName}")
         Log.d("*******", "${currentNickName}")
 
         // 내가 채팅을 보낸 경우
@@ -63,7 +62,9 @@ class MsgListAdapter(val msgList: MutableList<MessageData>, var currentUser : St
                         if(nickName != null) {
                             currentNickName = nickName
                             Log.d("currentNickName", "$nickName")
-                            notifyDataSetChanged()
+                            recyclerView.post {
+                                notifyDataSetChanged()
+                            }
                         }
                     }
                 }

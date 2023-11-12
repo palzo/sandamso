@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.sandamso.sansaninfo.Data.FBRoom
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import com.sandamso.sansaninfo.R
 
 class ChatRoomActivity:AppCompatActivity() {
 
@@ -24,6 +26,7 @@ class ChatRoomActivity:AppCompatActivity() {
     var currentUser = ""
     val roomList = mutableListOf<RoomData>()
     lateinit var msgRef: DatabaseReference
+    private lateinit var recyclerView : RecyclerView
 
     var roomId: String = ""
     var roomTitle: String = ""
@@ -39,12 +42,14 @@ class ChatRoomActivity:AppCompatActivity() {
         if(auth.currentUser != null) {
             currentUser = auth.currentUser?.uid!!
         }
-
         roomId = intent.getStringExtra("roomId") ?: "none"
         roomTitle = intent.getStringExtra("dataFromdetailPageTitle") ?: ""
 
         msgRef = FBRoom.roomRef.child(roomId).child("messages")
-        adapter = MsgListAdapter(msgList, currentUser)
+
+        recyclerView = findViewById(R.id.recycler_messages)
+        adapter = MsgListAdapter(msgList, currentUser, recyclerView)
+        recyclerView.adapter = adapter
 
         with(binding){
             recyclerMessages.adapter = adapter

@@ -13,11 +13,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -27,6 +25,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import com.sandamso.sansaninfo.BaseActivity
 import com.sandamso.sansaninfo.ChattingPage.ChatRoomListAdapter
 import com.sandamso.sansaninfo.Data.FBRef
 import com.sandamso.sansaninfo.Data.FBRoom
@@ -45,7 +44,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Supplier
 import kotlin.concurrent.thread
 
-class AddPageActivity : AppCompatActivity() {
+class AddPageActivity : BaseActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
 
@@ -92,7 +91,7 @@ class AddPageActivity : AppCompatActivity() {
                         showProgress(true)
                         goneData()
                         data()
-                        Toast.makeText(this@AddPageActivity, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
+                        showtoast("게시글 입력 완료")
                         thread(start = true) {
                             Thread.sleep(2500)
                             runOnUiThread {
@@ -100,7 +99,7 @@ class AddPageActivity : AppCompatActivity() {
                             }
                         }
                     } else {
-                        toastMessage("확인 버튼을 눌러주세요.")
+                        showtoast("확인 버튼을 눌러주세요.")
                     }
                 }
             }
@@ -134,25 +133,25 @@ class AddPageActivity : AppCompatActivity() {
         val dday = binding.addPageTvDday.text.toString()
 
         if (title.isEmpty()) {
-            toastMessage("제목을 입력해주세요.")
+            showtoast("제목을 입력해주세요.")
             return false
         } else if (title.length >= 31) {
-            toastMessage("제목은 30글자 이하로 입력해주세요.")
+            showtoast("제목은 30글자 이하로 입력해주세요.")
             return false
         } else if (!addImage) {
-            toastMessage("이미지를 첨부해 주세요.")
+            showtoast("이미지를 첨부해 주세요.")
             return false
         } else if (dday.isEmpty()) {
-            toastMessage("모임 마감일을 설정해주세요.")
+            showtoast("모임 마감일을 설정해주세요.")
             return false
         } else if (text.isEmpty()) {
-            toastMessage("본문 내용을 입력해주세요.")
+            showtoast("본문 내용을 입력해주세요.")
             return false
         } else if (text.length >= 5000) {
-            toastMessage("본문은 5000글자까지만 입력이 가능합니다.")
+            showtoast("본문은 5000글자까지만 입력이 가능합니다.")
             return false
         } else if (mnt.isEmpty()) {
-            toastMessage("산이름을 입력해주세요.")
+            showtoast("산이름을 입력해주세요.")
             return false
         }
         return true
@@ -166,7 +165,7 @@ class AddPageActivity : AppCompatActivity() {
             showProgress(true)
             goneData()
             data()
-            Toast.makeText(this@AddPageActivity, "게시글 입력 완료", Toast.LENGTH_SHORT).show()
+            showtoast("게시글 입력 완료")
             thread(start = true) {
                 Thread.sleep(2500)
                 runOnUiThread {
@@ -174,7 +173,7 @@ class AddPageActivity : AppCompatActivity() {
                 }
             }
         } else {
-            toastMessage("확인 버튼을 눌러주세요.")
+            showtoast("확인 버튼을 눌러주세요.")
         }
     }
 
@@ -361,11 +360,9 @@ class AddPageActivity : AppCompatActivity() {
         if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {
                 100 -> {
-                    Toast.makeText(
-                        this@AddPageActivity,
-                        "갤러리 불러오기 권한이 허용되었습니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showtoast(
+                        "갤러리 불러오기 권한이 허용되었습니다."
+                    )
                     galleryLauncher.launch("image/*")
                 }
             }
@@ -548,10 +545,6 @@ class AddPageActivity : AppCompatActivity() {
         picker.show()
     }
 
-    private fun toastMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
     // 수정하기
     private fun editData() {
         val id = intent.getStringExtra("dataFromAddPageId")
@@ -587,7 +580,7 @@ class AddPageActivity : AppCompatActivity() {
                 if (binding.addPageBtnMnt.text == "변경") {
                     saveEditeData()
                 } else {
-                    toastMessage("확인 버튼을 눌러주세요.")
+                    showtoast("확인 버튼을 눌러주세요.")
                 }
             }
         }
@@ -626,11 +619,10 @@ class AddPageActivity : AppCompatActivity() {
                             // 이미지 수정 시, 업로드하고 URL 업데이트 하기
                             CompletableFuture.supplyAsync(Supplier {
                                 imageSetData(editData)
-                            }).thenAccept { uploadedImageUrl ->
+                            }).thenAccept {
                             }
                             showProgress(true)
-                            Toast.makeText(this@AddPageActivity, "게시글 수정중..", Toast.LENGTH_SHORT)
-                                .show()
+                            showtoast("게시글 수정중..")
                             thread(start = true) {
                                 Thread.sleep(2500)
                                 runOnUiThread {

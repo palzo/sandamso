@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.kakao.sdk.user.UserApiClient
+import com.sandamso.sansaninfo.R
 
 
 class MyPageFragment : Fragment() {
@@ -107,7 +109,7 @@ class MyPageFragment : Fragment() {
 
         alertDialogBuilder.setPositiveButton("확인") { _, _ ->
             signOut()
-            Toast.makeText(activity, "로그아웃이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            showToast("로그아웃이 완료되었습니다.")
             val intent = Intent(activity, SignInActivity::class.java)
             startActivity(intent)
             activity?.finish()
@@ -178,7 +180,7 @@ class MyPageFragment : Fragment() {
             val intent = Intent(activity, SignInActivity::class.java)
             startActivity(intent)
             activity?.finish()
-            Toast.makeText(activity, "회원탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            showToast("회원탈퇴가 완료되었습니다.")
         }
         // 취소 버튼을 눌렀을 때
         alertDialogBuilder.setNegativeButton("취소") { dialog, _ ->
@@ -198,5 +200,17 @@ class MyPageFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun showToast(message: String) {
+        val inflater = layoutInflater
+        val layout = inflater.inflate(R.layout.toast_msg, requireActivity().findViewById(R.id.toast_layout))
+        val text = layout.findViewById<TextView>(R.id.tm_text)
+        text.text = message
+        with(Toast(requireContext())) {
+            duration = Toast.LENGTH_SHORT
+            view = layout
+            show()
+        }
     }
 }

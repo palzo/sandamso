@@ -1,13 +1,12 @@
 package com.sandamso.sansaninfo.SignPage
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.sandamso.sansaninfo.databinding.ActivityFindpwBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.sandamso.sansaninfo.BaseActivity
 
-class FindpwActivity : AppCompatActivity() {
+class FindpwActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivityFindpwBinding.inflate(layoutInflater) }
 
@@ -30,7 +29,7 @@ class FindpwActivity : AppCompatActivity() {
             if (email.isNotEmpty()) {
                 resetPW(email)
             } else {
-                toastMessage("이메일 주소를 입력해주세요.")
+                showtoast("이메일 주소를 입력해주세요.")
             }
         }
     }
@@ -44,12 +43,8 @@ class FindpwActivity : AppCompatActivity() {
                     val resultIntent = Intent(this, FindpwResultActivity::class.java)
                     startActivity(resultIntent)
                 } else {
-                    toastMessage("이메일 전송에 실패했습니다. 가입하신 이메일 주소를 확인해주세요.")
+                    showtoast("이메일 전송에 실패했습니다. 가입하신 이메일 주소를 확인해주세요.")
                 }
             }
-    }
-
-    private fun toastMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

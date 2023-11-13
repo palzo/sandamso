@@ -7,8 +7,6 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -23,6 +21,7 @@ import com.naver.maps.map.overlay.Marker
 import com.sandamso.sansaninfo.API.ModelData.Weather
 import com.sandamso.sansaninfo.API.Retrofit.WeatherClient
 import com.sandamso.sansaninfo.AddPage.AddPageActivity
+import com.sandamso.sansaninfo.BaseActivity
 import com.sandamso.sansaninfo.BuildConfig
 import com.sandamso.sansaninfo.Main.MainActivity
 import com.sandamso.sansaninfo.R
@@ -41,7 +40,7 @@ import java.util.Date
 <a href="https://www.flaticon.com/kr/free-icons/" title="날씨 아이콘">눈비 아이콘  제작자: Ubaid El-Ahyar Alyafizi - Flaticon</a>
 * */
 
-class InfoPage : AppCompatActivity(), OnMapReadyCallback {
+class InfoPage : BaseActivity(), OnMapReadyCallback {
 
     private val binding by lazy { ActivityInfoPageBinding.inflate(layoutInflater) }
 
@@ -299,7 +298,7 @@ class InfoPage : AppCompatActivity(), OnMapReadyCallback {
 //                Toast.makeText(this, "$address", Toast.LENGTH_SHORT).show()
                 return LatLng(latitude, longitude)
             } else {
-                Toast.makeText(this, "주소를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                showtoast("주소를 찾을 수 없습니다.")
             }
         } catch (e: Exception) {
             Log.e("주소 변환 오류", e.message.toString())

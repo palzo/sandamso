@@ -148,11 +148,13 @@ class SearchPageMountainFragment : Fragment() {
 
     // 탭바를 선택할 때도 닫히도록 수정
     fun onTabSelected() {
-        if(binding.searchPageSpinnerSido.isShowing) {
-            binding.searchPageSpinnerSido.dismiss()
-        }
-        if(binding.searchPageSpinnerGoo.isShowing) {
-            binding.searchPageSpinnerGoo.dismiss()
+        if(_binding != null) {
+            if(binding.searchPageSpinnerSido.isShowing) {
+                binding.searchPageSpinnerSido.dismiss()
+            }
+            if(binding.searchPageSpinnerGoo.isShowing) {
+                binding.searchPageSpinnerGoo.dismiss()
+            }
         }
     }
 

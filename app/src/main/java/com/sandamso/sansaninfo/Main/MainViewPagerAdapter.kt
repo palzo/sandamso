@@ -16,9 +16,7 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
     // 스피너 자동 닫힘
     fun closeSpinner() {
         for(tab in fragments) {
-            if(tab.fragment is CommunityPageFragment) {
-                (tab.fragment as CommunityPageFragment).onTabSelected()
-            }
+            tab.onTabSelected()
         }
     }
 

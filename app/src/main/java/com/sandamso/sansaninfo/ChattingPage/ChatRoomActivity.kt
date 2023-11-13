@@ -1,15 +1,20 @@
 package com.sandamso.sansaninfo.ChattingPage
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.MessageData
-import com.sandamso.sansaninfo.Data.RoomData
 import com.sandamso.sansaninfo.databinding.ActivityChattingPageBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,7 +29,6 @@ class ChatRoomActivity:AppCompatActivity() {
     private val binding by lazy { ActivityChattingPageBinding.inflate(layoutInflater) }
     private lateinit var auth: FirebaseAuth
     var currentUser = ""
-    val roomList = mutableListOf<RoomData>()
     lateinit var msgRef: DatabaseReference
     private lateinit var recyclerView : RecyclerView
 
@@ -42,6 +46,7 @@ class ChatRoomActivity:AppCompatActivity() {
         if(auth.currentUser != null) {
             currentUser = auth.currentUser?.uid!!
         }
+
         roomId = intent.getStringExtra("roomId") ?: "none"
         roomTitle = intent.getStringExtra("dataFromdetailPageTitle") ?: ""
 
@@ -92,6 +97,11 @@ class ChatRoomActivity:AppCompatActivity() {
                     msgRef.child(msgId).setValue(message)
                     edtMessage.setText("")
 
+                    // 보내는 사람이 현재 사용자가 아닌 경우에만 알림 보내기
+                    if (nickname != message.userName) {
+                        sendNotification("새로운 메시지가 도착했습니다.", message.msg)
+                    }
+
                     adapter.notifyDataSetChanged()
                     recyclerMessages.scrollToPosition(adapter.itemCount -1)
                 }
@@ -120,5 +130,50 @@ class ChatRoomActivity:AppCompatActivity() {
                     Log.d("Nickname", "error = $error")
                 }
             })
+    }
+
+    // 메시지 알림 설정
+    private fun sendNotification(title: String, message: String) {
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        val builder: NotificationCompat.Builder
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // 26 버전 이상
+            val channelId = "one-channel"
+            val channelName = "My Channel One"
+            val channel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "My Channel One Description"
+                setShowBadge(true)
+            }
+            manager.createNotificationChannel(channel)
+            builder = NotificationCompat.Builder(this, channelId)
+        } else {
+            // 26 버전 이하
+            builder = NotificationCompat.Builder(this)
+        }
+
+        val intent = Intent(this, ChatRoomActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        intent.putExtra("roomId",roomId)
+        intent.putExtra("dataFromdetailPageTitle",roomTitle)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        builder.run {
+            setSmallIcon(R.drawable.ic_logo_msg)
+            setWhen(System.currentTimeMillis())
+            setContentTitle(title)
+            setContentText(message)
+            setStyle(NotificationCompat.BigTextStyle()
+                .bigText(message))
+            setLargeIcon(null)
+            setContentIntent(pendingIntent)
+        }
+
+        manager.notify(11, builder.build())
     }
 }

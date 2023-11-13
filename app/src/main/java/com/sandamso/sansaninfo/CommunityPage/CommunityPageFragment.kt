@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -72,8 +73,10 @@ class CommunityPageFragment : Fragment() {
                 "내 글 순" -> sortPostMine()
             }
         }
+
         return binding.root
     }
+
     // 최신순으로 정렬 -> 날짜 최신순대로 내림차순
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostLatest() {
@@ -153,6 +156,7 @@ class CommunityPageFragment : Fragment() {
         getItems()
     }
 
+    @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 업로드한 게시물이 위로 가게 설정
@@ -167,6 +171,25 @@ class CommunityPageFragment : Fragment() {
             adapter = communityPageAdapter
             clickItem()
         }
+
+        binding.root.setOnTouchListener { _, event ->
+            if(event.action == MotionEvent.ACTION_DOWN) {
+                if(!isPointInsideView(event.rawX, event.rawY, binding.communitySpinner)) {
+                    binding.communitySpinner.dismiss()
+                }
+            }
+            false
+        }
+        communityPageAdapter.notifyDataSetChanged()
+    }
+
+    // 스피너 이외의 레이아웃 부분을 선택한 경우
+    private fun isPointInsideView(x : Float, y : Float, view : View) : Boolean {
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+        val viewX = location[0]
+        val viewY = location[1]
+        return (x > viewX && x < viewX + view.width && y > viewY && viewY < viewY + view.height)
     }
 
     // 아이템 클릭 처리

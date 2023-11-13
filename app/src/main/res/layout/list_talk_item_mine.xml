@@ -4,7 +4,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="15dp">
+    android:paddingVertical="5dp">
 
     <TextView
         android:id="@+id/txt_message"
@@ -14,12 +14,15 @@
         android:layout_marginEnd="10dp"
         android:autoLink="web"
         android:background="@drawable/background_talk_mine"
+        android:lineSpacingExtra="4sp"
         android:linksClickable="true"
+        android:maxWidth="230dp"
         android:paddingHorizontal="15dp"
-        android:paddingTop="7dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="안녕하세요."
         android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,13 +32,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
         android:text="오전 10:23"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/txt_message"
-        app:layout_constraintEnd_toStartOf="@+id/txt_message"
-        app:layout_constraintTop_toTopOf="@+id/txt_message"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintEnd_toStartOf="@+id/txt_message" />
 
     <TextView
         android:id="@+id/txt_isShown"
@@ -48,5 +48,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/txt_date"
         app:layout_constraintEnd_toStartOf="@+id/txt_date"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txt_date" />
 </androidx.constraintlayout.widget.ConstraintLayout>

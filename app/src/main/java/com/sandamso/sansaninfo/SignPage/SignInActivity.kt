@@ -104,12 +104,10 @@ class SignInActivity : BaseActivity() {
                                 showtoast("로그인 성공 !")
                                 saveData()
                                 startActivity(signInIntent)
-
-
                             }
                             // 이메일 인증 안했을 경우
                             else {
-                                showtoast("이메일 확인 후 로그인이 가능합니다.")
+                                showtoast("이메일 인증 후 로그인이 가능합니다.")
                             }
                         } else {
                             // 로그인 실패 시

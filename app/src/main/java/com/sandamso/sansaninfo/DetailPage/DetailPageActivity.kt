@@ -23,6 +23,7 @@ import com.sandamso.sansaninfo.Data.PostModel
 import com.sandamso.sansaninfo.R
 import com.sandamso.sansaninfo.databinding.ActivityDetailPageBinding
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.concurrent.thread
@@ -72,6 +73,7 @@ class DetailPageActivity : BaseActivity() {
             overridePendingTransition(0, 0)
             swipeRefreshLayout.isRefreshing = false
         }
+//        binding.detailPageTvDday.text
     }
 
     private fun userCheck() {
@@ -172,29 +174,42 @@ class DetailPageActivity : BaseActivity() {
         val dateData = intent.getStringExtra("dataFromAddPagedday")
 
         val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
-        val currentDate = Date()
+        val currentDate = Calendar.getInstance().apply {
+            time = Date()
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
 
         if (dateData != null) {
             if (dateData.matches(Regex("\\d{4}년 \\d{2}월 \\d{2}일"))) {
-                val targetDate = dateFormat.parse(dateData)
-                if (targetDate != null) {
-                    val timeDiff = targetDate.time - currentDate.time
-                    val dday = timeDiff / (1000 * 60 * 60 * 24)
+                val targetDate = Calendar.getInstance().apply {
+                    time = dateFormat.parse(dateData) ?: return
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
 
-                    if (dday.toInt() == 0) {
-                        binding.detailPageTvDday.text = "D-Day"
-                    } else if (dday > 0) {
-                        binding.detailPageTvDday.text = "D-${dday}"
-                    } else if (dday < 0) {
+                val timeDiff = targetDate.timeInMillis - currentDate.timeInMillis
+                val dday = timeDiff / (1000 * 60 * 60 * 24)
+
+                binding.detailPageTvDday.text = when {
+                    dday == 0L -> "D-Day"
+                    dday in 1..2 -> "D-${dday.toInt()}"
+                    dday > 2 -> "D-${dday.toInt()}"
+                    dday < 0 -> {
                         val outday = -dday
-                        binding.detailPageTvDday.text = "D+${outday}"
+                        "D+${outday.toInt()}"
                     }
-                } else {
-                    binding.detailPageTvDday.text = "유효하지 않은 날짜"
+
+                    else -> "유효하지 않은 날짜"
                 }
             }
         }
     }
+
 
     // 수정하기
     private fun editData() {
@@ -278,7 +293,7 @@ class DetailPageActivity : BaseActivity() {
 
         imageReference.delete().addOnSuccessListener {
             // 객체가 성공적으로 삭제됐을 때 처리
-            showtoast( "게시글이 삭제되었습니다.")
+            showtoast("게시글이 삭제되었습니다.")
             finish()
         }.addOnFailureListener { exception ->
             if (exception is StorageException && exception.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {

@@ -20,7 +20,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.kakao.sdk.user.UserApiClient
 import com.sandamso.sansaninfo.R
 
 
@@ -125,23 +124,12 @@ class MyPageFragment : Fragment() {
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
 
-        // 카카오
-        UserApiClient.instance.logout { error ->
-            if (error != null) {
-//                Toast.makeText(requireContext(), "로그아웃 실패 $error", Toast.LENGTH_SHORT).show()
-            } else {
-//                Toast.makeText(requireContext(), "로그아웃 성공", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         // 자동로그인 설정되어있는 경우 해제
-        val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
-        val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
-        autoLogin?.edit()?.apply {
-            putString("login", "0")
-            apply()
-        }
-        saveEmail?.edit()?.apply {
+        val loginInfo = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
+
+        loginInfo?.edit()?.apply {
+            putString("loginType", "0")
+            putString("email", "0")
             putString("pw", "0")
             apply()
         }
@@ -154,27 +142,22 @@ class MyPageFragment : Fragment() {
         alertDialogBuilder.setMessage("정말 회원을 탈퇴하시겠습니까?")
 
         alertDialogBuilder.setPositiveButton("확인") { _, _ ->
+            // realtimedatabase에서 제거
+            val user = auth.currentUser
+            val dataBase = FirebaseDatabase.getInstance()
+            val userReference = dataBase.getReference("users")
+            if(user != null){
+                userReference.child(user.uid).removeValue()
+            }
+            // authentication에서 제거
             auth.currentUser?.delete()
 
-            // 카카오
-            UserApiClient.instance.unlink { error ->
-                if (error != null) {
-//                Toast.makeText(requireContext(), "회원 탈퇴 실패 $error", Toast.LENGTH_SHORT).show()
-                } else {
-//                Toast.makeText(requireContext(), "회원 탈퇴 성공", Toast.LENGTH_SHORT).show()
-                }
-            }
+            val loginInfo = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
 
-            val autoLogin = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
-            val saveEmail = activity?.getSharedPreferences("prefEmail", Context.MODE_PRIVATE)
-            autoLogin?.edit()?.apply {
+            loginInfo?.edit()?.apply {
+                putString("loginType", "0")
                 putString("login", "0")
-                putString("pw", "")
-                apply()
-            }
-            saveEmail?.edit()?.apply {
-                putString("check", "0")
-                putString("email", "")
+                putString("pw", "0")
                 apply()
             }
             val intent = Intent(activity, SignInActivity::class.java)
@@ -190,13 +173,10 @@ class MyPageFragment : Fragment() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
     }
-
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

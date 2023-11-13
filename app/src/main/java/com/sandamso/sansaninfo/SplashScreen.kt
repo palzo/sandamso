@@ -20,13 +20,12 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val autoLogin = getSharedPreferences("prefLogin", 0)
-        val saveEmail = getSharedPreferences("prefEmail", 0)
-        val email = saveEmail.getString("email", "")
+        val loginInfo = getSharedPreferences("prefLogin", 0)
+        val email = loginInfo.getString("email", "")
+        val pw = loginInfo.getString("pw", "")
         // 저장된 데이터 불러오기
-        if (autoLogin.getString("login", "") == "1") {
+        if (loginInfo.getString("loginType", "") == "2") {
             // 자동 로그인 기능
-            val pw = autoLogin.getString("pw", "")
             if (email != null && pw != null) {
                 try{
                     auth.signInWithEmailAndPassword(email, pw)
@@ -34,34 +33,37 @@ class SplashScreen : AppCompatActivity() {
                             val user = auth.currentUser
                             if (user != null && user.isEmailVerified) {
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    startActivity(intent)
-                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                                    finish()
+                                    startMainActivity()
                                 }, 0)
                             }
                         }
                 }catch (e: Exception){
-                    val autoLogin = getSharedPreferences("prefLogin", 0)
-                    val autoLoginEdit = autoLogin.edit()
-                    autoLoginEdit.putString("login", "0")
-                    autoLoginEdit.putString("pw", "0")
-                    autoLoginEdit.apply()
+                    val loginInfo = getSharedPreferences("prefLogin", 0)
+                    val loginInfoEdit = loginInfo.edit()
+                    loginInfoEdit.putString("loginType", "0")
+                    loginInfoEdit.putString("pw", "0")
+                    loginInfoEdit.apply()
                     Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(this, SignInActivity::class.java)
-                        startActivity(intent)
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                        finish()
+                        startSignInActivity()
                     }, 0)
                 }
             }
         } else {
             Handler(Looper.getMainLooper()).postDelayed({
-                val intent = Intent(this, SignInActivity::class.java)
-                startActivity(intent)
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-                finish()
+                startSignInActivity()
             }, 0)
         }
+    }
+    private fun startMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        finish()
+    }
+    private fun startSignInActivity() {
+        val intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        finish()
     }
 }

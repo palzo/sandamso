@@ -76,15 +76,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_message"
-            tools:layout_editor_absoluteX="356dp"
-            tools:layout_editor_absoluteY="20dp" />
-
-        <Button
+        <TextView
             android:id="@+id/btn_submit"
             android:layout_width="60dp"
             android:layout_height="40dp"
@@ -93,6 +85,17 @@
             app:layout_constraintBottom_toBottomOf="@+id/edt_message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/edt_message" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_message"
+            android:layout_marginStart="5dp"
+            app:layout_constraintTop_toTopOf="@+id/btn_submit"
+            app:layout_constraintStart_toStartOf="@+id/btn_submit"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_submit"
+            app:layout_constraintEnd_toEndOf="@+id/btn_submit"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -54,7 +54,18 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/my_page_et_nickname"
+                    style="@style/PageTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="23dp"
+                    android:layout_marginTop="20dp"
+                    android:text="북한산날다람쥐"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/textView4"
@@ -65,20 +76,6 @@
                     app:layout_constraintBottom_toBottomOf="@+id/my_page_et_nickname"
                     app:layout_constraintStart_toEndOf="@+id/my_page_et_nickname"
                     app:layout_constraintTop_toTopOf="@+id/my_page_et_nickname" />
-
-                <TextView
-                    android:id="@+id/my_page_et_nickname"
-                    style="@style/PageTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="2"
-                    android:background="@android:color/transparent"
-                    android:text="북한산날다람쥐"
-                    android:textAlignment="textEnd"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -212,6 +209,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="15dp"
+                        android:visibility="invisible"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
                         android:paddingHorizontal="10dp">
@@ -246,7 +244,5 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

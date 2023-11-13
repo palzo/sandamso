@@ -1,25 +1,40 @@
 package com.sandamso.sansaninfo.SignPage
 
 import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.AuthCredential
 import com.sandamso.sansaninfo.Main.MainActivity
 import com.sandamso.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.AuthErrorCause
-import com.kakao.sdk.user.UserApiClient
 import com.sandamso.sansaninfo.BaseActivity
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.sandamso.sansaninfo.R
+import java.lang.Exception
 
 class SignInActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivitySignInBinding.inflate(layoutInflater) }
     private var emailCheck = false
     private var pwCheck = false
+
+    private lateinit var  oneTapClient: SignInClient
+    private lateinit var  signInRequest: BeginSignInRequest
+    private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
+    private var showOneTapUI = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,109 +121,118 @@ class SignInActivity : BaseActivity() {
             }
         }
 
-
         // 회원가입 버튼 누를 경우 회원가입 페이지로 이동
         binding.btnSignup.setOnClickListener {
             val signupIntent = Intent(this, SignUpActivity::class.java)
             startActivity(signupIntent)
         }
-
-
-        val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-            if (error != null) {
-                when {
-                    error.toString() == AuthErrorCause.AccessDenied.toString() -> {
-                        showtoast("접근이 거부 됨(동의 취소)")
-                    }
-
-                    error.toString() == AuthErrorCause.InvalidClient.toString() -> {
-                        showtoast("유효하지 않은 앱")
-                    }
-
-                    error.toString() == AuthErrorCause.InvalidGrant.toString() -> {
-                        showtoast("인증 수단이 유효하지 않아 인증할 수 없는 상태")
-
-                    }
-
-                    error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
-                        showtoast("요청 파라미터 오류")
-                    }
-
-                    error.toString() == AuthErrorCause.InvalidScope.toString() -> {
-                        showtoast( "유효하지 않은 scope ID")
-                    }
-                }
-            } else if (token != null) {
-                UserApiClient.instance.me { user, error ->
-                    showtoast(
-                        "${user?.kakaoAccount?.profile?.nickname.toString()} 님 로그인 성공"
-                    )
-
-                }
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-                finish()
-            }
-        }
-
-        // 로그인 정보 확인 (테스트 용)
-        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-            if (error != null) {
-                Log.d("kakao", "${error.message}")
-            } else if (tokenInfo != null) {
-                Log.d("kakao", "$tokenInfo")
-            }
-        }
-
-        // 소셜 로그인 테스트 (카카오 버튼)
-        binding.signinBtnKakao.setOnClickListener {
-            // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오 계정으로 로그인
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                UserApiClient.instance.loginWithKakaoTalk(this, callback = callback)
-            } else {
-                UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
-            }
-        }
-
         loadData()
+
+
+//        binding.signinTitle.setOnClickListener {
+//            oneTapClient = Identity.getSignInClient(this)
+//            signInRequest = BeginSignInRequest.builder()
+//                .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+//                    .setSupported(true)
+//                    .build())
+//                .setGoogleIdTokenRequestOptions(
+//                    BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+//                        .setSupported(true)
+//                        // Your server's client ID, not your Android client ID.
+////                        .setServerClientId("797720929790-2og2l3aaka8efbchrsikabn4hlsja82c.apps.googleusercontent.com")
+//                        .setServerClientId(getString(R.string.firebase_web_client_id))
+//                        // Only show accounts previously used to sign in.
+//                        .setFilterByAuthorizedAccounts(true)
+//                        .build())
+//                // Automatically sign in when exactly one credential is retrieved.
+//                .setAutoSelectEnabled(true)
+//                .build()
+//
+//            oneTapClient.beginSignIn(signInRequest)
+//                .addOnSuccessListener(this) { result ->
+//                    try {
+//                        startIntentSenderForResult(
+//                            result.pendingIntent.intentSender, REQ_ONE_TAP,
+//                            null, 0, 0, 0, null)
+//                    } catch (e: IntentSender.SendIntentException) {
+//                        Log.d("google", "Couldn't start One Tap UI: ${e.localizedMessage}")
+//                    }
+//                }
+//                .addOnFailureListener(this) { e ->
+//                    // No saved credentials found. Launch the One Tap sign-up flow, or
+//                    // do nothing and continue presenting the signed-out UI.
+//                    Log.d("google", e.localizedMessage)
+//                }
+//        }
     }
 
-    private fun saveData() = with(binding) {
-        val autoLogin = getSharedPreferences("prefLogin", 0)
-        val autoLoginEdit = autoLogin.edit()
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        when (requestCode) {
+//            REQ_ONE_TAP -> {
+//                try {
+//                    val credential = oneTapClient.getSignInCredentialFromIntent(data)
+//                    val idToken = credential.googleIdToken
+//                    val username = credential.id
+//                    val password = credential.password
+//                    when {
+//                        idToken != null -> {
+//                            // Got an ID token from Google. Use it to authenticate
+//                            // with your backend.
+//                            Log.d("google", "Got ID token.")
+//                        }
+//                        password != null -> {
+//                            // Got a saved username and password. Use them to authenticate
+//                            // with your backend.
+//                            Log.d("google", "Got password.")
+//                        }
+//                        else -> {
+//                            // Shouldn't happen.
+//                            Log.d("google", "No ID token or password!")
+//                        }
+//                    }
+//                } catch (e: ApiException) {
+//                    // ...
+//                }
+//            }
+//        }
+//    }
 
-        val saveEmail = getSharedPreferences("prefEmail", 0)
-        val saveEmailEdit = saveEmail.edit()
+    private fun saveData() = with(binding) {
+        val loginInfo = getSharedPreferences("prefLogin", 0)
+        val loginInfoEdit = loginInfo.edit()
 
         // 데이터 저장
         if (signinSwitchAutoLogin.isChecked) {
-            autoLoginEdit.putString("login", "1")
-            autoLoginEdit.putString("pw", signinEtPw.text.toString())
-            autoLoginEdit.apply()
+            // 자동 로그인이 체크되어있는 경우
+            loginInfoEdit.putString("loginType", "2")
+            loginInfoEdit.putString("email", signinEtEmail.text.toString())
+            loginInfoEdit.putString("pw", signinEtPw.text.toString())
+        } else if (signinSwitchSaveMail.isChecked) {
+            // 이메일 저장만 체크되어있는 경우
+            loginInfoEdit.putString("loginType", "1")
+            loginInfoEdit.putString("email", signinEtEmail.text.toString())
+            loginInfoEdit.putString("pw", "0")
         } else {
-            autoLoginEdit.putString("login", "0")
-            autoLoginEdit.putString("pw", "0")
-            autoLoginEdit.apply()
+            // 아무것도 체크되어있지 않은 경우
+            loginInfoEdit.putString("loginType", "0")
+            loginInfoEdit.putString("email", "0")
+            loginInfoEdit.putString("pw", "0")
         }
-        if (signinSwitchSaveMail.isChecked) {
-            saveEmailEdit.putString("check", "1")
-            saveEmailEdit.putString("email", signinEtEmail.text.toString())
-            saveEmailEdit.apply()
-        } else {
-            saveEmailEdit.putString("check", "0")
-            saveEmailEdit.apply()
+        loginInfoEdit.apply()
+    }
+    private fun loadData() = with(binding) {
+        val loginInfo = getSharedPreferences("prefLogin", 0)
+
+        if (loginInfo.getString("loginType", "") == "1") {
+            // 이메일 불러오기
+            signinSwitchSaveMail.isChecked = true
+            signinEtEmail.setText(loginInfo.getString("email", ""))
         }
     }
 
-    private fun loadData() = with(binding) {
-        val autoLogin = getSharedPreferences("prefLogin", 0)
-        val saveEmail = getSharedPreferences("prefEmail", 0)
-        val email = saveEmail.getString("email", "")
-
-        if (saveEmail.getString("check", "") == "1") {
-            // 이메일 불러오기
-            signinSwitchSaveMail.isChecked = true
-            signinEtEmail.setText(saveEmail.getString("email", ""))
-        }
+    private fun toastMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

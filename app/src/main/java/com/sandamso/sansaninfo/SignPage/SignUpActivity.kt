@@ -232,17 +232,13 @@ class SignUpActivity : BaseActivity() {
                 // 회원가입 성공 시
                 if (task.isSuccessful) {
                     sendVerifyEmail()
-                    showtoast("회원가입 성공!")
+                    SignUpDialog(this).show()
                     val user = auth.currentUser
                     // RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
                     val userData = UserData(name, email, nick)
                     if (user != null) {
                         saveUserData(user.uid, userData)
                     }
-                    // 회원가입 성공 후 로그인 화면으로 돌아가기
-                    val intent = Intent(this, SignInActivity::class.java)
-                    startActivity(intent)
-                    finish()
                 }
                 // 회원가입 실패 시
                 else {
@@ -282,8 +278,7 @@ class SignUpActivity : BaseActivity() {
         user?.sendEmailVerification()
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    showtoast("해당 이메일로 확인 메일이 전송되었습니다. 이메일을 확인하세요.")
-                    finish()
+                    // 인증 이메일 전송됨
                 } else {
                     showtoast("오류..이메일 전송에 실패했습니다.")
                 }

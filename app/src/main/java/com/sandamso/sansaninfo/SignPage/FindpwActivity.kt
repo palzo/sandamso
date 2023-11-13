@@ -10,7 +10,6 @@ class FindpwActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivityFindpwBinding.inflate(layoutInflater) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

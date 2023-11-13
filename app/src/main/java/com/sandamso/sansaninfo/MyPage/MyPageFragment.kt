@@ -128,9 +128,13 @@ class MyPageFragment : Fragment() {
         val loginInfo = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
 
         loginInfo?.edit()?.apply {
-            putString("loginType", "0")
-            putString("email", "0")
-            putString("pw", "0")
+            if(loginInfo.getString("loginType", "0") == "1"){
+                putString("pw", "0")
+            }else{
+                putString("loginType", "0")
+                putString("email", "0")
+                putString("pw", "0")
+            }
             apply()
         }
     }

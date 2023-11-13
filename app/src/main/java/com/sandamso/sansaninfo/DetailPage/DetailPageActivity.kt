@@ -203,6 +203,7 @@ class DetailPageActivity : BaseActivity() {
                         val outday = -dday
                         "D+${outday.toInt()}"
                     }
+
                     else -> "유효하지 않은 날짜"
                 }
             }
@@ -292,7 +293,7 @@ class DetailPageActivity : BaseActivity() {
 
         imageReference.delete().addOnSuccessListener {
             // 객체가 성공적으로 삭제됐을 때 처리
-            showtoast( "게시글이 삭제되었습니다.")
+            showtoast("게시글이 삭제되었습니다.")
             finish()
         }.addOnFailureListener { exception ->
             if (exception is StorageException && exception.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {

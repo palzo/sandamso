@@ -24,9 +24,12 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
+import com.sandamso.sansaninfo.CommunityPage.CommunityPageFragment
 import com.sandamso.sansaninfo.databinding.ActivityMainBinding
 import com.sandamso.spartube.main.MainViewModel
 import com.sandamso.spartube.util.ConnectWatcher
+import nl.joery.animatedbottombar.AnimatedBottomBar
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,7 +45,6 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         initViewModel()
-
     }
 
     private fun initView() = with(binding) {
@@ -51,10 +53,21 @@ class MainActivity : AppCompatActivity() {
         mainActivityBottomBar.setupWithViewPager2(activityMainViewpager)
         mainActivityBottomBar.indicatorMargin = 100
 
-
 //        mainActivityBottomBar.onTabSelected = {
 //            Log.d("bottom_bar", "Selected tab: " + it.title)
 //        }
+
+        // 하단 바 클릭 시 이벤트 처리
+        mainActivityBottomBar.setOnTabSelectListener(object : AnimatedBottomBar.OnTabSelectListener {
+            override fun onTabSelected(
+                lastIndex: Int,
+                lastTab: AnimatedBottomBar.Tab?,
+                newIndex: Int,
+                newTab: AnimatedBottomBar.Tab
+            ) {
+                viewPagerAdapter.closeSpinner()
+            }
+        })
     }
 
     // 인터넷 미연결시 예외처리

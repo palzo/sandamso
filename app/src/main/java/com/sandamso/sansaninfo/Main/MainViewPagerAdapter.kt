@@ -13,6 +13,13 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
 
     private val fragments = ArrayList<MainTab>()
 
+    // 스피너 자동 닫힘
+    fun closeSpinner() {
+        for(tab in fragments) {
+            tab.onTabSelected()
+        }
+    }
+
     init {
         fragments.add(
             MainTab(

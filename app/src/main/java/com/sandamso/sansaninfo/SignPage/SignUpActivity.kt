@@ -24,9 +24,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.sandamso.sansaninfo.BaseActivity
 import com.vane.badwordfiltering.BadWordFiltering
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
     private lateinit var resultpw: String
@@ -168,7 +169,7 @@ class SignUpActivity : AppCompatActivity() {
                 // 이메일 형식이 아닌 경우
                 if (emailCheck && nameCheck && pwCheck && pwSameCheck) {
                     if (!nickCheck) {
-                        toastMessage("닉네임 중복체크를 확인해주세요.")
+                        showtoast("닉네임 중복체크를 확인해주세요.")
                     } else {
                         if (pw == checkpw) {
                             resultpw = pw
@@ -177,14 +178,14 @@ class SignUpActivity : AppCompatActivity() {
                             // 새로운 사용자 등록
                             createUser(email, name, nick, resultpw)
                         } else {
-                            toastMessage("비밀번호가 일치하지 않습니다.")
+                            showtoast("비밀번호가 일치하지 않습니다.")
                         }
                     }
                 } else {
-                    toastMessage("올바른 이메일 형식이 아닙니다.")
+                    showtoast("올바른 이메일 형식이 아닙니다.")
                 }
             } else {
-                toastMessage("올바른 정보를 입력해주세요.")
+                showtoast("올바른 정보를 입력해주세요.")
             }
         }
         // 회원가입 취소 버튼 클릭 시 로그인 페이지로 돌아가기
@@ -213,13 +214,13 @@ class SignUpActivity : AppCompatActivity() {
                         binding.signupEtNickname.error = "사용할 수 없는 닉네임 입니다."
                     } else {
                         nickCheck = true
-                        toastMessage("사용가능한 닉네임 입니다.")
+                        showtoast("사용가능한 닉네임 입니다.")
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     nickCheck = false
-                    toastMessage("닉네임 중복 확인 중 에러 발생")
+                    showtoast("닉네임 중복 확인 중 에러 발생")
                 }
             })
     }
@@ -231,7 +232,7 @@ class SignUpActivity : AppCompatActivity() {
                 // 회원가입 성공 시
                 if (task.isSuccessful) {
                     sendVerifyEmail()
-                    toastMessage("회원가입 성공!")
+                    showtoast("회원가입 성공!")
                     val user = auth.currentUser
                     // RealTimeDB 사용자 정보에 간단하게 이름, 아이디, 성별, 닉네임 DB 생성
                     val userData = UserData(name, email, nick)
@@ -246,7 +247,7 @@ class SignUpActivity : AppCompatActivity() {
                 // 회원가입 실패 시
                 else {
                     val error = task.exception?.message ?: "알 수 없는 오류"
-                    toastMessage("회원가입에 실패했습니다. 오류 : $error")
+                    showtoast("회원가입에 실패했습니다. 오류 : $error")
                 }
             }
     }
@@ -269,7 +270,7 @@ class SignUpActivity : AppCompatActivity() {
                     // 회원가입 실패 시
                     else {
                         val error = task.exception?.message ?: "알 수 없는 오류"
-                        toastMessage("RealTime userData 생성 실패! 오류: $error")
+                        showtoast("RealTime userData 생성 실패! 오류: $error")
                     }
                 }
         }
@@ -281,10 +282,10 @@ class SignUpActivity : AppCompatActivity() {
         user?.sendEmailVerification()
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    toastMessage("해당 이메일로 확인 메일이 전송되었습니다. 이메일을 확인하세요.")
+                    showtoast("해당 이메일로 확인 메일이 전송되었습니다. 이메일을 확인하세요.")
                     finish()
                 } else {
-                    toastMessage("오류..이메일 전송에 실패했습니다.")
+                    showtoast("오류..이메일 전송에 실패했습니다.")
                 }
             }
     }
@@ -299,7 +300,7 @@ class SignUpActivity : AppCompatActivity() {
                     if (signInMethod.isNullOrEmpty()) {
                         registerUser(email, resultpw)
                     } else {
-                        toastMessage("이미 가입된 이메일 주소입니다.")
+                        showtoast("이미 가입된 이메일 주소입니다.")
                     }
                 }
             }
@@ -313,9 +314,5 @@ class SignUpActivity : AppCompatActivity() {
                     sendVerifyEmail()
                 }
             }
-    }
-
-    private fun toastMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

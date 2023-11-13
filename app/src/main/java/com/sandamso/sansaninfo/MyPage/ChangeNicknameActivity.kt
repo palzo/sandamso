@@ -21,9 +21,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.sandamso.sansaninfo.BaseActivity
 import com.vane.badwordfiltering.BadWordFiltering
 
-class ChangeNicknameActivity : AppCompatActivity() {
+class ChangeNicknameActivity : BaseActivity() {
 
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivityChangeNicknameBinding.inflate(layoutInflater) }
@@ -57,25 +58,13 @@ class ChangeNicknameActivity : AppCompatActivity() {
                             .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
                                     if (snapshot.exists()) {
-                                        Toast.makeText(
-                                            this@ChangeNicknameActivity,
-                                            "이미 존재하는 닉네임 입니다.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        showtoast("이미 존재하는 닉네임 입니다.")
                                     } else if (badWordFiltering.check(newNickname)) {
-                                        Toast.makeText(
-                                            this@ChangeNicknameActivity,
-                                            "사용할 수 없는 닉네임 입니다.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        showtoast("사용할 수 없는 닉네임 입니다.")
                                     } else {
                                         writeNewUser(userId, newNickname)
                                         // 수정할 닉네임을 입력했는지 토스트 띄워서 알려주기.
-                                        Toast.makeText(
-                                            this@ChangeNicknameActivity,
-                                            "닉네임 수정이 완료되었습니다.\n잠시 기다려주세요.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        showtoast("닉네임 수정이 완료되었습니다.\n잠시 기다려주세요.")
                                         finish()
                                     }
                                 }
@@ -84,13 +73,13 @@ class ChangeNicknameActivity : AppCompatActivity() {
                                 }
                             })
                     } else {
-                        Toast.makeText(this, "사용자 인증을 할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                        showtoast("사용자 인증을 할 수 없습니다.")
                     }
                 } else {
-                    Toast.makeText(this, "수정할 닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                    showtoast("수정할 닉네임을 입력해주세요.")
                 }
             } else {
-                Toast.makeText(this, "7글자 이하로 입력해주세요. (특수문자 제외)", Toast.LENGTH_SHORT).show()
+                showtoast("7글자 이하로 입력해주세요. (특수문자 제외)")
             }
         }
     }

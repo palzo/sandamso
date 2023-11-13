@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.firebase.storage.FirebaseStorage
 import com.sandamso.sansaninfo.Data.PostModel
 import com.sandamso.sansaninfo.databinding.CommunityPageItemBinding
-import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -91,25 +92,34 @@ class CommunityPageAdapter :
         }
 
         val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
-        val currentDate = Date()
-        val targetDate = dateFormat.parse(dateData)
+        val currentDate = Calendar.getInstance().apply {
+            time = Date()
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
 
-        if (targetDate != null) {
-            val timeDiff = targetDate.time - currentDate.time
-            val dday = timeDiff / (1000 * 60 * 60 * 24)
-//            Log.d("test date", "timeDiff: $timeDiff")
-//            Log.d("test date", "dday: $dday")
+        val targetDate = Calendar.getInstance().apply {
+            time = dateFormat.parse(dateData) ?: return "유효하지 않은 날짜"
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
 
-            if (dday.toInt() == 0) {
-                return "D-Day"
-            } else if (dday > 0) {
-                return "D-${dday}"
-            } else {
+        val timeDiff = targetDate.timeInMillis - currentDate.timeInMillis
+        val dday = timeDiff / (1000 * 60 * 60 * 24)
+
+        return when {
+            dday == 0L -> "D-Day"
+            dday > 0 -> "D-${dday.toInt()}"
+            dday < 0 -> {
                 val outday = -dday
-                return "D+${outday}"
+                "D+${outday.toInt()}"
             }
-        } else {
-            return "유효하지 않은 날짜"
+
+            else -> "유효하지 않은 날짜"
         }
     }
 }

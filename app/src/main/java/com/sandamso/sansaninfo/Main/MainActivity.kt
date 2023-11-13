@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 //            Log.d("bottom_bar", "Selected tab: " + it.title)
 //        }
 
+        // 하단 바 클릭 시 이벤트 처리
         mainActivityBottomBar.setOnTabSelectListener(object : AnimatedBottomBar.OnTabSelectListener {
             override fun onTabSelected(
                 lastIndex: Int,

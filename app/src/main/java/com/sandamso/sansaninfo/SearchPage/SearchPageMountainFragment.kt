@@ -118,10 +118,8 @@ class SearchPageMountainFragment : Fragment() {
     }
 
     private fun initSpinner(city: String) = with(binding) {
-
         searchPageSpinnerGoo.setItems(GooData.getRegionList(city))
         searchPageSpinnerGoo.dismiss()
-
     }
 
     // 산 이름, 산 지역을 검색할 경우 정보를 가져옴

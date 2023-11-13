@@ -172,6 +172,7 @@ class CommunityPageFragment : Fragment() {
             clickItem()
         }
 
+        // 스피너 이외의 전체 레이아웃을 선택하면 스피너 자동 닫힘
         binding.root.setOnTouchListener { _, event ->
             if(event.action == MotionEvent.ACTION_DOWN) {
                 if(!isPointInsideView(event.rawX, event.rawY, binding.communitySpinner)) {
@@ -180,6 +181,7 @@ class CommunityPageFragment : Fragment() {
             }
             false
         }
+        // 변경사항 UI 적용
         communityPageAdapter.notifyDataSetChanged()
     }
 

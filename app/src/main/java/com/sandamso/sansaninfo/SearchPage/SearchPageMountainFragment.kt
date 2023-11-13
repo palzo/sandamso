@@ -15,12 +15,14 @@
  */
 package com.sandamso.sansaninfo.SearchPage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -66,6 +68,7 @@ class SearchPageMountainFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -114,6 +117,42 @@ class SearchPageMountainFragment : Fragment() {
         binding.searchPageRecyclerview.apply {
             adapter = searchPageAdapter
             clickMntItem()
+        }
+
+        // 스피너 이외의 전체 레이아웃을 선택하면 스피너 자동 닫힘
+        binding.searchPageRecyclerview.setOnTouchListener { _, event ->
+            if(event.action == MotionEvent.ACTION_DOWN) {
+                if(!isPointInsideView(event.rawX, event.rawY, binding.searchPageSpinnerSido)) {
+                    binding.searchPageSpinnerSido.dismiss()
+                }
+                if(!isPointInsideView(event.rawX, event.rawY, binding.searchPageSpinnerGoo)) {
+                    binding.searchPageSpinnerGoo.dismiss()
+                }
+            }
+            false
+        }
+
+        // 변경사항 UI 적용
+        searchPageAdapter.notifyDataSetChanged()
+    }
+
+
+    // 스피너 이외의 레이아웃 부분을 선택한 경우
+    fun isPointInsideView(x : Float, y : Float, view : View) : Boolean {
+        val location = IntArray(2)
+        view.getLocationOnScreen(location)
+        val viewX = location[0]
+        val viewY = location[1]
+        return (x > viewX && x < viewX + view.width && y > viewY && viewY < viewY + view.height)
+    }
+
+    // 탭바를 선택할 때도 닫히도록 수정
+    fun onTabSelected() {
+        if(binding.searchPageSpinnerSido.isShowing) {
+            binding.searchPageSpinnerSido.dismiss()
+        }
+        if(binding.searchPageSpinnerGoo.isShowing) {
+            binding.searchPageSpinnerGoo.dismiss()
         }
     }
 

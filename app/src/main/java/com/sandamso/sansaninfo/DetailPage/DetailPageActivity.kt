@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -18,6 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.sandamso.sansaninfo.AddPage.AddPageActivity
+import com.sandamso.sansaninfo.BaseActivity
 import com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity
 import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.PostModel
@@ -29,7 +28,7 @@ import java.util.Date
 import java.util.Locale
 import kotlin.concurrent.thread
 
-class DetailPageActivity : AppCompatActivity() {
+class DetailPageActivity : BaseActivity() {
 
     private val list = ArrayList<PostModel?>()
 
@@ -265,25 +264,21 @@ class DetailPageActivity : AppCompatActivity() {
                             deleteImage()
 
                         } else {
-                            Toast.makeText(
-                                this@DetailPageActivity,
-                                "삭제 중 오류가 발생했습니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showtoast(
+                                "삭제 중 오류가 발생했습니다."
+                            )
                         }
                     }
                 } else {
                     // 게시물 데이터를 찾을 수 없을 때 오류 처리
-                    Toast.makeText(this@DetailPageActivity, "게시물을 찾을 수 없습니다.", Toast.LENGTH_SHORT)
-                        .show()
+                    showtoast("게시물을 찾을 수 없습니다.")
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 // 오류 처리
                 Log.e("Firebase", "Firebase Database Error: ${error.message}")
-                Toast.makeText(this@DetailPageActivity, "Firebase Database 오류", Toast.LENGTH_SHORT)
-                    .show()
+                showtoast("Firebase Database 오류")
             }
         })
     }
@@ -297,16 +292,16 @@ class DetailPageActivity : AppCompatActivity() {
 
         imageReference.delete().addOnSuccessListener {
             // 객체가 성공적으로 삭제됐을 때 처리
-            Toast.makeText(this, "게시글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            showtoast( "게시글이 삭제되었습니다.")
             finish()
         }.addOnFailureListener { exception ->
             if (exception is StorageException && exception.errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
                 // 객체가 이미 존재하지 않을 때 처리
-                Toast.makeText(this, "삭제할 객체가 이미 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
+                showtoast("삭제할 객체가 이미 존재하지 않습니다.")
             } else {
                 // 다른 예외처리
                 Log.e("Firebase Storage", "객체 삭제 오류: ${exception.message}")
-                Toast.makeText(this, "객체 삭제 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                showtoast("객체 삭제 중 오류가 발생했습니다.")
             }
         }
     }

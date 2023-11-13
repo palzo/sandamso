@@ -13,8 +13,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.sandamso.sansaninfo.BaseActivity
 
-class SignInActivity : AppCompatActivity() {
+class SignInActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
     private val binding by lazy { ActivitySignInBinding.inflate(layoutInflater) }
     private var emailCheck = false
@@ -85,23 +86,24 @@ class SignInActivity : AppCompatActivity() {
                             val user = auth.currentUser
                             if (user != null && user.isEmailVerified) {
                                 val signInIntent = Intent(this, MainActivity::class.java)
-                                toastMessage("로그인 성공 !")
+                                showtoast("로그인 성공 !")
                                 saveData()
                                 startActivity(signInIntent)
+
+
                             }
                             // 이메일 인증 안했을 경우
                             else {
-                                toastMessage("이메일 확인 후 로그인이 가능합니다.")
+                                showtoast("이메일 확인 후 로그인이 가능합니다.")
                             }
                         } else {
                             // 로그인 실패 시
-                            toastMessage("아이디 또는 비밀번호가 일치하지 않습니다.")
+                            showtoast("아이디 또는 비밀번호가 일치하지 않습니다.")
                         }
                     }
             } else {
-                toastMessage("로그인 정보를 확인해 주세요.")
+                showtoast("로그인 정보를 확인해 주세요.")
             }
-
         }
 
 
@@ -116,35 +118,32 @@ class SignInActivity : AppCompatActivity() {
             if (error != null) {
                 when {
                     error.toString() == AuthErrorCause.AccessDenied.toString() -> {
-                        Toast.makeText(this, "접근이 거부 됨(동의 취소)", Toast.LENGTH_SHORT).show()
+                        showtoast("접근이 거부 됨(동의 취소)")
                     }
 
                     error.toString() == AuthErrorCause.InvalidClient.toString() -> {
-                        Toast.makeText(this, "유효하지 않은 앱", Toast.LENGTH_SHORT).show()
+                        showtoast("유효하지 않은 앱")
                     }
 
                     error.toString() == AuthErrorCause.InvalidGrant.toString() -> {
-                        Toast.makeText(this, "인증 수단이 유효하지 않아 인증할 수 없는 상태", Toast.LENGTH_SHORT)
-                            .show()
+                        showtoast("인증 수단이 유효하지 않아 인증할 수 없는 상태")
+
                     }
 
                     error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
-                        Toast.makeText(this, "요청 파라미터 오류", Toast.LENGTH_SHORT).show()
+                        showtoast("요청 파라미터 오류")
                     }
 
                     error.toString() == AuthErrorCause.InvalidScope.toString() -> {
-                        Toast.makeText(this, "유효하지 않은 scope ID", Toast.LENGTH_SHORT).show()
+                        showtoast( "유효하지 않은 scope ID")
                     }
                 }
             } else if (token != null) {
                 UserApiClient.instance.me { user, error ->
-                    Toast.makeText(
-                        this,
-                        "${user?.kakaoAccount?.email.toString()} 님 로그인 성공",
-                        Toast.LENGTH_SHORT
-                    ).show()
-//                    user?.kakaoAccount?.profile?.nickname.toString()
-//                    user?.kakaoAccount?.email.toString()
+                    showtoast(
+                        "${user?.kakaoAccount?.profile?.nickname.toString()} 님 로그인 성공"
+                    )
+
                 }
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
@@ -155,11 +154,9 @@ class SignInActivity : AppCompatActivity() {
         // 로그인 정보 확인 (테스트 용)
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
             if (error != null) {
-//                Toast.makeText(this, "${error.message}", Toast.LENGTH_SHORT).show()
-                Log.d("kakao", "error : ${error.message}")
+                Log.d("kakao", "${error.message}")
             } else if (tokenInfo != null) {
-                Log.d("kakao", "${tokenInfo}")
-                Toast.makeText(this, "tokenInfo : $tokenInfo", Toast.LENGTH_SHORT).show()
+                Log.d("kakao", "$tokenInfo")
             }
         }
 
@@ -213,8 +210,5 @@ class SignInActivity : AppCompatActivity() {
             signinSwitchSaveMail.isChecked = true
             signinEtEmail.setText(saveEmail.getString("email", ""))
         }
-    }
-    private fun toastMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

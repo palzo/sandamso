@@ -13,6 +13,14 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
 
     private val fragments = ArrayList<MainTab>()
 
+    fun closeSpinner() {
+        for(tab in fragments) {
+            if(tab.fragment is CommunityPageFragment) {
+                (tab.fragment as CommunityPageFragment).onTabSelected()
+            }
+        }
+    }
+
     init {
         fragments.add(
             MainTab(

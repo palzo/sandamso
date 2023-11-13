@@ -184,12 +184,19 @@ class CommunityPageFragment : Fragment() {
     }
 
     // 스피너 이외의 레이아웃 부분을 선택한 경우
-    private fun isPointInsideView(x : Float, y : Float, view : View) : Boolean {
+    fun isPointInsideView(x : Float, y : Float, view : View) : Boolean {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
         val viewX = location[0]
         val viewY = location[1]
         return (x > viewX && x < viewX + view.width && y > viewY && viewY < viewY + view.height)
+    }
+
+    // 탭바를 선택할 때도 닫히도록 수정
+    fun onTabSelected() {
+        if(binding.communitySpinner.isShowing) {
+            binding.communitySpinner.dismiss()
+        }
     }
 
     // 아이템 클릭 처리

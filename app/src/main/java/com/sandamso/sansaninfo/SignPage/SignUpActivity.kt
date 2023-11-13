@@ -11,12 +11,10 @@ The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.*/
 package com.sandamso.sansaninfo.SignPage
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.sandamso.sansaninfo.Data.UserData
 import com.sandamso.sansaninfo.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +23,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.sandamso.sansaninfo.BaseActivity
+import com.sandamso.sansaninfo.R
 import com.vane.badwordfiltering.BadWordFiltering
 
 class SignUpActivity : BaseActivity() {
@@ -216,6 +215,7 @@ class SignUpActivity : BaseActivity() {
                         nickCheck = true
                         showtoast("사용가능한 닉네임 입니다.")
                     }
+                    checkBtnColor()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -223,6 +223,25 @@ class SignUpActivity : BaseActivity() {
                     showtoast("닉네임 중복 확인 중 에러 발생")
                 }
             })
+    }
+
+    private fun checkBtnColor() {
+        if(!nickCheck) {
+            changeBtnGrey()
+        }
+        else {
+            changeBtnDesert()
+        }
+    }
+
+    private fun changeBtnGrey() {
+        binding.signupBtnChecknick.setBackgroundResource(R.drawable.signup_btn_border)
+        binding.signupBtnChecknick.setTextColor(ContextCompat.getColor(this@SignUpActivity, R.color.black))
+    }
+
+    private fun changeBtnDesert() {
+        binding.signupBtnChecknick.setBackgroundResource(R.drawable.signup_btn_checked_id)
+        binding.signupBtnChecknick.setTextColor(ContextCompat.getColor(this@SignUpActivity, R.color.white))
     }
 
     private fun createUser(email: String, name: String, nick: String, pw: String) {

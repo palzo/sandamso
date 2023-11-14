@@ -1,6 +1,7 @@
 package com.sandamso.sansaninfo.CommunityPage
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -38,6 +39,12 @@ class CommunityPageFragment : Fragment() {
     // 마감일 지난 글 옵션 필터 체크 여부
     private var isDeadlineOption = false
 
+    private val PREF_SORT = "SortPreference"
+    private val SORT_KEY = "SortKey"
+
+    private val sharedPreference by lazy { requireContext()
+        .getSharedPreferences(PREF_SORT, Context.MODE_PRIVATE) }
+
     companion object {
         fun newInstance() = CommunityPageFragment()
     }
@@ -67,14 +74,65 @@ class CommunityPageFragment : Fragment() {
 
         binding.communitySpinner.setOnSpinnerItemSelectedListener<String> { _, _, _, sort ->
             when(sort) {
-                "최신순" -> sortPostLatest()
-                "인기순" -> sortPostLike()
-                "마감일순" -> sortPostDeadline()
-                "내 글 순" -> sortPostMine()
+                "최신순" -> {
+                    sortPostLatest()
+                    saveSelectedItem(sort)
+                    Log.d("save", "$sort")
+                }
+                "인기순" -> {
+                    sortPostLike()
+                    saveSelectedItem(sort)
+                    Log.d("save", "$sort")
+                }
+                "마감일 순" -> {
+                    sortPostDeadline()
+                    saveSelectedItem(sort)
+                    Log.d("save", "$sort")
+                }
+                "내 글 순" -> {
+                    sortPostMine()
+                    saveSelectedItem(sort)
+                    Log.d("save", "$sort")
+                }
             }
         }
 
         return binding.root
+    }
+
+    // 선택한 정렬 기준 저장하기
+    private fun saveSelectedItem(item : String) {
+        with(sharedPreference.edit()) {
+            putString(SORT_KEY, item)
+            apply()
+        }
+    }
+
+    // 선택된 정렬 기준 적용하기
+    private fun applySelectedSort() {
+        val savedSort = sharedPreference.getString(SORT_KEY, "0")
+        when(savedSort) {
+            "최신순" -> {
+                sortPostLatest()
+                Log.d("apply", "최신순 정렬 불러오기")
+            }
+            "인기순" -> {
+                sortPostLike()
+                Log.d("apply", "좋아요 순 정렬 불러오기")
+            }
+            "마감일 순" -> {
+                sortPostDeadline()
+                Log.d("apply", "마감일 순 정렬 불러오기")
+            }
+            "내 글 순" -> {
+                sortPostMine()
+                Log.d("apply", "내 글 순 정렬 불러오기")
+            }
+            else -> {
+                sortPostLatest()
+                Log.d("apply", "최신순 정렬 불러오기")
+            }
+        }
     }
 
     // 최신순으로 정렬 -> 날짜 최신순대로 내림차순
@@ -152,6 +210,10 @@ class CommunityPageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+        // 저장한 정렬 목록 적용하기
+        applySelectedSort()
+
         //데이터베이스에서 데이터 읽어오기
         getItems()
     }

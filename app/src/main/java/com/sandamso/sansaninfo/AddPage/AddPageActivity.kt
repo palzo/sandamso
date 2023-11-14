@@ -48,12 +48,6 @@ class AddPageActivity : BaseActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
 
-    private val roomList = mutableListOf<RoomData>()
-
-    private val chatRoomListAdapter by lazy {
-        ChatRoomListAdapter(roomList)
-    }
-
     private var addImage = false
 
     private var firebaseDatabase = FirebaseDatabase.getInstance().reference
@@ -81,7 +75,6 @@ class AddPageActivity : BaseActivity() {
         init()
         editData()
         btnChange()
-
         mntCheck()
 
         with(binding) {
@@ -90,6 +83,7 @@ class AddPageActivity : BaseActivity() {
                     if (addPageBtnMnt.text == "변경") {
                         showProgress(true)
                         goneData()
+                        binding.postButton.visibility = View.INVISIBLE
                         data()
                         showtoast("게시글 입력 완료")
                         thread(start = true) {
@@ -157,26 +151,6 @@ class AddPageActivity : BaseActivity() {
         return true
     }
 
-    private fun addBtn() {
-
-        val mnt = binding.addPageBtnMnt.text
-
-        if (mnt == "변경") {
-            showProgress(true)
-            goneData()
-            data()
-            showtoast("게시글 입력 완료")
-            thread(start = true) {
-                Thread.sleep(2500)
-                runOnUiThread {
-                    showProgress(false)
-                }
-            }
-        } else {
-            showtoast("확인 버튼을 눌러주세요.")
-        }
-    }
-
     private fun mntCheck() {
         with(binding) {
             addPageBtnMnt.setOnClickListener {
@@ -231,7 +205,6 @@ class AddPageActivity : BaseActivity() {
                 }
 
                 else -> {
-
                 }
             }
         }
@@ -622,6 +595,10 @@ class AddPageActivity : BaseActivity() {
                             }).thenAccept {
                             }
                             showProgress(true)
+                            goneData()
+                            binding.postButton.visibility = View.INVISIBLE
+                            binding.completeButton.visibility = View.INVISIBLE
+                            binding.cancelButton.visibility = View.INVISIBLE
                             showtoast("게시글 수정중..")
                             thread(start = true) {
                                 Thread.sleep(2500)

@@ -96,6 +96,7 @@ class CommunityPageFragment : Fragment() {
                 }
             }
         }
+        applySelectedSort()
 
         return binding.root
     }
@@ -110,7 +111,7 @@ class CommunityPageFragment : Fragment() {
 
     // 선택된 정렬 기준 적용하기
     private fun applySelectedSort() {
-        val savedSort = sharedPreference.getString(SORT_KEY, "0")
+        val savedSort = sharedPreference.getString(SORT_KEY, "마감일 순")
         when(savedSort) {
             "최신순" -> {
                 sortPostLatest()

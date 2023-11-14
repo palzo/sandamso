@@ -26,7 +26,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.sandamso.sansaninfo.BaseActivity
-import com.sandamso.sansaninfo.ChattingPage.ChatRoomListAdapter
+import com.sandamso.sansaninfo.ChattingPage.ChattingListAdapter
 import com.sandamso.sansaninfo.Data.FBRef
 import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.PostModel
@@ -47,6 +47,12 @@ import kotlin.concurrent.thread
 class AddPageActivity : BaseActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
+
+    private val roomList = mutableListOf<RoomData>()
+
+    private val chattingListAdapter by lazy {
+        ChattingListAdapter(roomList)
+    }
 
     private var addImage = false
 
@@ -158,7 +164,7 @@ class AddPageActivity : BaseActivity() {
 
                 // 존재하는 산인지 찾기
                 val check = MountainMapping.getMountainCode(addPageEtMnt.text.trim().toString())
-                val mntList = listOf("한라산")
+                val mntList = listOf("한라산", "설악산", "지리산")
 
                 if ((check != 0 || mntList.contains(
                         addPageEtMnt.text.trim().toString()
@@ -230,6 +236,7 @@ class AddPageActivity : BaseActivity() {
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
                         writer = Firebase.auth.currentUser?.uid,
+                        userCount = "1",
                     )
 
                     // 닉네임도 넣어주기

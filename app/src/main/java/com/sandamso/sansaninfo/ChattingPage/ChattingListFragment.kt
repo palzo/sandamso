@@ -15,6 +15,8 @@ import com.sandamso.sansaninfo.Data.RoomData
 import com.sandamso.sansaninfo.databinding.FragmentChattingListBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.sandamso.sansaninfo.R
@@ -23,9 +25,10 @@ class ChattingListFragment : Fragment() {
 
     val roomList = mutableListOf<RoomData>()
 
-    private val chatRoomListAdapter by lazy {
-        ChatRoomListAdapter(roomList)
+    private val chattingListAdapter by lazy {
+        ChattingListAdapter(roomList)
     }
+
 
     private var _binding: FragmentChattingListBinding? = null
     private val binding get() = _binding!!
@@ -47,7 +50,7 @@ class ChattingListFragment : Fragment() {
         val view = binding.root
 
         binding.recyclerViewChattingRoom.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewChattingRoom.adapter = chatRoomListAdapter
+        binding.recyclerViewChattingRoom.adapter = chattingListAdapter
 
         loadRooms()
 
@@ -57,8 +60,8 @@ class ChattingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chatRoomListAdapter.setOnItemLongClickListener(object :
-            ChatRoomListAdapter.OnItemLongClickListener {
+        chattingListAdapter.setOnItemLongClickListener(object :
+            ChattingListAdapter.OnItemLongClickListener {
 
             // 채팅방 나가기 기능 구현
             override fun onItemLongClick(position: Int) {
@@ -89,7 +92,7 @@ class ChattingListFragment : Fragment() {
                                                     // 리스트에서 아이템 삭제 전에 해당 위치가 여전히 유효한지 확인하기
                                                     if (position < roomList.size) {
                                                         roomList.removeAt(position)
-                                                        chatRoomListAdapter.notifyItemRemoved(
+                                                        chattingListAdapter.notifyItemRemoved(
                                                             position
                                                         )
                                                     }
@@ -100,7 +103,7 @@ class ChattingListFragment : Fragment() {
                                             // 리스트에서 아이템 삭제 전에 해당 위치가 여전히 유효한지 확인
                                             if (position < roomList.size) {
                                                 roomList.removeAt(position)
-                                                chatRoomListAdapter.notifyItemRemoved(position)
+                                                chattingListAdapter.notifyItemRemoved(position)
                                             }
                                         }
                                     }
@@ -129,22 +132,42 @@ class ChattingListFragment : Fragment() {
         FBRoom.roomRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 roomList.clear()
-
+                Log.d("RoomData", "들어옴")
                 for (item in snapshot.children) {
                     val room = item.getValue(RoomData::class.java)
                     Log.d("RoomData", "RoomData = $room")
-
                     if (room != null && userId in room.users.values) {
                         Log.d("joinUser", "joinUser = $userId")
-                        roomList.add(room)
+                        totalUser(FBRoom.roomRef.child(room.id).child("users"), room)
+                        Log.d("RoomData", "room = $room")
                     }
                 }
-                chatRoomListAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("load Rooms", "Error loading rooms")
             }
         })
+    }
+    private fun totalUser(usersRef: DatabaseReference, room: RoomData){
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("RoomData", "snapshot.childrenCount = ${snapshot.childrenCount}")
+                room.userCount = snapshot.childrenCount
+                Log.d("RoomData", "room.userCount = ${room.userCount}")
+                roomList.add(room)
+                chattingListAdapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    // 닉네임 비교해서 들어온 본인이 아닌 경우
+    fun alarm(roomId: String) {
+        loadRooms()
+
     }
 }

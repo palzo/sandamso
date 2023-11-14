@@ -103,7 +103,7 @@ class MsgListAdapter(
         }
     }
 
-    // 사용자 1의 viewHolder 클래스 정의
+    // 사용자 1의 viewHolder 클래스 정의 (본인)
     inner class User1Holder(val binding: ListTalkItemMineBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun setMsg(msg: MessageData) {
@@ -114,7 +114,7 @@ class MsgListAdapter(
         }
     }
 
-    // 사용자 2의 viewHolder 클래스 정의
+    // 사용자 2의 viewHolder 클래스 정의 (상대방)
     inner class User2Holder(val binding: ListTalkItemOthersBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun setMsg(msg: MessageData) {

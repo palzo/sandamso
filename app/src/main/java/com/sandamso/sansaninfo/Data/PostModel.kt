@@ -10,5 +10,6 @@ data class PostModel(
     var mountain: String = "",
     var deadlinedate: String = "",
     var writer: String? = "",
-    var roomId: String = ""
+    var roomId: String = "",
+    var userCount: String = ""
 )

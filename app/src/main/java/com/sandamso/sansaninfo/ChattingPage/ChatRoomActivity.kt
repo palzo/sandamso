@@ -27,6 +27,9 @@ import com.sandamso.sansaninfo.R
 class ChatRoomActivity:AppCompatActivity() {
 
     private val binding by lazy { ActivityChattingPageBinding.inflate(layoutInflater) }
+    private val chattingListFragment by lazy{
+        ChattingListFragment()
+    }
     private lateinit var auth: FirebaseAuth
     var currentUser = ""
     lateinit var msgRef: DatabaseReference
@@ -91,6 +94,7 @@ class ChatRoomActivity:AppCompatActivity() {
         with(binding){
             if (edtMessage.text.isNotEmpty()) {
                 setNickname { nickname ->
+
                     val message = MessageData(edtMessage.text.toString(), nickname)
                     val msgId = msgRef.push().key!!
                     message.id = msgId
@@ -100,6 +104,8 @@ class ChatRoomActivity:AppCompatActivity() {
                     // 보내는 사람이 현재 사용자가 아닌 경우에만 알림 보내기
                     if (nickname != message.userName) {
                         sendNotification("새로운 메시지가 도착했습니다.", message.msg)
+
+                        chattingListFragment.alarm(roomId)
                     }
 
                     adapter.notifyDataSetChanged()
@@ -109,7 +115,7 @@ class ChatRoomActivity:AppCompatActivity() {
         }
     }
 
-    //     Firebase에서 닉네임 가져오기
+    // Firebase에서 닉네임 가져오기
     private fun setNickname(onNickNameFetched: (String) -> Unit) {
         val uid = Firebase.auth.currentUser?.uid ?: ""
         FirebaseDatabase.getInstance().reference.child("users").child(uid)

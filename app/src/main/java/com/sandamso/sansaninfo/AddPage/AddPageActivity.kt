@@ -26,7 +26,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.sandamso.sansaninfo.BaseActivity
-import com.sandamso.sansaninfo.ChattingPage.ChatRoomListAdapter
+import com.sandamso.sansaninfo.ChattingPage.ChattingListAdapter
 import com.sandamso.sansaninfo.Data.FBRef
 import com.sandamso.sansaninfo.Data.FBRoom
 import com.sandamso.sansaninfo.Data.PostModel
@@ -50,8 +50,8 @@ class AddPageActivity : BaseActivity() {
 
     private val roomList = mutableListOf<RoomData>()
 
-    private val chatRoomListAdapter by lazy {
-        ChatRoomListAdapter(roomList)
+    private val chattingListAdapter by lazy {
+        ChattingListAdapter(roomList)
     }
 
     private var addImage = false
@@ -81,7 +81,6 @@ class AddPageActivity : BaseActivity() {
         init()
         editData()
         btnChange()
-
         mntCheck()
 
         with(binding) {
@@ -90,6 +89,7 @@ class AddPageActivity : BaseActivity() {
                     if (addPageBtnMnt.text == "변경") {
                         showProgress(true)
                         goneData()
+                        binding.postButton.visibility = View.INVISIBLE
                         data()
                         showtoast("게시글 입력 완료")
                         thread(start = true) {
@@ -157,26 +157,6 @@ class AddPageActivity : BaseActivity() {
         return true
     }
 
-    private fun addBtn() {
-
-        val mnt = binding.addPageBtnMnt.text
-
-        if (mnt == "변경") {
-            showProgress(true)
-            goneData()
-            data()
-            showtoast("게시글 입력 완료")
-            thread(start = true) {
-                Thread.sleep(2500)
-                runOnUiThread {
-                    showProgress(false)
-                }
-            }
-        } else {
-            showtoast("확인 버튼을 눌러주세요.")
-        }
-    }
-
     private fun mntCheck() {
         with(binding) {
             addPageBtnMnt.setOnClickListener {
@@ -184,7 +164,7 @@ class AddPageActivity : BaseActivity() {
 
                 // 존재하는 산인지 찾기
                 val check = MountainMapping.getMountainCode(addPageEtMnt.text.trim().toString())
-                val mntList = listOf("한라산")
+                val mntList = listOf("한라산", "설악산", "지리산")
 
                 if ((check != 0 || mntList.contains(
                         addPageEtMnt.text.trim().toString()
@@ -231,7 +211,6 @@ class AddPageActivity : BaseActivity() {
                 }
 
                 else -> {
-
                 }
             }
         }
@@ -257,6 +236,7 @@ class AddPageActivity : BaseActivity() {
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
                         writer = Firebase.auth.currentUser?.uid,
+                        userCount = "1",
                     )
 
                     // 닉네임도 넣어주기
@@ -622,6 +602,10 @@ class AddPageActivity : BaseActivity() {
                             }).thenAccept {
                             }
                             showProgress(true)
+                            goneData()
+                            binding.postButton.visibility = View.INVISIBLE
+                            binding.completeButton.visibility = View.INVISIBLE
+                            binding.cancelButton.visibility = View.INVISIBLE
                             showtoast("게시글 수정중..")
                             thread(start = true) {
                                 Thread.sleep(2500)

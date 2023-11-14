@@ -59,6 +59,21 @@ class DetailPageActivity : BaseActivity() {
         }
 
         binding.detailPageLlJoin.setOnClickListener {
+
+            // 참여하기 누를 시 userCount + 1 해주기 (중복체크 필수)
+            firebaseDatabase.child("Rooms").child(postId).get().addOnCompleteListener {
+                if(it.isSuccessful){
+                    Log.d("user", "${it.result.value}")
+                }
+            }
+            firebaseDatabase.child("POST").child(postId).get().addOnCompleteListener {
+                if(it.isSuccessful){
+                    val userData = it.result.getValue(PostModel::class.java)
+
+
+                }
+            }
+
             val intent = Intent(this@DetailPageActivity, ChatRoomActivity::class.java)
             intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
             intent.putExtra("roomId", roomid)
@@ -313,5 +328,7 @@ class DetailPageActivity : BaseActivity() {
         if (roomid != null && currentUser != null) {
             FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)
         }
+
+
     }
 }

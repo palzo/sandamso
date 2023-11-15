@@ -245,7 +245,7 @@ class AddPageActivity : BaseActivity() {
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
                         writer = Firebase.auth.currentUser?.uid,
-                        userCount = "1",
+                        userCount = 1,
                     )
 
                     // 닉네임도 넣어주기

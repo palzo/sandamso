@@ -11,5 +11,5 @@ data class PostModel(
     var deadlinedate: String = "",
     var writer: String? = "",
     var roomId: String = "",
-    var userCount: String = ""
+    var userCount: Long? = null,
 )

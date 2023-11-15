@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.sandamso.sansaninfo.data.LastMessageManager
 import com.sandamso.sansaninfo.data.RoomData
 import com.sandamso.sansaninfo.databinding.ChattingListItemBinding
 

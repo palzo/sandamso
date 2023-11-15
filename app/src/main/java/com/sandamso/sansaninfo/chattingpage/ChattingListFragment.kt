@@ -105,6 +105,7 @@ class ChattingListFragment : Fragment() {
 //                                                chattingListAdapter.notifyItemRemoved(position)
                                             }
                                         }
+                                        // 채팅방에서 나간 유저 게시글 참여수 -1 해주기
                                     }
                             }
                         }
@@ -126,14 +127,10 @@ class ChattingListFragment : Fragment() {
         FBRoom.roomRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 roomList.clear()
-                Log.d("RoomData", "들어옴")
                 for (item in snapshot.children) {
                     val room = item.getValue(RoomData::class.java)
-                    Log.d("RoomData", "RoomData = $room")
-                    if (room != null && userId in room.users.values) {
-                        Log.d("joinUser", "joinUser = $userId")
+                    if (room != null && userId in room.users.keys) {
                         totalUser(FBRoom.roomRef.child(room.id).child("users"), room)
-                        Log.d("RoomData", "room = $room")
                     }
                 }
             }
@@ -144,14 +141,27 @@ class ChattingListFragment : Fragment() {
         })
     }
 
-    private fun totalUser(usersRef: DatabaseReference, room: RoomData) {
-        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun totalUser(roomRef: DatabaseReference, room: RoomData) {
+        roomRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("RoomData", "snapshot.childrenCount = ${snapshot.childrenCount}")
                 room.userCount = snapshot.childrenCount
-                Log.d("RoomData", "room.userCount = ${room.userCount}")
+//                FBRoom.roomRef.child(room.id).child("userCount").setValue(snapshot.childrenCount)
 
-//                room.newMsg = 1
+                    // 새로운 Map을 만들어 변경된 값을 적용
+//                    val updatedUsers = room.users.mapValues { (key, value) ->
+//                        // 본인이 아니고,                  메세지를 읽지 않았다면 && value == "0"
+//                        if (key != lastMessage.userId ) {
+//                            "1"
+//                        } else {
+//                            "0"
+//                        }
+//                    }.toMutableMap()
+//
+//                    room.users = updatedUsers
+//                    roomRef.setValue(updatedUsers)
+//
+//                    Log.d("testUser", "$updatedUsers")
+//                    room.newMsg = 1
 
                 roomList.add(room)
                 chattingListAdapter.notifyDataSetChanged()
@@ -163,11 +173,6 @@ class ChattingListFragment : Fragment() {
         })
     }
 
-    fun alarm(roomId: String, nickname: String) {
-        // 보낸사람의 닉네임이 찍히므로 닉네임이 일치하지 않으면 newMsg = 1 로 바꿔주기
-        Log.d("nicknametest", "ChattingListFragment : $roomId")
-        Log.d("nicknametest", "ChattingListFragment : $nickname")
-    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

@@ -59,12 +59,17 @@ class DetailPageActivity : BaseActivity() {
         }
 
         binding.detailPageLlJoin.setOnClickListener {
-
-            val usersRef = FBRoom.roomRef.child(roomid).child("users")
-            var userCount : Long = 1
-            usersRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            joinRoom()
+            thread(start = true) {
+                Thread.sleep(2500)
+                runOnUiThread {
+                    showProgress(false)
+                }
+            }
+            val roomRef = FBRoom.roomRef.child(roomid).child("users")
+            roomRef.addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    userCount = snapshot.childrenCount
+                    modifiedUserCount(snapshot.childrenCount)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -72,30 +77,12 @@ class DetailPageActivity : BaseActivity() {
                 }
 
             })
-            val databaseReference = firebaseDatabase.child("POST").child(postId)
-            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
-                        // 참여인원 값 수정 후 저장
-                        val userData = snapshot.getValue(PostModel::class.java) ?: return
-                        userData.userCount = userCount.toString()
-                        databaseReference.setValue(userData)
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-
             val intent = Intent(this@DetailPageActivity, ChatRoomActivity::class.java)
             intent.putExtra("dataFromdetailPageTitle", binding.detailPageTvTitle.text.toString())
             intent.putExtra("roomId", roomid)
-            Log.d("like", "roomId : $roomid")
-            joinRoom()
             startActivity(intent)
+            finish()
         }
-
         val swipeRefreshLayout = binding.detailPageRefresh
         swipeRefreshLayout.setOnRefreshListener {
             finish()
@@ -103,9 +90,23 @@ class DetailPageActivity : BaseActivity() {
             overridePendingTransition(0, 0)
             swipeRefreshLayout.isRefreshing = false
         }
-//        binding.detailPageTvDday.text
+        binding.detailPageTvDday.text
     }
 
+    // Room에 인원이 추가 되고 적용이 되어야함
+    private fun modifiedUserCount(userCount: Long){
+        firebaseDatabase.child("POST").child(postId).child("userCount").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val cnt = firebaseDatabase.child("POST").child(postId).child("userCount")
+                cnt.setValue(userCount)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
     private fun userCheck() {
         with(binding) {
             if (auth.currentUser?.uid == intent.getStringExtra("dataFromAddPageWriter")) {
@@ -347,6 +348,7 @@ class DetailPageActivity : BaseActivity() {
         val currentUser = FirebaseAuth.getInstance().currentUser?.uid
         if (roomid != null && currentUser != null) {
             FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)
+
         }
     }
 }

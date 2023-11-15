@@ -1,4 +1,4 @@
-package com.sandamso.sansaninfo.SignPage
+package com.sandamso.sansaninfo.signpage
 
 import android.app.Dialog
 import android.content.Context

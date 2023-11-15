@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.main.MainActivity
 import com.sandamso.sansaninfo.SignPage.SignInActivity
 import com.sandamso.sansaninfo.databinding.ActivitySplashScreenBinding
 import com.google.firebase.auth.FirebaseAuth

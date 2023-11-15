@@ -15,7 +15,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.core.content.ContextCompat
-import com.sandamso.sansaninfo.Data.UserData
+import com.sandamso.sansaninfo.data.UserData
 import com.sandamso.sansaninfo.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot

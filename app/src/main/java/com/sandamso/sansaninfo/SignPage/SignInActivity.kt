@@ -1,29 +1,16 @@
 package com.sandamso.sansaninfo.SignPage
 
 import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthCredential
-import com.sandamso.sansaninfo.Main.MainActivity
+import com.sandamso.sansaninfo.main.MainActivity
 import com.sandamso.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.sandamso.sansaninfo.BaseActivity
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import com.sandamso.sansaninfo.R
-import java.lang.Exception
 
 class SignInActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth

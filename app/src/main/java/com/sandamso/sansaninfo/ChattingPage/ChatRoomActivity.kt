@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -104,10 +105,11 @@ class ChatRoomActivity:AppCompatActivity() {
                     // 보내는 사람이 현재 사용자가 아닌 경우에만 알림 보내기
                     if (nickname != message.userName) {
                         sendNotification("새로운 메시지가 도착했습니다.", message.msg)
-
-                        chattingListFragment.alarm(roomId)
+                    }else{
                     }
-
+                    chattingListFragment.alarm(roomId, nickname)
+                    Log.d("nicknametest", "ChatRoomActivity : $roomId")
+                    Log.d("nicknametest", "ChatRoomActivity : $nickname")
                     adapter.notifyDataSetChanged()
                     recyclerMessages.scrollToPosition(adapter.itemCount -1)
                 }

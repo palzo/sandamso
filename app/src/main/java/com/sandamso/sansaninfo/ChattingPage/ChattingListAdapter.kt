@@ -25,8 +25,6 @@ class ChattingListAdapter(val roomList: MutableList<RoomData>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
         return ViewHolder(
             ChattingListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
@@ -44,6 +42,11 @@ class ChattingListAdapter(val roomList: MutableList<RoomData>) :
 
     override fun getItemCount(): Int {
         return roomList.size
+    }
+
+    fun remove(position: Int) {
+        roomList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
 

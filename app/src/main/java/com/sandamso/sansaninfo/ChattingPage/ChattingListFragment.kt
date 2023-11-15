@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,14 +47,14 @@ class ChattingListFragment : Fragment() {
     ): View? {
 
         _binding = FragmentChattingListBinding.inflate(inflater, container, false)
-        val view = binding.root
 
         binding.recyclerViewChattingRoom.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewChattingRoom.adapter = chattingListAdapter
 
         loadRooms()
 
-        return view
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,18 +78,18 @@ class ChattingListFragment : Fragment() {
                     when (p1) {
                         DialogInterface.BUTTON_POSITIVE -> {
 
-                            // 해당 위치가 리스트 범위 내에 있는지 확인하기
+//                          해당 위치가 리스트 범위 내에 있는지 확인하기
                             if (position >= 0 && position < roomList.size) {
                                 FBRoom.roomRef.child(roomIdToDelete).child("users").child(userId)
                                     .setValue(null)
                                     .addOnSuccessListener {
 
-                                        // 채팅방에 다른 유저가 없으면 채팅방 정보 삭제하기
+//                                      채팅방에 다른 유저가 없으면 채팅방 정보 삭제하기
                                         if (usersInRoom.size <= 1) {
                                             FBRoom.roomRef.child(roomIdToDelete).removeValue()
                                                 .addOnSuccessListener {
-
-                                                    // 리스트에서 아이템 삭제 전에 해당 위치가 여전히 유효한지 확인하기
+                                                    Log.d("position", "position : $position")
+//                                                    리스트에서 아이템 삭제 전에 해당 위치가 여전히 유효한지 확인하기
                                                     if (position < roomList.size) {
                                                         roomList.removeAt(position)
 //                                                        chattingListAdapter.notifyItemRemoved(
@@ -121,11 +122,6 @@ class ChattingListFragment : Fragment() {
         })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     // 채팅방 목록 만들기
     private fun loadRooms() {
         FBRoom.roomRef.addValueEventListener(object : ValueEventListener {
@@ -155,6 +151,9 @@ class ChattingListFragment : Fragment() {
                 Log.d("RoomData", "snapshot.childrenCount = ${snapshot.childrenCount}")
                 room.userCount = snapshot.childrenCount
                 Log.d("RoomData", "room.userCount = ${room.userCount}")
+
+//                room.newMsg = 1
+
                 roomList.add(room)
                 chattingListAdapter.notifyDataSetChanged()
             }
@@ -165,9 +164,12 @@ class ChattingListFragment : Fragment() {
         })
     }
 
-    // 닉네임 비교해서 들어온 본인이 아닌 경우
-    fun alarm(roomId: String) {
-        loadRooms()
-
+    fun alarm(roomId: String, nickname: String) {
+        Log.d("nicknametest", "ChattingListFragment : $roomId")
+        Log.d("nicknametest", "ChattingListFragment : $nickname")
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

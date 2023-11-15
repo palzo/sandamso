@@ -85,7 +85,7 @@
                         style="@style/Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="5dp"
                         android:text="설악산" />
 
                     <TextView
@@ -93,7 +93,7 @@
                         style="@style/RegularText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="18dp"
                         android:text="강원도 속초시 양양군 인제군 고성군" />
 
                     <TextView
@@ -282,7 +282,7 @@
         android:id="@+id/info_page_btn_mnt_name"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_desert_borderless"
         android:text="모임 만들기"

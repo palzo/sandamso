@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.UserPopUp
+import com.sandamso.sansaninfo.data.LastMessageManager
 
 class ChatRoomActivity:AppCompatActivity() {
 
@@ -37,6 +39,7 @@ class ChatRoomActivity:AppCompatActivity() {
 
     var roomId: String = ""
     var roomTitle: String = ""
+    var UID: String = ""
 
     val msgList = mutableListOf<MessageData>()
     lateinit var adapter: MsgListAdapter
@@ -69,6 +72,16 @@ class ChatRoomActivity:AppCompatActivity() {
         }
 
         loadMsgs()
+        loadUser()
+    }
+
+    private fun loadUser() {
+        with(binding){
+            chattingPageIvConversationPartner.setOnClickListener{
+                UserPopUp(this@ChatRoomActivity, FBRoom.roomRef.child(roomId)).show()
+
+            }
+        }
     }
 
     private fun loadMsgs() {
@@ -99,16 +112,15 @@ class ChatRoomActivity:AppCompatActivity() {
                     val msgId = msgRef.push().key!!
                     message.id = msgId
                     msgRef.child(msgId).setValue(message)
-                    edtMessage.setText("")
+
+                    LastMessageManager.updateLastMessage(roomId, UID, edtMessage.text.toString())
 
                     // 보내는 사람이 현재 사용자가 아닌 경우에만 알림 보내기
                     if (nickname != message.userName) {
                         sendNotification("새로운 메시지가 도착했습니다.", message.msg)
                     }else{
                     }
-                    chattingListFragment.alarm(roomId, nickname)
-                    Log.d("nicknametest", "ChatRoomActivity : $roomId")
-                    Log.d("nicknametest", "ChatRoomActivity : $nickname")
+                    edtMessage.setText("")
                     adapter.notifyDataSetChanged()
                     recyclerMessages.scrollToPosition(adapter.itemCount -1)
                 }
@@ -118,8 +130,8 @@ class ChatRoomActivity:AppCompatActivity() {
 
     // Firebase에서 닉네임 가져오기
     private fun setNickname(onNickNameFetched: (String) -> Unit) {
-        val uid = Firebase.auth.currentUser?.uid ?: ""
-        FirebaseDatabase.getInstance().reference.child("users").child(uid)
+        UID = Firebase.auth.currentUser?.uid ?: ""
+        FirebaseDatabase.getInstance().reference.child("users").child(UID)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {

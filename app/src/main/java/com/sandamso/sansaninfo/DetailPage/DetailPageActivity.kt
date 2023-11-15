@@ -215,6 +215,7 @@ class DetailPageActivity : BaseActivity() {
                     dday in 1..2 -> "D-${dday.toInt()}"
                     dday > 2 -> "D-${dday.toInt()}"
                     dday < 0 -> {
+                        hideJoinBtn()
                         val outday = -dday
                         "D+${outday.toInt()}"
                     }
@@ -223,6 +224,10 @@ class DetailPageActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun hideJoinBtn() {
+        binding.detailPageLlJoin.visibility = View.GONE
     }
 
 
@@ -328,7 +333,5 @@ class DetailPageActivity : BaseActivity() {
         if (roomid != null && currentUser != null) {
             FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)
         }
-
-
     }
 }

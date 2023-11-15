@@ -39,10 +39,10 @@
             android:name="com.sandamso.sansaninfo.mypage.ChangeNicknameActivity"
             android:exported="false" />
         <activity
-            android:name="com.sandamso.sansaninfo.SignPage.FindpwResultActivity"
+            android:name="com.sandamso.sansaninfo.signpage.FindpwResultActivity"
             android:exported="false" />
         <activity
-            android:name="com.sandamso.sansaninfo.SignPage.FindpwActivity"
+            android:name="com.sandamso.sansaninfo.signpage.FindpwActivity"
             android:exported="false" />
         <activity
             android:name="com.sandamso.sansaninfo.infopage.InfoPage"
@@ -64,7 +64,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.sandamso.sansaninfo.SignPage.SignUpActivity"
+            android:name="com.sandamso.sansaninfo.signpage.SignUpActivity"
             android:exported="false" />
         <activity
             android:name="com.sandamso.sansaninfo.main.MainActivity"
@@ -72,7 +72,7 @@
             android:windowSoftInputMode="adjustNothing" />
 
         <activity
-            android:name="com.sandamso.sansaninfo.SignPage.SignInActivity"
+            android:name="com.sandamso.sansaninfo.signpage.SignInActivity"
             android:windowSoftInputMode="adjustPan"
             android:exported="false"></activity>
     </application>

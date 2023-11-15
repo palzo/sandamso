@@ -164,6 +164,7 @@ class ChattingListFragment : Fragment() {
     }
 
     fun alarm(roomId: String, nickname: String) {
+        // 보낸사람의 닉네임이 찍히므로 닉네임이 일치하지 않으면 newMsg = 1 로 바꿔주기
         Log.d("nicknametest", "ChattingListFragment : $roomId")
         Log.d("nicknametest", "ChattingListFragment : $nickname")
     }

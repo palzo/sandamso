@@ -164,7 +164,7 @@ class AddPageActivity : BaseActivity() {
 
                 // 존재하는 산인지 찾기
                 val check = MountainMapping.getMountainCode(addPageEtMnt.text.trim().toString())
-                val mntList = listOf("한라산", "설악산", "지리산")
+                val mntList = listOf("한라산", "설악산", "지리산", "유명산")
 
                 if ((check != 0 || mntList.contains(
                         addPageEtMnt.text.trim().toString()

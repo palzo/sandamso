@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.sandamso.sansaninfo.data.UserData
-import com.sandamso.sansaninfo.SignPage.FindpwActivity
-import com.sandamso.sansaninfo.SignPage.SignInActivity
+import com.sandamso.sansaninfo.signpage.FindpwActivity
+import com.sandamso.sansaninfo.signpage.SignInActivity
 import com.sandamso.sansaninfo.databinding.FragmentMyPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot

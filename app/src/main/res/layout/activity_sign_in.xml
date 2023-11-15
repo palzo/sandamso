@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/iv_background_up"
-    tools:context=".SignPage.SignInActivity">
+    tools:context=".signpage.SignInActivity">
 
     <ScrollView
         android:layout_width="match_parent"

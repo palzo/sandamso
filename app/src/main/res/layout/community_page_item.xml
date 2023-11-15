@@ -106,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="40dp"
-        android:text="10"
+        android:text="0"
         app:layout_constraintBottom_toBottomOf="@+id/community_item_tv_date"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/community_item_tv_date" />

@@ -10,16 +10,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.ktx.auth
-import com.sandamso.sansaninfo.Data.FBRoom
-import com.sandamso.sansaninfo.Data.RoomData
-import com.sandamso.sansaninfo.databinding.FragmentChattingListBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import com.sandamso.sansaninfo.Data.FBRoom
+import com.sandamso.sansaninfo.Data.RoomData
 import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.databinding.FragmentChattingListBinding
 
 class ChattingListFragment : Fragment() {
 
@@ -92,9 +91,9 @@ class ChattingListFragment : Fragment() {
                                                     // 리스트에서 아이템 삭제 전에 해당 위치가 여전히 유효한지 확인하기
                                                     if (position < roomList.size) {
                                                         roomList.removeAt(position)
-                                                        chattingListAdapter.notifyItemRemoved(
-                                                            position
-                                                        )
+//                                                        chattingListAdapter.notifyItemRemoved(
+//                                                            position
+//                                                        )
                                                     }
                                                 }
                                         } else {
@@ -103,7 +102,7 @@ class ChattingListFragment : Fragment() {
                                             // 리스트에서 아이템 삭제 전에 해당 위치가 여전히 유효한지 확인
                                             if (position < roomList.size) {
                                                 roomList.removeAt(position)
-                                                chattingListAdapter.notifyItemRemoved(position)
+//                                                chattingListAdapter.notifyItemRemoved(position)
                                             }
                                         }
                                     }
@@ -149,8 +148,9 @@ class ChattingListFragment : Fragment() {
             }
         })
     }
-    private fun totalUser(usersRef: DatabaseReference, room: RoomData){
-        usersRef.addListenerForSingleValueEvent(object : ValueEventListener{
+
+    private fun totalUser(usersRef: DatabaseReference, room: RoomData) {
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d("RoomData", "snapshot.childrenCount = ${snapshot.childrenCount}")
                 room.userCount = snapshot.childrenCount

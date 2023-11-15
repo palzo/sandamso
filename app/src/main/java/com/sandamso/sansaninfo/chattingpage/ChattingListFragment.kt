@@ -13,6 +13,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.sandamso.sansaninfo.data.FBRoom
@@ -28,7 +29,7 @@ class ChattingListFragment : Fragment() {
         ChattingListAdapter(roomList)
     }
 
-
+    private val firebaseDatabase = FirebaseDatabase.getInstance().reference
     private var _binding: FragmentChattingListBinding? = null
     private val binding get() = _binding!!
 
@@ -64,7 +65,7 @@ class ChattingListFragment : Fragment() {
 
             // 채팅방 나가기 기능 구현
             override fun onItemLongClick(position: Int) {
-
+                val postId = roomList[position].postId
                 val roomIdToDelete = roomList[position].id
                 val usersInRoom = roomList[position].users
 
@@ -106,6 +107,19 @@ class ChattingListFragment : Fragment() {
                                             }
                                         }
                                         // 채팅방에서 나간 유저 게시글 참여수 -1 해주기
+                                        firebaseDatabase.child("POST").child(postId).child("userCount").addListenerForSingleValueEvent(object :ValueEventListener{
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                val currentCount = snapshot.getValue(Long::class.java) ?: 0
+                                                val newCount = currentCount - 1
+                                                val cnt = firebaseDatabase.child("POST").child(postId).child("userCount")
+                                                cnt.setValue(newCount)
+                                            }
+
+                                            override fun onCancelled(error: DatabaseError) {
+                                                TODO("Not yet implemented")
+                                            }
+
+                                        })
                                     }
                             }
                         }

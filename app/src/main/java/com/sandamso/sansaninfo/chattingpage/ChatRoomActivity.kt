@@ -24,7 +24,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.sandamso.sansaninfo.R
 import com.sandamso.sansaninfo.UserPopUp
-import com.sandamso.sansaninfo.data.LastMessageManager
 
 class ChatRoomActivity:AppCompatActivity() {
 
@@ -112,8 +111,6 @@ class ChatRoomActivity:AppCompatActivity() {
                     val msgId = msgRef.push().key!!
                     message.id = msgId
                     msgRef.child(msgId).setValue(message)
-
-                    LastMessageManager.updateLastMessage(roomId, UID, edtMessage.text.toString())
 
                     // 보내는 사람이 현재 사용자가 아닌 경우에만 알림 보내기
                     if (nickname != message.userName) {

@@ -247,7 +247,8 @@ class AddPageActivity : BaseActivity() {
                         val roomdata = RoomData()
                         roomdata.title = addPageTvTitle.text.toString()
                         roomdata.postId = postId
-                        roomdata.users = mapOf(uid to uid)
+                        roomdata.users = mutableMapOf(uid to "0")
+                        roomdata.deadlinedate = addPageTvDday.text.toString()
 
                         // 파이어 베이스에 Rooms 데이터 추가하기
                         val roomId = addMsgData(
@@ -577,6 +578,9 @@ class AddPageActivity : BaseActivity() {
                 if (it.isSuccessful) {
                     val originalData = it.result.getValue(PostModel::class.java)
                     if (originalData != null) {
+                        // roomId 가져오기
+                        roomDateChange(originalData.roomId, binding.addPageTvDday.text.toString())
+
                         with(binding) {
                             // 수정된 데이터로 업데이트 하기
                             val editData = originalData.copy(
@@ -620,7 +624,23 @@ class AddPageActivity : BaseActivity() {
                     }
                 }
             }
+
         }
+    }
+
+    // 마감기한 변경 처리
+    private fun roomDateChange(roomId: String, changedDate: String){
+        firebaseDatabase.child("Rooms").child(roomId).child("deadlinedate").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val date = firebaseDatabase.child("Rooms").child(roomId).child("deadlinedate")
+                date.setValue(changedDate)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun imageSetData(editData: PostModel) {

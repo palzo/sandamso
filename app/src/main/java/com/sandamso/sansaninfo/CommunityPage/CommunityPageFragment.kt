@@ -96,7 +96,6 @@ class CommunityPageFragment : Fragment() {
                 }
             }
         }
-        applySelectedSort()
 
         return binding.root
     }
@@ -111,11 +110,11 @@ class CommunityPageFragment : Fragment() {
 
     // 선택된 정렬 기준 적용하기
     private fun applySelectedSort() {
-        val savedSort = sharedPreference.getString(SORT_KEY, "마감일 순")
-        when(savedSort) {
+        when(val savedSort = sharedPreference.getString(SORT_KEY, "최신순")) {
             "최신순" -> {
                 sortPostLatest()
                 Log.d("apply", "최신순 정렬 불러오기")
+                Log.d("savdSort", "$savedSort")
             }
             "인기순" -> {
                 sortPostLike()
@@ -124,6 +123,7 @@ class CommunityPageFragment : Fragment() {
             "마감일 순" -> {
                 sortPostDeadline()
                 Log.d("apply", "마감일 순 정렬 불러오기")
+                Log.d("savdSort", "$savedSort")
             }
             "내 글 순" -> {
                 sortPostMine()
@@ -212,11 +212,36 @@ class CommunityPageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        // 저장한 정렬 목록 적용하기
-        applySelectedSort()
-
         //데이터베이스에서 데이터 읽어오기
         getItems()
+    }
+
+    // 마감일이 지난 게시글 안보이게 설정하는 옵션 기능
+    @SuppressLint("NotifyDataSetChanged")
+    private fun isOverDeadline() {
+        Log.d("Press Switch", "스위치 눌렀냐?")
+        val currentDate = System.currentTimeMillis()
+
+        Log.d("check", "$isDeadlineOption")
+        // 제외하는 옵션 눌렀을 경우
+        if(isDeadlineOption) {
+            val filterList = communityList.filter { post ->
+                val deadlineDate = post.deadlinedate
+                val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+                val date = dateFormat.parse(deadlineDate)
+                val deadline = date?.time ?: 0
+                currentDate < deadline
+            }
+            Log.d("if check", "$isDeadlineOption")
+            communityPageAdapter.addItem(filterList.toMutableList())
+        }
+        else {
+            Log.d("else check", "$isDeadlineOption")
+            communityPageAdapter.addItem(communityList)
+            // 상단으로 올라가기
+            binding.communityPageRecyclerview.scrollToPosition(communityList.size - 1)
+        }
+        communityPageAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("ClickableViewAccessibility", "NotifyDataSetChanged")
@@ -301,38 +326,13 @@ class CommunityPageFragment : Fragment() {
                                 communityPageAdapter.addItem(communityList)
                             }
                         }
+                        // 저장한 정렬 목록 적용하기
+                        applySelectedSort()
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                 }
             })
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun isOverDeadline() {
-        Log.d("Press Switch", "스위치 눌렀냐?")
-        val currentDate = System.currentTimeMillis()
-
-        Log.d("check", "$isDeadlineOption")
-        // 제외하는 옵션 눌렀을 경우
-        if(isDeadlineOption) {
-            val filterList = communityList.filter { post ->
-                val deadlineDate = post.deadlinedate
-                val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-                val date = dateFormat.parse(deadlineDate)
-                val deadline = date?.time ?: 0
-                currentDate < deadline
-            }
-            Log.d("if check", "$isDeadlineOption")
-            communityPageAdapter.addItem(filterList.toMutableList())
-        }
-        else {
-            Log.d("else check", "$isDeadlineOption")
-            communityPageAdapter.addItem(communityList)
-            // 상단으로 올라가기
-            binding.communityPageRecyclerview.scrollToPosition(communityList.size - 1)
-        }
-        communityPageAdapter.notifyDataSetChanged()
     }
 }

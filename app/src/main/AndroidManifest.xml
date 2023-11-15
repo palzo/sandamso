@@ -24,7 +24,7 @@
         tools:targetApi="31">
 
         <activity
-            android:name="com.sandamso.sansaninfo.ChattingPage.ChatRoomActivity"
+            android:name="com.sandamso.sansaninfo.chattingpage.ChatRoomActivity"
             android:exported="false" />
 
         <uses-library
@@ -36,7 +36,7 @@
             android:value="dh21bw2cew" />
 
         <activity
-            android:name="com.sandamso.sansaninfo.MyPage.ChangeNicknameActivity"
+            android:name="com.sandamso.sansaninfo.mypage.ChangeNicknameActivity"
             android:exported="false" />
         <activity
             android:name="com.sandamso.sansaninfo.SignPage.FindpwResultActivity"
@@ -45,13 +45,13 @@
             android:name="com.sandamso.sansaninfo.SignPage.FindpwActivity"
             android:exported="false" />
         <activity
-            android:name="com.sandamso.sansaninfo.InfoPage.InfoPage"
+            android:name="com.sandamso.sansaninfo.infopage.InfoPage"
             android:exported="false" />
         <activity
-            android:name="com.sandamso.sansaninfo.DetailPage.DetailPageActivity"
+            android:name="com.sandamso.sansaninfo.detailpage.DetailPageActivity"
             android:exported="false" />
         <activity
-            android:name="com.sandamso.sansaninfo.AddPage.AddPageActivity"
+            android:name="com.sandamso.sansaninfo.addpage.AddPageActivity"
             android:exported="false" />
         <activity
             android:name="com.sandamso.sansaninfo.SplashScreen"
@@ -67,7 +67,7 @@
             android:name="com.sandamso.sansaninfo.SignPage.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name="com.sandamso.sansaninfo.Main.MainActivity"
+            android:name="com.sandamso.sansaninfo.main.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustNothing" />
 

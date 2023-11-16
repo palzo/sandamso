@@ -76,7 +76,7 @@ class ChatRoomActivity:AppCompatActivity() {
 
     private fun loadUser() {
         with(binding){
-            chattingPageIvConversationPartner.setOnClickListener{
+            chattingPageIvConversationPartner?.setOnClickListener{
                 UserPopUp(this@ChatRoomActivity, FBRoom.roomRef.child(roomId)).show()
 
             }

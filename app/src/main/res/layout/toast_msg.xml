@@ -6,9 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center|bottom"
     android:layout_marginBottom="30dp"
-    android:paddingVertical="10dp"
+    android:background="@drawable/background_toast"
     android:paddingHorizontal="20dp"
-    android:background="@drawable/background_toast">
+    android:paddingVertical="10dp">
 
     <ImageView
         android:id="@+id/tm_image"

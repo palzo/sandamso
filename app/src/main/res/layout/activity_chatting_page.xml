@@ -35,16 +35,11 @@
         android:id="@+id/chatting_page_iv_conversation_partner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_hiker"
+        android:src="@drawable/ic_hiker_white"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-
-
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_messages"
@@ -121,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="2023.11.11"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/recycler_messages" />

@@ -145,8 +145,11 @@ class CommunityPageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun sortPostLike() {
         Log.d("menu", "좋아요순으로 정렬")
-        /*communityPageAdapter.addItem(communityList)
-        communityPageAdapter.notifyDataSetChanged()*/
+        communityList.sortBy { it.userCount }
+
+        communityPageAdapter.addItem(communityList)
+        communityPageAdapter.notifyDataSetChanged()
+        isOverDeadline()
     }
 
     // 마감일순으로 정렬
@@ -301,6 +304,7 @@ class CommunityPageFragment : Fragment() {
             }
         })
     }
+
 
     // Realtime Database에서 POST 데이터 값 전부 가져오기
     fun getItems() {

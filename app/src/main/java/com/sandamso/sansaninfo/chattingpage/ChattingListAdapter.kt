@@ -63,14 +63,14 @@ class ChattingListAdapter(val roomList: MutableList<RoomData>) :
         }
         fun bind(room: RoomData) {
             with(binding){
-//                val lastMessage = LastMessageManager.lastMessage
+
                 txtMessageDate.text = room.deadlinedate
                 txtName.text = room.title
                 txtUserCount.text = room.userCount.toString()
                 txtMessage.text = room.lastMessage
-                // 마지막 채팅
-//                txtMessage.text = lastMessage.lastMsg
-//                for(i in room.users){
+
+
+//                for(i in room.users.values){
 //                    // 자신의 value가 1일 때
 //                    if(i.key == currentUser && i.value == "1"){
 //                        txtChatCount.visibility = View.VISIBLE

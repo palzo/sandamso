@@ -117,12 +117,28 @@ class ChatRoomActivity:AppCompatActivity() {
                         sendNotification("새로운 메시지가 도착했습니다.", message.msg)
                     }else{
                     }
-                    edtMessage.setText("")
                     adapter.notifyDataSetChanged()
                     recyclerMessages.scrollToPosition(adapter.itemCount -1)
+                    lastMessage(edtMessage.text.toString())
+                    edtMessage.setText("")
+
                 }
             }
         }
+    }
+
+    private fun lastMessage(sendMsg: String) {
+        FirebaseDatabase.getInstance().reference.child("Rooms").child(roomId).child("lastMessage").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val msg = FirebaseDatabase.getInstance().reference.child("Rooms").child(roomId).child("lastMessage")
+                msg.setValue(sendMsg)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     // Firebase에서 닉네임 가져오기

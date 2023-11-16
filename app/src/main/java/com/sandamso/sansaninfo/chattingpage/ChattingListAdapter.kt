@@ -67,6 +67,7 @@ class ChattingListAdapter(val roomList: MutableList<RoomData>) :
                 txtMessageDate.text = room.deadlinedate
                 txtName.text = room.title
                 txtUserCount.text = room.userCount.toString()
+                txtMessage.text = room.lastMessage
                 // 마지막 채팅
 //                txtMessage.text = lastMessage.lastMsg
 //                for(i in room.users){

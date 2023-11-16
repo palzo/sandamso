@@ -8,5 +8,6 @@ data class RoomData (
     var postId: String = "",
     var userCount: Long = 1,
     var newMsg: Int = 0,
-    var deadlinedate: String = ""
+    var deadlinedate: String = "",
+    var lastMessage: String = ""
 )

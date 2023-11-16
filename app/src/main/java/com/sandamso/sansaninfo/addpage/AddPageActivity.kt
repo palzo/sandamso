@@ -258,6 +258,7 @@ class AddPageActivity : BaseActivity() {
                         roomdata.postId = postId
                         roomdata.users = mutableMapOf(uid to "0")
                         roomdata.deadlinedate = addPageTvDday.text.toString()
+                        roomdata.lastMessage = ""
 
                         // 파이어 베이스에 Rooms 데이터 추가하기
                         val roomId = addMsgData(

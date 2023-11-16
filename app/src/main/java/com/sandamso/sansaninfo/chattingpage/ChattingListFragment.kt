@@ -145,6 +145,7 @@ class ChattingListFragment : Fragment() {
                     val room = item.getValue(RoomData::class.java)
                     if (room != null && userId in room.users.keys) {
                         totalUser(FBRoom.roomRef.child(room.id).child("users"), room)
+                        lastMsg(FBRoom.roomRef.child(room.id).child("lastMessage"), room)
                     }
                 }
             }
@@ -154,7 +155,21 @@ class ChattingListFragment : Fragment() {
             }
         })
     }
+    private fun lastMsg(roomRef: DatabaseReference, room: RoomData){
+        roomRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val msg = snapshot.getValue(String::class.java)
+                if (msg != null) {
+                    room.lastMessage = msg
+                }
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
     private fun totalUser(roomRef: DatabaseReference, room: RoomData) {
         roomRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

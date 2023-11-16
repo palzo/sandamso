@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.sandamso.sansaninfo.R
+import com.sandamso.sansaninfo.TutorialActivity.TutorialActivity
 
 
 class MyPageFragment : Fragment() {
@@ -67,6 +68,11 @@ class MyPageFragment : Fragment() {
         //비밀번호 변경
         binding.myPageTvChangePw.setOnClickListener {
             val intent = Intent(activity, FindpwActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.myPageTvTutorial.setOnClickListener{
+            val intent = Intent(activity, TutorialActivity::class.java)
             startActivity(intent)
         }
 

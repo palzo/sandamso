@@ -22,9 +22,7 @@
         android:theme="@style/Theme.SanSanInfo"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".TutorialActivity.TutorialActivity"
-            android:exported="false" />
+
         <activity
             android:name=".UserPopUp"
             android:exported="false" />
@@ -78,6 +76,10 @@
             android:name=".signpage.SignInActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".TutorialActivity.TutorialActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:exported="false" />
     </application>
 
 </manifest>

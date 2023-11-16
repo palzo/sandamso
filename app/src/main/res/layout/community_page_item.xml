@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/community_item_cl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingHorizontal="20dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/community_page_cv_cardview"
+        android:layout_width="120dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="13dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/community_item_iv_image"
+            android:layout_width="120dp"
+            android:layout_height="110dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/ic_gallery2" />
+
+        <View
+            android:id="@+id/view5"
+            android:layout_width="120dp"
+            android:layout_height="110dp"
+            android:background="@drawable/community_page_item_opercity" />
+
+        <TextView
+            android:id="@+id/community_item_tv_dday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="D - 2"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/community_item_tv_title"
+        style="@style/Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="북한산 등반 할 파티원 구합니다~~~ 북한산 등반 할 파티원 구합니다~~~"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/community_page_cv_cardview"
+        app:layout_constraintTop_toTopOf="@+id/community_page_cv_cardview" />
+
+    <TextView
+        android:id="@+id/community_item_tv_mnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="북한산"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/community_item_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/community_item_tv_title" />
+
+    <TextView
+        android:id="@+id/community_item_tv_nickname"
+        style="@style/RegularText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="북한산날다람쥐"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/community_item_tv_date"
+        app:layout_constraintStart_toStartOf="@+id/community_item_tv_mnt" />
+
+    <TextView
+        android:id="@+id/community_item_tv_date"
+        style="@style/SmallText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="2023.10.10"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toBottomOf="@+id/community_page_cv_cardview"
+        app:layout_constraintStart_toStartOf="@+id/community_item_tv_nickname" />
+
+    <ImageView
+        android:id="@+id/community_item_iv_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/community_item_tv_like_amount"
+        app:layout_constraintEnd_toStartOf="@+id/community_item_tv_like_amount"
+        app:layout_constraintTop_toTopOf="@+id/community_item_tv_like_amount"
+        app:srcCompat="@drawable/ic_handshake" />
+
+    <TextView
+        android:id="@+id/community_item_tv_like_amount"
+        style="@style/RegularText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="@+id/community_item_tv_date"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/community_item_tv_date" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="400dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/dark_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/community_page_cv_cardview" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

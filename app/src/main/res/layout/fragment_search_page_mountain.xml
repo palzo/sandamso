@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".searchpage.SearchPageMountainFragment">
+
+    <Button
+        android:id="@+id/search_page_bt_mountain"
+        style="@style/BtnText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="18dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/search_page_click_button_background"
+        android:gravity="center"
+        android:minHeight="10dp"
+        android:paddingHorizontal="26dp"
+        android:paddingVertical="8dp"
+        android:text="@string/search_page_btn_mnt"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toStartOf="@id/search_page_bt_region"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/search_page_bt_region"
+        style="@style/BtnText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/search_page_button_background"
+        android:gravity="center"
+        android:minHeight="10dp"
+        android:paddingHorizontal="26dp"
+        android:paddingVertical="8dp"
+        android:text="@string/search_page_btn_goo"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/search_page_bt_mountain"
+        app:layout_constraintTop_toTopOf="@id/search_page_bt_mountain" />
+
+    <EditText
+        android:id="@+id/search_page_et_search_text"
+        style="@style/HintText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/search_page_background"
+        android:ems="18"
+        android:hint="@string/search_page_et_hint"
+        android:paddingVertical="8dp"
+        android:paddingStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
+        app:layout_constraintWidth_percent="0.7" />
+
+    <ImageView
+        android:id="@+id/search_page_iv_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/search_page_et_search_text"
+        app:layout_constraintStart_toEndOf="@id/search_page_et_search_text"
+        app:layout_constraintTop_toTopOf="@id/search_page_et_search_text"
+        app:layout_constraintWidth_percent="0.2" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/search_page_recyclerview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_page_bt_region">
+
+        <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/search_page_spinner_sido"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/search_page_button_background"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:hint="@string/search_page_spinner_sido"
+            android:padding="7dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/search_page_bt_mountain"
+            app:layout_constraintStart_toStartOf="@+id/search_page_bt_mountain"
+            app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
+            app:spinner_arrow_gravity="end"
+            app:spinner_arrow_tint="@color/black"
+            app:spinner_divider_color="@color/light_grey"
+            app:spinner_divider_show="true"
+            app:spinner_divider_size="1dp"
+            app:spinner_item_array="@array/sido"
+            app:spinner_item_height="33dp"
+            app:spinner_popup_animation="normal"
+            app:spinner_popup_background="@color/white"
+            app:spinner_popup_max_height="240dp"
+            app:spinner_selected_item_background="@color/desert"
+            tools:ignore="HardcodedText, UnusedAttribute" />
+
+        <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/search_page_spinner_goo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/search_page_button_background"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:hint="@string/search_page_spinner_goo"
+            android:padding="7dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/search_page_bt_region"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/search_page_spinner_sido"
+            app:layout_constraintTop_toBottomOf="@id/search_page_bt_region"
+            app:spinner_arrow_gravity="end"
+            app:spinner_arrow_tint="@color/black"
+            app:spinner_divider_color="@color/light_grey"
+            app:spinner_divider_show="true"
+            app:spinner_divider_size="1dp"
+            app:spinner_item_height="33dp"
+            app:spinner_popup_animation="normal"
+            app:spinner_popup_background="@color/white"
+            app:spinner_popup_max_height="240dp"
+            app:spinner_selected_item_background="@color/desert"
+            tools:ignore="HardcodedText, UnusedAttribute" />
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_page_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_page_et_search_text"
+        tools:itemCount="3"
+        tools:listitem="@layout/searchpage_item" />
+
+    <ImageView
+        android:id="@+id/search_page_iv_backpackers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/iv_backpackers"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/search_page_tv_backpackers"
+        style="@style/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="함께 떠날곳을 검색해 볼까요??"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/search_page_iv_backpackers"
+        app:layout_constraintStart_toStartOf="@+id/search_page_iv_backpackers"
+        app:layout_constraintTop_toBottomOf="@+id/search_page_iv_backpackers" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

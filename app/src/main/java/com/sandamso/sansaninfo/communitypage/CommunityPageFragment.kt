@@ -282,7 +282,7 @@ class CommunityPageFragment : Fragment() {
 
     // 탭바를 선택할 때도 닫히도록 수정
     fun onTabSelected() {
-        if(binding.communitySpinner.isShowing) {
+        if (::binding.isInitialized && binding.communitySpinner.isShowing) {
             binding.communitySpinner.dismiss()
         }
     }

@@ -12,9 +12,10 @@
         style="@style/Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
         android:paddingHorizontal="15dp"
         android:text="홍길동 \n홍길동"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/chatting_page_iv_conversation_partner"
         app:layout_constraintStart_toEndOf="@+id/imgbtn_quit"
         app:layout_constraintTop_toTopOf="@+id/imgbtn_quit" />
 

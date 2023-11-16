@@ -359,8 +359,8 @@ class DetailPageActivity : BaseActivity() {
     private fun joinRoom() {
         val currentUser = FirebaseAuth.getInstance().currentUser?.uid
         if (roomid != null && currentUser != null) {
-            val inputValue = mutableMapOf(currentUser to "0")
-            FBRoom.roomRef.child(roomid).child("users").setValue(inputValue)
+            val inputValue = mapOf(currentUser to "0")
+            FBRoom.roomRef.child(roomid).child("users").updateChildren(inputValue)
         }
     }
 }

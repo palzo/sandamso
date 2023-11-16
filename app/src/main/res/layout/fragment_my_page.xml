@@ -203,8 +203,7 @@
                         android:layout_height="1dp"
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginTop="15dp"
-                        android:background="@color/light_grey"
-                        android:visibility="invisible" />
+                        android:background="@color/light_grey"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -212,23 +211,23 @@
                         android:layout_marginHorizontal="15dp"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="10dp"
-                        android:visibility="invisible">
+                        android:paddingHorizontal="10dp">
 
                         <TextView
                             style="@style/RegularText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight="2"
-                            android:text="@string/my_page_tv_social_view" />
+                            android:layout_weight="5"
+                            android:text="사용설명서 보러가기" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
                             android:paddingHorizontal="30dp"
-                            android:src="@drawable/ic_kakao_logo" />
+                            android:src="@drawable/ic_right_direction" />
 
                     </LinearLayout>
 

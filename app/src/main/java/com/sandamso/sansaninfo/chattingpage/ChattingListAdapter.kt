@@ -2,7 +2,6 @@ package com.sandamso.sansaninfo.chattingpage
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sandamso.sansaninfo.data.RoomData
@@ -64,16 +63,22 @@ class ChattingListAdapter(val roomList: MutableList<RoomData>) :
         }
         fun bind(room: RoomData) {
             with(binding){
+//                val lastMessage = LastMessageManager.lastMessage
+                txtMessageDate.text = room.deadlinedate
                 txtName.text = room.title
                 txtUserCount.text = room.userCount.toString()
-                when(room.newMsg){
-                    0 -> {
-                        txtChatCount.visibility = View.INVISIBLE
-                    }
-                    1 -> {
-                        txtChatCount.visibility = View.VISIBLE
-                    }
-                }
+                txtMessage.text = room.lastMessage
+                // 마지막 채팅
+//                txtMessage.text = lastMessage.lastMsg
+//                for(i in room.users){
+//                    // 자신의 value가 1일 때
+//                    if(i.key == currentUser && i.value == "1"){
+//                        txtChatCount.visibility = View.VISIBLE
+//                    }else{
+//                        txtChatCount.visibility = View.INVISIBLE
+//                    }
+//                    break
+//                }
             }
         }
     }

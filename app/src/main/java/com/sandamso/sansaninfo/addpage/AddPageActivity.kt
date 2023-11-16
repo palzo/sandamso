@@ -47,7 +47,7 @@ import kotlin.concurrent.thread
 class AddPageActivity : BaseActivity() {
 
     private val binding by lazy { ActivityAddPageBinding.inflate(layoutInflater) }
-
+    private lateinit var imageCheck: Uri
     private val roomList = mutableListOf<RoomData>()
 
     private val chattingListAdapter by lazy {
@@ -138,8 +138,13 @@ class AddPageActivity : BaseActivity() {
         } else if (title.length >= 31) {
             showtoast("제목은 30글자 이하로 입력해주세요.")
             return false
-        } else if (!addImage) {
+        } else if (!addImage && binding.postButton.visibility == View.VISIBLE ) {
             showtoast("이미지를 첨부해 주세요.")
+            Log.d("testimage", "1번")
+            return false
+        } else if ( binding.completeButton.visibility == View.VISIBLE && imageCheck.path.isNullOrEmpty() ) {
+            showtoast("이미지를 첨부해 주세요.")
+            Log.d("testimage", "2번")
             return false
         } else if (dday.isEmpty()) {
             showtoast("모임 마감일을 설정해주세요.")
@@ -161,6 +166,8 @@ class AddPageActivity : BaseActivity() {
         with(binding) {
             addPageBtnMnt.setOnClickListener {
                 val background = resources.getDrawable(R.drawable.add_page_stroke_round_rec)
+                val btnColor = resources.getDrawable(R.drawable.btn_desert_borderless)
+                val btnColor2 = resources.getDrawable(R.drawable.btn_desert_borderless2)
 
                 // 존재하는 산인지 찾기
                 val check = MountainMapping.getMountainCode(addPageEtMnt.text.trim().toString())
@@ -171,6 +178,7 @@ class AddPageActivity : BaseActivity() {
                     )) && addPageBtnMnt.text == "확인"
                 ) {
                     addPageBtnMnt.text = "변경"
+                    addPageBtnMnt.background = btnColor2
                     addPageEtMnt.isEnabled = false
                     addPageEtMnt.background = background
                     addPageErrMsg.visibility = View.INVISIBLE
@@ -180,6 +188,7 @@ class AddPageActivity : BaseActivity() {
                     )) && addPageBtnMnt.text == "변경"
                 ) {
                     addPageBtnMnt.text = "확인"
+                    addPageBtnMnt.background = btnColor
                     addPageEtMnt.isEnabled = true
                     addPageEtMnt.background = background
                     addPageErrMsg.visibility = View.INVISIBLE
@@ -236,7 +245,7 @@ class AddPageActivity : BaseActivity() {
                         date = date,
                         deadlinedate = addPageTvDday.text.toString(),
                         writer = Firebase.auth.currentUser?.uid,
-                        userCount = "1",
+                        userCount = 1,
                     )
 
                     // 닉네임도 넣어주기
@@ -247,7 +256,9 @@ class AddPageActivity : BaseActivity() {
                         val roomdata = RoomData()
                         roomdata.title = addPageTvTitle.text.toString()
                         roomdata.postId = postId
-                        roomdata.users = mapOf(uid to uid)
+                        roomdata.users = mutableMapOf(uid to "0")
+                        roomdata.deadlinedate = addPageTvDday.text.toString()
+                        roomdata.lastMessage = ""
 
                         // 파이어 베이스에 Rooms 데이터 추가하기
                         val roomId = addMsgData(
@@ -544,6 +555,7 @@ class AddPageActivity : BaseActivity() {
                         val reference = storage.reference.child("images/${userData.image}")
                         reference.downloadUrl.addOnSuccessListener {
                             binding.addPageIvAdd.load(it)
+                            imageCheck = it
                             Log.d("Image Tag222", "AddPage image : $it")
                         }.addOnFailureListener {
                             Log.d("Image Tag222", "AddPage image : $it")
@@ -577,6 +589,9 @@ class AddPageActivity : BaseActivity() {
                 if (it.isSuccessful) {
                     val originalData = it.result.getValue(PostModel::class.java)
                     if (originalData != null) {
+                        // roomId 가져오기
+                        roomDateChange(originalData.roomId, binding.addPageTvDday.text.toString())
+
                         with(binding) {
                             // 수정된 데이터로 업데이트 하기
                             val editData = originalData.copy(
@@ -620,7 +635,23 @@ class AddPageActivity : BaseActivity() {
                     }
                 }
             }
+
         }
+    }
+
+    // 마감기한 변경 처리
+    private fun roomDateChange(roomId: String, changedDate: String){
+        firebaseDatabase.child("Rooms").child(roomId).child("deadlinedate").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val date = firebaseDatabase.child("Rooms").child(roomId).child("deadlinedate")
+                date.setValue(changedDate)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun imageSetData(editData: PostModel) {

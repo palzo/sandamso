@@ -25,6 +25,9 @@
     <string name="search_page_item_tv">산이름</string>
     <string name="signin_tv_auto_login">자동로그인</string>
     <string name="signin_tv_save_mail">이메일저장</string>
+    <string name="next">다음</string>
+    <string name="skip">건너띄기</string>
+    <string name="start">시작</string>
     <string name="firebase_web_client_id">797720929790-2og2l3aaka8efbchrsikabn4hlsja82c.apps.googleusercontent.com</string>
     <string-array name="sido">
         <item>서울특별시</item>

@@ -24,7 +24,6 @@ import com.sandamso.sansaninfo.databinding.FragmentChattingListBinding
 class ChattingListFragment : Fragment() {
 
     val roomList = mutableListOf<RoomData>()
-
     private val chattingListAdapter by lazy {
         ChattingListAdapter(roomList)
     }
@@ -107,19 +106,47 @@ class ChattingListFragment : Fragment() {
                                             }
                                         }
                                         // 채팅방에서 나간 유저 게시글 참여수 -1 해주기
-                                        firebaseDatabase.child("POST").child(postId).child("userCount").addListenerForSingleValueEvent(object :ValueEventListener{
-                                            override fun onDataChange(snapshot: DataSnapshot) {
-                                                val currentCount = snapshot.getValue(Long::class.java) ?: 0
-                                                val newCount = currentCount - 1
-                                                val cnt = firebaseDatabase.child("POST").child(postId).child("userCount")
-                                                cnt.setValue(newCount)
-                                            }
+                                        firebaseDatabase.child("POST").child(postId)
+                                            .child("userCount")
+                                            .addListenerForSingleValueEvent(object :
+                                                ValueEventListener {
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    val currentCount =
+                                                        snapshot.getValue(Long::class.java) ?: 0
+                                                    val newCount = currentCount - 1
+                                                    if (newCount > 0) {
+                                                        val cnt = firebaseDatabase.child("POST")
+                                                            .child(postId).child("userCount")
+                                                        cnt.setValue(newCount)
+                                                    }
+                                                }
 
-                                            override fun onCancelled(error: DatabaseError) {
-                                                TODO("Not yet implemented")
-                                            }
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
 
-                                        })
+                                            })
+                                        firebaseDatabase.child("Rooms").child(roomIdToDelete)
+                                            .child("userCount")
+                                            .addListenerForSingleValueEvent(object :
+                                                ValueEventListener {
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    val currentCount =
+                                                        snapshot.getValue(Long::class.java) ?: 0
+                                                    val newCount = currentCount - 1
+                                                    if (newCount > 0) {
+                                                        val cnt = firebaseDatabase.child("Rooms")
+                                                            .child(roomIdToDelete)
+                                                            .child("userCount")
+                                                        cnt.setValue(newCount)
+                                                    }
+                                                }
+
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    TODO("Not yet implemented")
+                                                }
+
+                                            })
                                     }
                             }
                         }
@@ -144,60 +171,15 @@ class ChattingListFragment : Fragment() {
                 for (item in snapshot.children) {
                     val room = item.getValue(RoomData::class.java)
                     if (room != null && userId in room.users.keys) {
-                        totalUser(FBRoom.roomRef.child(room.id).child("users"), room)
-                        lastMsg(FBRoom.roomRef.child(room.id).child("lastMessage"), room)
+                        Log.d("totaluser", "$userId , ${room.users.keys}")
+                        roomList.add(room)
+                        chattingListAdapter.notifyDataSetChanged()
                     }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("load Rooms", "Error loading rooms")
-            }
-        })
-    }
-    private fun lastMsg(roomRef: DatabaseReference, room: RoomData){
-        roomRef.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val msg = snapshot.getValue(String::class.java)
-                if (msg != null) {
-                    room.lastMessage = msg
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
-    private fun totalUser(roomRef: DatabaseReference, room: RoomData) {
-        roomRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                room.userCount = snapshot.childrenCount
-//                FBRoom.roomRef.child(room.id).child("userCount").setValue(snapshot.childrenCount)
-
-                    // 새로운 Map을 만들어 변경된 값을 적용
-//                    val updatedUsers = room.users.mapValues { (key, value) ->
-//                        // 본인이 아니고,                  메세지를 읽지 않았다면 && value == "0"
-//                        if (key != lastMessage.userId ) {
-//                            "1"
-//                        } else {
-//                            "0"
-//                        }
-//                    }.toMutableMap()
-//
-//                    room.users = updatedUsers
-//                    roomRef.setValue(updatedUsers)
-//
-//                    Log.d("testUser", "$updatedUsers")
-//                    room.newMsg = 1
-
-                roomList.add(room)
-                chattingListAdapter.notifyDataSetChanged()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
         })
     }

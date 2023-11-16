@@ -106,6 +106,18 @@ class DetailPageActivity : BaseActivity() {
             }
 
         })
+        firebaseDatabase.child("Rooms").child(roomid).child("userCount").addListenerForSingleValueEvent(object : ValueEventListener{
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val cnt = firebaseDatabase.child("Rooms").child(roomid).child("userCount")
+                cnt.setValue(userCount)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
     private fun userCheck() {
         with(binding) {
@@ -347,8 +359,8 @@ class DetailPageActivity : BaseActivity() {
     private fun joinRoom() {
         val currentUser = FirebaseAuth.getInstance().currentUser?.uid
         if (roomid != null && currentUser != null) {
-            FBRoom.roomRef.child(roomid).child("users").child(currentUser).setValue(currentUser)
-
+            val inputValue = mapOf(currentUser to "0")
+            FBRoom.roomRef.child(roomid).child("users").updateChildren(inputValue)
         }
     }
 }

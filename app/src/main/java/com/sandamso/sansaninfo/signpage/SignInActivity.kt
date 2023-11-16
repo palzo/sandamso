@@ -75,6 +75,7 @@ class SignInActivity : BaseActivity() {
 
         // 로그인 버튼을 누를 경우
         binding.btnSignin.setOnClickListener {
+
             val email = binding.signinEtEmail.text.toString()
             val pw = binding.signinEtPw.text.toString()
 

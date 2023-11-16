@@ -37,9 +37,9 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="640dp"
+                android:layout_height="550dp"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/signin_roundbox"
+                android:background="@drawable/signin_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

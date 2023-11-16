@@ -1,9 +1,12 @@
 package com.sandamso.sansaninfo.chattingpage
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.sandamso.sansaninfo.data.RoomData
 import com.sandamso.sansaninfo.databinding.ChattingListItemBinding
 
@@ -69,16 +72,18 @@ class ChattingListAdapter(val roomList: MutableList<RoomData>) :
                 txtUserCount.text = room.userCount.toString()
                 txtMessage.text = room.lastMessage
 
-
-//                for(i in room.users.values){
-//                    // 자신의 value가 1일 때
-//                    if(i.key == currentUser && i.value == "1"){
-//                        txtChatCount.visibility = View.VISIBLE
-//                    }else{
-//                        txtChatCount.visibility = View.INVISIBLE
-//                    }
-//                    break
-//                }
+                val currentUser = FirebaseAuth.getInstance().currentUser?.uid
+                for(i in room.users){
+                    // 자신의 value가 1일 때
+                    if(i.key == currentUser && i.value == "1"){
+                        txtChatCount.visibility = View.VISIBLE
+                        Log.d("jebal", "들어옴 : $currentUser")
+                        break
+                    }else{
+                        txtChatCount.visibility = View.INVISIBLE
+                        Log.d("jebal", "안들어옴 : ")
+                    }
+                }
             }
         }
     }

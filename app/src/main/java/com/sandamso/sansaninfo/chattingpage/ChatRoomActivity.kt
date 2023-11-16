@@ -38,7 +38,6 @@ class ChatRoomActivity:AppCompatActivity() {
 
     var roomId: String = ""
     var roomTitle: String = ""
-    var UID: String = ""
 
     val msgList = mutableListOf<MessageData>()
     lateinit var adapter: MsgListAdapter
@@ -72,6 +71,26 @@ class ChatRoomActivity:AppCompatActivity() {
 
         loadMsgs()
         loadUser()
+        initAlarm()
+    }
+
+    private fun initAlarm() {
+        val firebaseDatabase = FirebaseDatabase.getInstance().reference
+        firebaseDatabase.child("Rooms").child(roomId).child("users").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(i in snapshot.children){
+                    if(currentUser == i.key && i.value == "1"){
+                        val inputValue = mapOf(i.key to "0")
+                        firebaseDatabase.child("Rooms").child(roomId).child("users").updateChildren(inputValue)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun loadUser() {
@@ -120,15 +139,33 @@ class ChatRoomActivity:AppCompatActivity() {
                     adapter.notifyDataSetChanged()
                     recyclerMessages.scrollToPosition(adapter.itemCount -1)
                     lastMessage(edtMessage.text.toString())
+                    pushAlarm()
                     edtMessage.setText("")
 
                 }
             }
         }
     }
+    private fun pushAlarm() {
+        FirebaseDatabase.getInstance().reference.child("Rooms").child(roomId).child("users").addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(i in snapshot.children){
+                    if(currentUser != i.key && i.value == "0"){
+                        val inputValue = mapOf(i.key to "1")
+                        FirebaseDatabase.getInstance().reference.child("Rooms").child(roomId).child("users").updateChildren(inputValue)
+                    }
+                }
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
     private fun lastMessage(sendMsg: String) {
-        FirebaseDatabase.getInstance().reference.child("Rooms").child(roomId).child("lastMessage").addListenerForSingleValueEvent(object : ValueEventListener{
+        val firebaseDatabase = FirebaseDatabase.getInstance().reference
+        firebaseDatabase.child("Rooms").child(roomId).child("lastMessage").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val msg = FirebaseDatabase.getInstance().reference.child("Rooms").child(roomId).child("lastMessage")
                 msg.setValue(sendMsg)
@@ -143,8 +180,7 @@ class ChatRoomActivity:AppCompatActivity() {
 
     // Firebase에서 닉네임 가져오기
     private fun setNickname(onNickNameFetched: (String) -> Unit) {
-        UID = Firebase.auth.currentUser?.uid ?: ""
-        FirebaseDatabase.getInstance().reference.child("users").child(UID)
+        FirebaseDatabase.getInstance().reference.child("users").child(currentUser)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {

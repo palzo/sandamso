@@ -66,8 +66,7 @@
         android:text="북한산"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/community_item_tv_title"
-        app:layout_constraintTop_toBottomOf="@+id/community_item_tv_title"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/community_item_tv_title" />
 
     <TextView
         android:id="@+id/community_item_tv_nickname"
@@ -76,8 +75,8 @@
         android:layout_height="wrap_content"
         android:text="북한산날다람쥐"
         android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/community_item_tv_mnt"
-        app:layout_constraintBottom_toTopOf="@+id/community_item_tv_date" />
+        app:layout_constraintBottom_toTopOf="@+id/community_item_tv_date"
+        app:layout_constraintStart_toStartOf="@+id/community_item_tv_mnt" />
 
     <TextView
         android:id="@+id/community_item_tv_date"

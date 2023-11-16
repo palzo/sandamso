@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/iv_example"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
 
         <View
             android:id="@+id/view5"
@@ -38,8 +38,8 @@
             android:layout_gravity="center"
             android:text="산 이름"
             android:textAlignment="center"
-            android:textSize="22dp"
             android:textColor="@color/white"
+            android:textSize="22dp"
             app:layout_constraintBottom_toBottomOf="@+id/card_view"
             app:layout_constraintEnd_toEndOf="@+id/card_view"
             app:layout_constraintStart_toStartOf="@+id/card_view"

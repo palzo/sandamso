@@ -9,12 +9,12 @@
 
 - ### [Team_Canva](https://www.canva.com/design/DAF0YbUEP_4/qEz6fLQLpQTGXv8DYCQuFQ/view?utm_content=DAF0YbUEP_4&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 
-| 이름   | 역할 | MBTI        | BLOG                                               | GitHub                                                   | 
-| ------ | ---- | ----------  | -------------------------------------------------- | -------------------------------------------------------- |
-| 박용석 | 팀장 | ISFJ         | https://velog.io/@ys4897                           |      https://github.com/yspark2                          |
-| 임주리 | 팀원 | ENFJ         | https://juperi.tistory.com/             |  https://github.com/Lim-Juri/Android_Project                         |
-| 이다민 | 팀원 | ESTJ         | https://velog.io/@kkominl                            |    https://github.com/kkomin                            |
-| 권민석 | 팀원 | ISFP         | https://coding-martinkwon.tistory.com/                     |  https://github.com/MartinKwon94                          |
+| 이름   | 역할  | MBTI         | BLOG                                               | GitHub                                                   | 
+| ------ | ----  | ----------   | -------------------------------------------------- | -------------------------------------------------------- |
+| 박용석 | 리더   | ISFJ         | https://velog.io/@ys4897                           |      https://github.com/yspark2                          |
+| 임주리 | 부리더 | ENFJ         | https://juperi.tistory.com/                        |  https://github.com/Lim-Juri/Android_Project             |
+| 이다민 | 팀원   | ESTJ         | https://velog.io/@kkominl                          |    https://github.com/kkomin                             |
+| 권민석 | 팀원   | ISFP         | https://coding-martinkwon.tistory.com/             |  https://github.com/MartinKwon94                         |
 
 <details>
 <summary>역할 분담</summary>

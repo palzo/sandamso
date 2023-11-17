@@ -3,6 +3,7 @@ package com.sandamso.sansaninfo.mypage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,6 +88,7 @@ class MyPageFragment : Fragment() {
         newNickname()
     }
 
+
     private fun newNickname() {
         // 이름, 닉네임 띄우기
         val uid = auth.currentUser?.uid ?: ""
@@ -152,7 +154,53 @@ class MyPageFragment : Fragment() {
         alertDialogBuilder.setMessage("정말 회원을 탈퇴하시겠습니까?")
 
         alertDialogBuilder.setPositiveButton("확인") { _, _ ->
-            // realtimedatabase에서 제거
+
+            // 파이어베이스 POST는 게시물 삭제
+            val uid = auth.currentUser?.uid
+            firebaseDatabase.child("POST").addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for(postSnapshot in snapshot.children){
+                        val writer = postSnapshot.child("writer").getValue(String::class.java)
+                        if(uid == writer){
+                            val postId = postSnapshot.key
+                            if(postId != null){
+                                firebaseDatabase.child("POST").child(postId).removeValue()
+                            }
+                        }
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+            // Rooms는 카운터랑 유저 빼주기
+            firebaseDatabase.child("Rooms").addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for(roomsSnapshot in snapshot.children){
+                        val usersSnapshot = roomsSnapshot.child("users")
+                        for(userSnapShot in usersSnapshot.children){
+                            val userKey = userSnapShot.key
+                            if(uid == userKey){
+                                // 채팅방에 참여했는데 회원탈퇴를 한 유저 지워주기
+                                userSnapShot.ref.removeValue()
+                                val currentCount = roomsSnapshot.child("userCount").getValue(Long::class.java) ?: 0
+                                val newCount = currentCount - 1
+                                if(newCount > 0){
+                                    roomsSnapshot.child("userCount").ref.setValue(newCount)
+                                } else if (newCount < 0){
+                                    roomsSnapshot.ref.removeValue()
+                                }
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+            //  realtimedatabase에서 제거
             val user = auth.currentUser
             val dataBase = FirebaseDatabase.getInstance()
             val userReference = dataBase.getReference("users")
@@ -163,7 +211,6 @@ class MyPageFragment : Fragment() {
             auth.currentUser?.delete()
 
             val loginInfo = activity?.getSharedPreferences("prefLogin", Context.MODE_PRIVATE)
-
             loginInfo?.edit()?.apply {
                 putString("loginType", "0")
                 putString("login", "0")
@@ -183,6 +230,7 @@ class MyPageFragment : Fragment() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

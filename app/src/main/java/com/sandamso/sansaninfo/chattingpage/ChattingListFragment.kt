@@ -118,6 +118,8 @@ class ChattingListFragment : Fragment() {
                                                         val cnt = firebaseDatabase.child("POST")
                                                             .child(postId).child("userCount")
                                                         cnt.setValue(newCount)
+                                                    } else if(newCount < 0){
+                                                        // 방 폭파
                                                     }
                                                 }
 

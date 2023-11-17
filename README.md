@@ -7,6 +7,8 @@
 
 - ### [Team GitHub](https://github.com/palzo/sandamso)
 
+- ### [Team_Canva](https://www.canva.com/design/DAF0YbUEP_4/qEz6fLQLpQTGXv8DYCQuFQ/view?utm_content=DAF0YbUEP_4&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+
 | 이름   | 역할 | MBTI        | BLOG                                               | GitHub                                                   | 
 | ------ | ---- | ----------  | -------------------------------------------------- | -------------------------------------------------------- |
 | 박용석 | 팀장 | ISFJ         | https://velog.io/@ys4897                           |      https://github.com/yspark2                          |

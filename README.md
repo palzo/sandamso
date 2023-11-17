@@ -190,8 +190,6 @@ Info Page는 SearchMountain Page에서 선택한 `산의 위치, 산의 높이, 
 <details>
 <summary>My Page</summary>
 
-     Nickname Change [sub page]
-
 ![MyPage](https://github.com/palzo/sandamso/assets/88123219/af076384-c693-4860-91a7-718de8dddf1d)
 
 My Page에서는 `닉네임을 변경할 수 있는 기능, 비밀번호 변경 기능, 사용설명서 보러가기, 로그아웃 기능, 회원탈퇴 기능`이 있습니다.

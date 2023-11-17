@@ -16,6 +16,13 @@
 | 이다민 | 팀원 | ESTJ         | https://velog.io/@kkominl                            |    https://github.com/kkomin                            |
 | 권민석 | 팀원 | ISFP         | https://coding-martinkwon.tistory.com/                     |  https://github.com/MartinKwon94                          |
 
+<details>
+<summary>역할 분담</summary>
+  
+![role1](https://github.com/palzo/sandamso/assets/88123219/2596efd7-a293-454b-b229-409dd3a5f0b8)
+![role2](https://github.com/palzo/sandamso/assets/88123219/15310ca0-bd52-4732-a9cc-ba41b160d2ab)
+
+</details>
 
 ##  Project Introduce 🎩
 ### 기본 화면 구성

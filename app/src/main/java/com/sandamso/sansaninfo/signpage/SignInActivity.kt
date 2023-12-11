@@ -1,16 +1,20 @@
 package com.sandamso.sansaninfo.signpage
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.sandamso.sansaninfo.main.MainActivity
 import com.sandamso.sansaninfo.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.sandamso.sansaninfo.BaseActivity
+import java.util.Base64
 
 class SignInActivity : BaseActivity() {
     private lateinit var auth: FirebaseAuth
@@ -18,11 +22,12 @@ class SignInActivity : BaseActivity() {
     private var emailCheck = false
     private var pwCheck = false
 
-    private lateinit var  oneTapClient: SignInClient
-    private lateinit var  signInRequest: BeginSignInRequest
+    private lateinit var oneTapClient: SignInClient
+    private lateinit var signInRequest: BeginSignInRequest
     private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
     private var showOneTapUI = true
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -113,78 +118,9 @@ class SignInActivity : BaseActivity() {
             startActivity(signupIntent)
         }
         loadData()
-
-
-//        binding.signinTitle.setOnClickListener {
-//            oneTapClient = Identity.getSignInClient(this)
-//            signInRequest = BeginSignInRequest.builder()
-//                .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
-//                    .setSupported(true)
-//                    .build())
-//                .setGoogleIdTokenRequestOptions(
-//                    BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                        .setSupported(true)
-//                        // Your server's client ID, not your Android client ID.
-////                        .setServerClientId("797720929790-2og2l3aaka8efbchrsikabn4hlsja82c.apps.googleusercontent.com")
-//                        .setServerClientId(getString(R.string.firebase_web_client_id))
-//                        // Only show accounts previously used to sign in.
-//                        .setFilterByAuthorizedAccounts(true)
-//                        .build())
-//                // Automatically sign in when exactly one credential is retrieved.
-//                .setAutoSelectEnabled(true)
-//                .build()
-//
-//            oneTapClient.beginSignIn(signInRequest)
-//                .addOnSuccessListener(this) { result ->
-//                    try {
-//                        startIntentSenderForResult(
-//                            result.pendingIntent.intentSender, REQ_ONE_TAP,
-//                            null, 0, 0, 0, null)
-//                    } catch (e: IntentSender.SendIntentException) {
-//                        Log.d("google", "Couldn't start One Tap UI: ${e.localizedMessage}")
-//                    }
-//                }
-//                .addOnFailureListener(this) { e ->
-//                    // No saved credentials found. Launch the One Tap sign-up flow, or
-//                    // do nothing and continue presenting the signed-out UI.
-//                    Log.d("google", e.localizedMessage)
-//                }
-//        }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        when (requestCode) {
-//            REQ_ONE_TAP -> {
-//                try {
-//                    val credential = oneTapClient.getSignInCredentialFromIntent(data)
-//                    val idToken = credential.googleIdToken
-//                    val username = credential.id
-//                    val password = credential.password
-//                    when {
-//                        idToken != null -> {
-//                            // Got an ID token from Google. Use it to authenticate
-//                            // with your backend.
-//                            Log.d("google", "Got ID token.")
-//                        }
-//                        password != null -> {
-//                            // Got a saved username and password. Use them to authenticate
-//                            // with your backend.
-//                            Log.d("google", "Got password.")
-//                        }
-//                        else -> {
-//                            // Shouldn't happen.
-//                            Log.d("google", "No ID token or password!")
-//                        }
-//                    }
-//                } catch (e: ApiException) {
-//                    // ...
-//                }
-//            }
-//        }
-//    }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveData() = with(binding) {
         val loginInfo = getSharedPreferences("prefLogin", 0)
         val loginInfoEdit = loginInfo.edit()
@@ -194,7 +130,9 @@ class SignInActivity : BaseActivity() {
             // 자동 로그인이 체크되어있는 경우
             loginInfoEdit.putString("loginType", "2")
             loginInfoEdit.putString("email", signinEtEmail.text.toString())
-            loginInfoEdit.putString("pw", signinEtPw.text.toString())
+            val pw = signinEtPw.text.toString()
+            val encodingPw = encode(pw)
+            loginInfoEdit.putString("pw", encodingPw)
         } else if (signinSwitchSaveMail.isChecked) {
             // 이메일 저장만 체크되어있는 경우
             loginInfoEdit.putString("loginType", "1")
@@ -208,6 +146,7 @@ class SignInActivity : BaseActivity() {
         }
         loginInfoEdit.apply()
     }
+
     private fun loadData() = with(binding) {
         val loginInfo = getSharedPreferences("prefLogin", 0)
 
@@ -218,7 +157,10 @@ class SignInActivity : BaseActivity() {
         }
     }
 
-    private fun toastMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun encode(input: String): String {
+        val encodedBytes = Base64.getEncoder().encode(input.toByteArray())
+        Log.d("encryption", "encoding : $encodedBytes")
+        return String(encodedBytes)
     }
 }
